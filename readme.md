@@ -2,8 +2,8 @@
 とあるコミュニティのコミュニティ通貨管理です。
 
 ### 動作させるには？
-VisualStudio 2019(Comunity以上)
-VisualStudioCode
+*VisualStudio 2019(Comunity以上)
+*VisualStudioCode
 
 のいずれかを利用すれば動作させれると思います。
 
