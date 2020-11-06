@@ -1,0 +1,89 @@
+﻿@page
+@model VetCoin.Pages.Trades.Contracts.SuggestionCancelModel
+@{
+}
+<h1>取引提案のキャンセル</h1>
+
+<div>
+    <h2>提示内容</h2>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.Direction)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.Direction)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.Content)
+        </dt>
+        <dd class="col-sm-10" style="white-space:pre-wrap">@Html.DisplayFor(model => model.Contract.Trade.Content)</dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.Reward)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.Reward)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.RewardComment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.RewardComment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.DeliveryDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.DeliveryDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.CreateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.CreateDate)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.VetMember)
+        </dt>
+        <dd class="col-sm-10">
+            <partial name="MemberTag" model="Model.Trade.VetMember" />
+        </dd>
+    </dl>
+</div>
+
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Contract.Id" />
+            <div class="form-group">
+                <label asp-for="Contract.Reword" class="control-label"></label>
+                <input asp-for="Contract.Reword" class="form-control" readonly />
+                <span asp-validation-for="Contract.Reword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contract.DeliveryDate" class="control-label"></label>
+                <input asp-for="Contract.DeliveryDate" class="form-control" readonly />
+                <span asp-validation-for="Contract.DeliveryDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contract.AgreementContent" class="control-label"></label>
+                <textarea asp-for="Contract.AgreementContent" class="form-control" readonly rows="12"></textarea>
+                <span asp-validation-for="Contract.AgreementContent" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">提案キャンセル</button>
+            </div>
+        </form>
+    </div>
+</div>

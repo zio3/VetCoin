@@ -1,0 +1,91 @@
+﻿@page
+@model LogsModel
+@inject Services.UrlQueryService UrlQueryService
+
+@{
+    ViewData["Title"] = "Logs";
+    var query = Model.CoinTransactionQuery;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 10;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.CoinTransaction();
+}
+
+<h1>Logs</h1>
+
+<form class="form-inline" method="get">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+</form>
+
+<a asp-page="alllogs">システムのログをみる</a>
+
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.UpdateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.UpdateDate)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.SendVetMember)">
+                    送信者
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.RecivedVetMember)">
+                    受信者
+                </a>
+            </th>
+            <th>
+                送金
+            </th>
+            <th>
+                受金
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Text)">
+                    メッセージ
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pageItems) 
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                <partial name="MemberTag" model="item.SendVetMember" />
+            </td>
+            <td>
+                <partial name="MemberTag" model="item.RecivedVetMember" />
+            </td>
+            <td>
+                @if (item.SendVetMember.Id == Model.UserContext.CurrentUser.Id)
+                {
+                    <span>@item.Amount</span>
+                }
+            </td>
+            <td>
+                @if (item.RecivedVetMember.Id == Model.UserContext.CurrentUser.Id)
+                {
+                    <span>@item.Amount</span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />

@@ -1,0 +1,58 @@
+﻿@page
+@model EditModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+
+<h1>Edit</h1>
+
+<h4>Company</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ScheduleInfo.MethodName" />
+            <div class="form-group">
+                <label asp-for="ScheduleInfo.MethodName" class="control-label"></label>
+                <input asp-for="ScheduleInfo.MethodName" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="ScheduleInfo.CronExpression" class="control-label"></label>
+                <input asp-for="ScheduleInfo.CronExpression" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="ScheduleInfo.OverideCronExpression" class="control-label"></label>
+                <input asp-for="ScheduleInfo.OverideCronExpression" class="form-control" />
+                <span asp-validation-for="ScheduleInfo.OverideCronExpression" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input asp-for="ScheduleInfo.Disabled" />
+                    <label asp-for="ScheduleInfo.Disabled" class="control-label"></label>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input asp-for="ScheduleInfo.SendVerboseInfo" />
+                    <label asp-for="ScheduleInfo.SendVerboseInfo" class="control-label"></label>
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

@@ -1,0 +1,17 @@
+import Vue from 'vue';
+import Router from 'vue-router';
+
+Vue.use(Router);
+
+export default new Router({
+    routes: [
+@foreach (var item in Model.Items)
+{
+    <text>{
+        path: '/@item',
+        name: '@item',
+        component: () => import('./WebComponents/@(item).vue')
+        },</text>
+}
+]
+});

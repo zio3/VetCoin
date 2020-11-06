@@ -1,0 +1,14 @@
+<template>
+    <div id="app">
+        @foreach (var item in Model.Items)
+        {
+            <router-link to="/@item">@item</router-link>
+            <span> | </span>
+        }
+        <router-view mode="dev" />
+    </div>
+</template>
+<style>
+</style>
+
+

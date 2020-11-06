@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-MyAllInTemplate-98CB18F9-7DB3-425A-BB88-00D9D82DAE7C</UserSecretsId>
+      <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptEnabled>false</TypeScriptEnabled>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="15.0.8" />
+    <PackageReference Include="Discord.Net" Version="2.2.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.22.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureADB2C.UI" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="ncrontab" Version="3.3.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Templates\RazorPageGenerator\Create.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\CreatePageModel.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\Delete.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\DeletePageModel.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\Details.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\DetailsPageModel.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\Edit.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\EditPageModel.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\Empty.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\EmptyPageModel.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\List.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\ListPageModel.cshtml" />
+    <Content Remove="Templates\RazorPageGenerator\_ValidationScriptsPartial.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Pages\Shared\DisplayTemplates\DateTimeOffset.cshtml" />
+    <None Include="Templates\RazorPageGenerator\Create.cshtml" />
+    <None Include="Templates\RazorPageGenerator\CreatePageModel.cshtml" />
+    <None Include="Templates\RazorPageGenerator\Delete.cshtml" />
+    <None Include="Templates\RazorPageGenerator\DeletePageModel.cshtml" />
+    <None Include="Templates\RazorPageGenerator\Details.cshtml" />
+    <None Include="Templates\RazorPageGenerator\DetailsPageModel.cshtml" />
+    <None Include="Templates\RazorPageGenerator\Edit.cshtml" />
+    <None Include="Templates\RazorPageGenerator\EditPageModel.cshtml" />
+    <None Include="Templates\RazorPageGenerator\Empty.cshtml" />
+    <None Include="Templates\RazorPageGenerator\EmptyPageModel.cshtml" />
+    <None Include="Templates\RazorPageGenerator\List.cshtml" />
+    <None Include="Templates\RazorPageGenerator\ListPageModel.cshtml" />
+    <None Include="Templates\RazorPageGenerator\_ValidationScriptsPartial.cshtml" />
+  </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>

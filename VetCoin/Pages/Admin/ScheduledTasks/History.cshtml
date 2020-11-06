@@ -1,0 +1,58 @@
+﻿@page
+@model HistoryModel
+@inject Services.UrlQueryService UrlQueryService
+@{
+    ViewData["Title"] = "History";
+
+    
+    var query = Model.Logs;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 50;
+
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var timeOffset = TimeSpan.FromHours(9);
+
+}
+
+<h1>History</h1>
+<form class="form-inline" method="get">
+
+    <input type="hidden" asp-for="MethodName" />
+
+    <div class="form-group mb-2">
+        <label>
+            <input type="checkbox" asp-for="IsErrorOnly">ErrorOnly
+        </label>
+    </div>
+
+    @*<div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>*@
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+
+</form>
+
+<partial name="PageNavi" model="pagerContext" />
+
+<table class="table"> 
+    <thead></thead>
+    <tbody>
+        @foreach (var item in pageItems)
+        {
+        <tr>
+            <td>@item.Id</td>
+            <td>@Html.DisplayFor(c => item.Start)</td>
+            <td>@Html.DisplayFor(c => item.Finished)</td>
+            <td>
+                <pre>@item.ExceptionMessage</pre>                
+            </td>
+        </tr>
+        }
+
+    </tbody>
+
+</table>
+
+<partial name="PageNavi" model="pagerContext" />

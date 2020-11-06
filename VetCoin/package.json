@@ -1,0 +1,51 @@
+{
+  "scripts": {
+    "api.ClientScaffold": "SET JAVA_OPTS=-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true && openapi-generator generate  -i https://localhost:44391/swagger/v1/swagger.json -g typescript-fetch -o ./src/api",
+    "ef.addMigration": "dotnet ef migrations add migration%RANDOM%",
+    "ef.updateDatabase": "dotnet ef database update",
+    "vue.serve": "vue-cli-service serve --open",
+    "vue.build": "vue-cli-service build",
+    "vue.build-wc": "vue-cli-service build --target wc --name vue src/WebComponents/*.vue  --dest wwwroot/VueWebComponents",
+    "vue.routegen": ".\\tools\\DevRouteGen\\DevRouteGen.exe",
+    "lint.AutoFix": "vue-cli-service lint --fix"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@fortawesome/vue-fontawesome": "^0.1.9",
+    "@microsoft/signalr": "^3.1.4",
+    "@types/node": "^14.0.6",
+    "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
+    "portable-fetch": "3.0.0",
+    "url": "^0.11.0",
+    "util": "0.11.1",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-ctk-date-time-picker": "^2.4.0",
+    "vue-multiselect": "^2.1.6",
+    "vue-property-decorator": "^8.4.0",
+    "vue-router": "^3.1.5",
+    "vue-toasted": "^1.1.28"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@types/moment": "^2.13.0",
+    "@vue/cli-plugin-typescript": "^3.12.1",
+    "@vue/cli-service": "^3.12.1",
+    "typescript": "^3.8.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}

@@ -1,0 +1,178 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    var isSuggester = Model.Contract.VetMemberId == Model.UserContext.CurrentUser.Id;
+    var isTradeMaster = Model.Contract.Trade.VetMemberId == Model.UserContext.CurrentUser.Id;
+    var direction = Model.Contract.Trade.Direction;
+
+    var isSeller = isSuggester && direction == Data.Direction.Buy || isTradeMaster && direction == Data.Direction.Sell;
+    var isBuyer = isSuggester && direction == Data.Direction.Sell || isTradeMaster && direction == Data.Direction.Buy;
+
+}
+
+<h1>提示内容</h1>
+<div>
+
+    @if (Model.Contract.ContractStatus == Data.ContractStatus.Suggestion)
+    {
+        @if (isSuggester)
+        {//提案者だった場合
+            <a asp-page="./SuggestionEdit" asp-route-id="@Model.Contract.Id" class="btn btn-primary">提案編集</a>
+            <a asp-page="./SuggestionCancel" asp-route-id="@Model.Contract.Id" class="btn btn-primary">提案キャンセル</a>
+        }
+
+        @if (isTradeMaster)
+        {//依頼者だった場合
+            <a asp-page="./ContractAgreement" asp-route-id="@Model.Contract.Id" class="btn btn-primary">契約</a>
+            <a asp-page="./SuggestionRegect" asp-route-id="@Model.Contract.Id" class="btn btn-primary">他の提案に依頼</a>
+        }
+    }
+
+    @if (Model.Contract.ContractStatus == Data.ContractStatus.Working)
+    {
+        @if (isSeller)
+        {
+            <a asp-page="./ContractCancel" asp-route-id="@Model.Contract.Id" class="btn btn-primary">契約キャンセル</a>
+        }
+        @if (isBuyer)
+        {
+            <a asp-page="./ContractComplete" asp-route-id="@Model.Contract.Id" class="btn btn-primary">契約内容の完了</a>
+        }
+    }
+    <a asp-page="../details" asp-route-id="@Model.Contract.Trade.Id">Back to List</a>
+</div>
+
+<div>
+    @if (Model.Contract.ContractStatus == Data.ContractStatus.Canceled)
+    {
+        <div class="alert alert-danger" role="alert">
+            この提案はキャンセルされています。
+        </div>
+
+    }
+</div>
+
+
+<div>
+    <h2>提示内容</h2>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Trade.Direction)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contract.Trade.Direction)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Trade.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contract.Trade.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Trade.Content)
+        </dt>
+        <dd class="col-sm-10" style="white-space:pre-wrap">@Html.DisplayFor(model => model.Contract.Trade.Content)</dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Trade.Reward)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contract.Trade.Reward)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Trade.RewardComment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contract.Trade.RewardComment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Trade.DeliveryDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contract.Trade.DeliveryDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Trade.CreateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contract.Trade.CreateDate)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Trade.VetMember)
+        </dt>
+        <dd class="col-sm-10">
+            <partial name="MemberTag" model="Model.Contract.Trade.VetMember" />
+        </dd>
+    </dl>
+</div>
+
+
+
+<div>
+    <h4>提案内容</h4>
+    <hr />
+    <dl class="row">
+
+        <dt class="col-sm-2">
+            提案者
+        </dt>
+        <dd class="col-sm-10">
+            <partial name="MemberTag" model="Model.Contract.VetMember" />
+
+        </dd>
+
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.Reword)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contract.Reword)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.DeliveryDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contract.DeliveryDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contract.AgreementContent)
+        </dt>
+
+        <dd class="col-sm-10" style="white-space:pre-wrap">@Html.DisplayFor(model => model.Contract.AgreementContent)</dd>
+    </dl>
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>VetMember</th>
+            <th>日時</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in @Model.Contract.ContractMessages.OrderBy(c => c.CreateDate))
+        {
+            <tr>
+                <td>
+                    <partial name="MemberTag" model="message.VetMember" />
+                </td>
+                <td>
+                    @Html.DisplayFor(c => message.CreateDate)
+                </td>
+                <td class="col-sm-10" style="white-space:pre-wrap">@message.Message</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form class="form" method="post">
+    <div class="form-group mb-2">
+        <textarea type="text" class="form-control" asp-for="PostMessage" placeholder="メッセージを記入してください"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">投稿</button>
+</form>

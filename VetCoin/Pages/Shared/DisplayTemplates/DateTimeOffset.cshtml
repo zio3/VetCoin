@@ -1,0 +1,8 @@
+﻿@model DateTimeOffset?
+@{
+    var text = string.Empty;
+    if (Model.HasValue)
+    {
+        text = Model.Value.ToOffset(TimeSpan.FromHours(9)).ToString("yyyy/MM/dd HH:mm:ss");
+    }
+}@text

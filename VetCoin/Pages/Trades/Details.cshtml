@@ -1,0 +1,171 @@
+﻿@page
+@model DetailsModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment enviroment
+@using Microsoft.Extensions.Hosting 
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>取引詳細</h1>
+
+<div>
+    @if (Model.Trade.TradeStatus == Data.TradeStatus.Cancel)
+    {
+        <div class="alert alert-danger" role="alert">
+            取引はキャンセルされています。
+        </div>
+
+    }
+</div>
+<div>
+    @if (Model.Trade.TradeStatus == Data.TradeStatus.Open)
+    {
+        @if (Model.IsOwner)
+        {
+            <a asp-page="./Edit" asp-route-id="@Model.Trade.Id" class="btn btn-primary">編集</a>
+            <a asp-page="./Delete" asp-route-id="@Model.Trade.Id" class="btn btn-primary">キャンセル</a>
+        }
+        else
+        {
+            <a asp-page="./Contracts/Create" asp-route-tradeId="@Model.Trade.Id" class="btn btn-primary">取引提案</a>
+        }
+
+        @if (User.Identity.Name == "zio3" && enviroment.IsDevelopment())
+        {
+            <a asp-page="./Contracts/Create" asp-route-tradeId="@Model.Trade.Id" class="btn btn-primary">取引提案[デバッグ用]</a>
+        }
+
+
+    }
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+<div>
+    <h4>Trade</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.Direction)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.Direction)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.Title)
+        </dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Trade.Content)</dt>
+        <dd class="col-sm-10" style="white-space:pre-wrap">@Html.DisplayFor(model => model.Trade.Content)</dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.Reward)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.Reward)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.RewardComment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.RewardComment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.DeliveryDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.DeliveryDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.CreateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Trade.CreateDate)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trade.VetMember)
+        </dt>
+        <dd class="col-sm-10">
+            <partial name="MemberTag" model="Model.Trade.VetMember" />
+        </dd>
+    </dl>
+</div>
+
+<hr />
+<h3>取引提案</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>VetMember</th>
+            <th>日時</th>
+            <th>報酬</th>
+            <th>納期</th>
+            <th>ステータス</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contract in Model.Trade.Contracts.OrderBy(c => c.CreateDate))
+        {
+        <tr>
+            <th>
+                <a asp-page="./Contracts/Index" asp-route-contractId="@contract.Id" class="btn btn-primary">確認</a>
+            </th>
+            <td>
+
+                <partial name="MemberTag" model="contract.VetMember" />
+            </td>
+            <td>
+                @Html.DisplayFor(c => contract.CreateDate)
+            </td>
+            <td>
+                @(contract.Reword)
+            </td>
+            <td>
+                @(contract.DeliveryDate)
+            </td>
+            <td>
+                @(contract.ContractStatus)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<hr />
+<h3>メッセージ</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>VetMember</th>
+            <th>日時</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in @Model.Trade.TradeMessages.OrderBy(c=>c.CreateDate))
+        {
+        <tr>
+            <td>
+                <partial name="MemberTag" model="message.VetMember" />
+            </td>
+            <td>
+                @Html.DisplayFor(c => message.CreateDate)
+            </td>
+            <td class="col-sm-10" style="white-space:pre-wrap">@message.Message</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<form class="form" method="post">
+    <div class="form-group mb-2">
+        <textarea type="text" class="form-control" asp-for="PostMessage" placeholder="メッセージを記入してください"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">投稿</button>
+</form>

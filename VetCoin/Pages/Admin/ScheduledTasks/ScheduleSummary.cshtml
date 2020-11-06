@@ -1,0 +1,30 @@
+﻿@page
+@model ScheduleSummaryModel
+@{
+    ViewData["Title"] = "ScheduleSummary";
+}
+
+<h1>ScheduleSummary</h1>
+
+<table class="table">
+    <tr>
+        <th>FunctionName</th>
+        <th>CronExpression</th>
+        <th>LastExecuteDateTime</th>
+        <th>LastErrorDateTime</th>
+        <th>NexeExecuteDateTime</th>
+        <td>ExecuteDiff</td>
+    </tr>
+    @foreach (var item in Model.Summaryes)
+    {
+<tr>
+    <td>@item.FunctionName</td>
+    <td>@item.CronExpression</td>
+    <td>@Html.DisplayFor(c => item.LastExecuteDateTime)</td>
+    <td>@Html.DisplayFor(c => item.LastErrorDateTime)</td>
+    <td>@Html.DisplayFor(c=> item.NexeExecuteDateTime)</td>
+    <td>@item.ExecuteDiff</td>
+</tr>
+    }
+
+</table>

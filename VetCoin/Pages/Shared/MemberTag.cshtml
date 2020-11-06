@@ -1,0 +1,14 @@
+﻿@model Data.VetMember
+
+@if (Model.DiscordId == 0)
+{    
+    <partial name="AvaterImage" model="Model" />
+    @Html.DisplayFor(modelItem => Model.Name)    
+}
+else
+{
+    <a asp-page="/Member" asp-route-memberId="@Model.DiscordId">
+        <partial name="AvaterImage" model="Model" />
+        @Html.DisplayFor(modelItem => Model.Name)
+    </a>
+}

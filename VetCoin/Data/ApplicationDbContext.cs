@@ -1,0 +1,236 @@
+﻿using VetCoin.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using VetCoin.Codes;
+using System.Threading;
+
+namespace VetCoin.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
+
+            , IHttpContextAccessor httpContextAccessor
+
+            )
+            : base(options)
+        {
+
+            HttpContextAccessor = httpContextAccessor;
+
+        }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<VetMember>()
+                .HasData(new VetMember
+                {
+                    Id = 1,
+                    Name = "[System]"
+                });
+
+            builder.Entity<CoinTransaction>()
+                .HasOne(c => c.SendVetMember)
+                .WithMany(c => c.SendTransactions)
+                .HasForeignKey(c => c.SendeVetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<CoinTransaction>()
+                .HasOne(c => c.RecivedVetMember)
+                .WithMany(c => c.RecivedTransactions)
+                .HasForeignKey(c => c.RecivedVetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Contract>()
+                .HasOne(c=>c.EscrowTransaction)
+                .WithMany(c=>c.EscrowContracts)
+                .HasForeignKey(c=>c.EscrowTransactionId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Entity<Contract>()
+                .HasOne(c => c.VetMember)
+                .WithMany()
+                .HasForeignKey(c => c.VetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            builder.Entity<TradeMessage>()
+                .HasOne(c => c.VetMember)
+                .WithMany()
+                .HasForeignKey(c => c.VetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<ContractMessage>()
+                .HasOne(c => c.VetMember)
+                .WithMany()
+                .HasForeignKey(c => c.VetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+        }
+
+        public DbSet<ScheduledExecutionLog> ScheduledExecutionLogs { get; set; }
+        public DbSet<ScheduleExecutionTicket> ScheduleExecutionTickets { get; set; }
+
+        public IHttpContextAccessor HttpContextAccessor { get; }
+
+        public DbSet<JsonParam> JsonParams { get; set; }
+
+        public DbSet<VetMember> VetMembers { get; set; }
+        public DbSet<CoinTransaction> CoinTransactions { get; set; }
+
+        public DbSet<Trade> Trades { get; set; }
+        public DbSet<TradeMessage> TradeMessages { get; set; }
+        public DbSet<Contract> Contracts { get; set; }
+        public DbSet<ContractMessage> ContractMessage { get; set; }
+
+        public override int SaveChanges()
+        {
+            EntryModifyInfo();
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            EntryModifyInfo();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+
+
+        public T GetParam<T>() where T : new()
+        {
+            var typeName = typeof(T).Name;
+            var entity = JsonParams.Find(typeName);
+            if (entity == null)
+            {
+                return new T();
+            }
+            else
+            {
+                return JsonConvert.DeserializeObject<T>(entity.JsonBody);
+            }
+        }
+
+        public T[] GetParamArray<T>() where T : new()
+        {
+            var typeName = typeof(T).Name;
+            var entity = JsonParams.Find(typeName + "[]");
+            if (entity == null)
+            {
+                return new T[0];
+            }
+            else
+            {
+                return JsonConvert.DeserializeObject<T[]>(entity.JsonBody);
+            }
+        }
+
+
+        public void SetParam<T>(T arg) where T : new()
+        {
+            var typeName = typeof(T).Name;
+            var entity = JsonParams.Find(typeName);
+            if (entity == null)
+            {
+                entity = new JsonParam
+                {
+                    Id = typeName
+                };
+                JsonParams.Add(entity);
+            }
+            entity.JsonBody = JsonConvert.SerializeObject(arg);
+        }
+
+        public void SetParamArray<T>(T[] args) where T : new()
+        {
+            var typeName = typeof(T).Name + "[]";
+            var entity = JsonParams.Find(typeName);
+            if (entity == null)
+            {
+                entity = new JsonParam
+                {
+                    Id = typeName
+                };
+                JsonParams.Add(entity);
+            }
+            entity.JsonBody = JsonConvert.SerializeObject(args);
+        }
+
+        private void EntryModifyInfo()
+        {
+            var saveChangesDate = DateTimeOffset.Now.ToOffset(Consts.JstOffset);
+            var user = "[System]";
+
+            if (HttpContextAccessor != null && HttpContextAccessor.HttpContext != null)
+            {
+                if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                {
+                    user = HttpContextAccessor.HttpContext.User.Identity.Name;
+                }
+                else
+                {
+                    user = "[AnonymousWebRequest]";
+                }
+            }
+
+
+            var entiteys = ChangeTracker.Entries();
+            var createdEntityes = entiteys
+                            .Where(c => c.State == EntityState.Added)
+                            .Select(c => c.Entity)
+                            .OfType<ICreate>()
+                            .ToArray();
+            foreach (var item in createdEntityes)
+            {
+                item.CreateDate = saveChangesDate;
+                item.CreateUser = user;
+            }
+            var updateEntityes = entiteys
+                 .Where(c => c.State == EntityState.Added || c.State == EntityState.Modified)
+                 .Select(c => c.Entity)
+                 .OfType<IUpdate>()
+                 .ToArray();
+            foreach (var item in updateEntityes)
+            {
+                item.UpdateDate = saveChangesDate;
+                item.UpdateUser = user;
+            }
+
+
+            //var loggingEntities = entiteys
+            //     .Where(c => c.State == EntityState.Added || c.State == EntityState.Modified || c.State == EntityState.Deleted)
+            //     .Where(c => c.Entity is ILogging)
+            //     .ToArray();
+
+            //foreach (var item in loggingEntities)
+            //{
+            //    var modifyEntity = item.Entity;
+            //    var orgId = (item.Entity as ILogging).GetOrigenKey();
+            //    var modifyEntityJson = JsonConvert.SerializeObject(item.Entity);
+
+            //    this.TableChangeHistories.Add(new TableChangeHistory
+            //    {
+            //        Body = modifyEntityJson,
+            //        CreateDate = saveChangesDate,
+            //        CreateUser = user,
+            //        Type = item.Entity.GetType().FullName,
+            //        EntityState = item.State,
+            //        OrigenKey = orgId
+
+            //    });
+            //}
+
+
+        }
+
+    }
+}
+
+

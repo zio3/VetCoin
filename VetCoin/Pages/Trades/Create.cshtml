@@ -1,0 +1,89 @@
+﻿@page
+@model CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@if (Model.Direction.HasValue)
+{
+    if (Model.Direction == Data.Direction.Buy)
+    {
+        <h1>働き手を募集する</h1>
+    }
+    else
+    {
+        <h1>自分の商品・サービスを販売する</h1>
+    }
+}
+else
+{
+    <h1>Create</h1>
+    <h4>Trade</h4>
+}
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            @if (!Model.Direction.HasValue)
+            {
+                <div class="form-group">
+                    <label asp-for="Trade.Direction" class="control-label"></label>
+                    <select asp-for="Trade.Direction" class="form-control" asp-items="Html.GetEnumSelectList<VetCoin.Data.Direction>()"></select>
+                    <span asp-validation-for="Trade.Direction" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @*<h2>@Html.DisplayFor(c => Model.Direction)</h2>*@
+                    <input asp-for="Trade.Direction" class="form-control" type="hidden" />
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Trade.Title" class="control-label"></label>
+                <input asp-for="Trade.Title" class="form-control" />
+                <span asp-validation-for="Trade.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trade.Content" class="control-label"></label>
+                <textarea asp-for="Trade.Content" class="form-control" rows="12"></textarea>
+                <span asp-validation-for="Trade.Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trade.Reward" class="control-label"></label>
+                <input asp-for="Trade.Reward" class="form-control" />
+                <span asp-validation-for="Trade.Reward" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trade.RewardComment" class="control-label"></label>
+                <input asp-for="Trade.RewardComment" class="form-control" />
+                <span asp-validation-for="Trade.RewardComment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trade.DeliveryDate" class="control-label"></label>
+                <input asp-for="Trade.DeliveryDate" class="form-control" />
+                <span asp-validation-for="Trade.DeliveryDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trade.ConsultationRequest" class="control-label"></label>
+                <select asp-for="Trade.ConsultationRequest" class="form-control" asp-items="Html.GetEnumSelectList(typeof(VetCoin.Data.ConsultationRequest))"></select>
+                <span asp-validation-for="Trade.ConsultationRequest" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

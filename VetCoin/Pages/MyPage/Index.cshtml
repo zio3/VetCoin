@@ -1,0 +1,256 @@
+﻿@page
+@model VetCoin.Pages.MyPage.IndexModel
+@{
+    var displayNameEntity = new VetCoin.Data.Trade();
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>名前</th>
+            <th>残高</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.UserContext.CurrentUser.Name</td>
+            <td>@Model.UserContext.Amount</td>
+        </tr>
+    </tbody>
+</table>
+<a asp-page="Edit">名前変更はこちら</a>
+
+<h3>送受金記録</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>日時</th>
+            <th>送信者</th>
+            <th>受信者</th>
+            <th>送金</th>
+            <th>受金</th>
+            <th>メッセージ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Transactions)
+        {
+
+            <tr>
+                <td>@Html.DisplayFor(c => item.CreateDate)</td>
+                <td>
+                    <partial name="MemberTag" model="item.SendVetMember" />
+                </td>
+
+                <td>
+                    <partial name="MemberTag" model="item.RecivedVetMember" />
+                </td>
+                <td class="num">
+                    @if (item.SendVetMember.Id == Model.UserContext.CurrentUser.Id)
+                    {
+                        <span>@item.Amount</span>
+                    }
+                </td>
+                <td class="num">
+                    @if (item.RecivedVetMember.Id == Model.UserContext.CurrentUser.Id)
+                    {
+                        <span>@item.Amount</span>
+                    }
+                </td>
+                <td>
+                    @item.Text
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table><a>続きを見る(未実装)</a>
+
+<hr />
+<h3>あなたの依頼</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.Direction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.Reward)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.DeliveryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.VetMember)
+            </th>
+            <th>
+
+                @Html.DisplayNameFor(model => displayNameEntity.TradeStatus)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Trades)
+        {
+            <tr>
+
+                <td>
+                    <a asp-page="../Trades/Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Direction)
+                </td>
+                <td>
+                    <a asp-page="../Trades/Details" asp-route-id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reward)
+                    @Html.DisplayFor(modelItem => item.RewardComment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+
+                <td>
+                    <partial name="MemberTag" model="item.VetMember" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TradeStatus)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a>続きを見る(未実装)</a>
+
+<h3>コメントを付けた提案依頼</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.Direction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.Reward)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.DeliveryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => displayNameEntity.VetMember)
+            </th>
+            <th>
+
+                @Html.DisplayNameFor(model => displayNameEntity.TradeStatus)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CommentedTrades)
+        {
+            <tr>
+
+                <td>
+                    <a asp-page="../Trades/Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Direction)
+                </td>
+                <td>
+                    <a asp-page="../Trades//Details" asp-route-id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reward)
+                    @Html.DisplayFor(modelItem => item.RewardComment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeliveryDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+
+                <td>
+                    <partial name="MemberTag" model="item.VetMember" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TradeStatus)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a>続きを見る(未実装)</a>
+
+<h3>あなたの提案</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>依頼者</th>
+            <th>依頼</th>
+            <th>VetMember</th>
+            <th>日時</th>
+            <th>報酬</th>
+            <th>納期</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contract in Model.Contracts.OrderByDescending(c => c.CreateDate))
+        {
+            <tr>
+                <th>
+                    <a asp-page="/Trades/Contracts/Index" asp-route-contractId="@contract.Id" class="btn btn-primary">確認</a>
+                </th>
+
+                <td>
+                    <partial name="MemberTag" model="contract.Trade.VetMember" />
+                </td>
+                <td>
+                    <a asp-page="/Trades/Contracts/Index" asp-route-contractId="@contract.Trade.Id">
+                        @Html.DisplayFor(modelItem => contract.Trade.Title)
+                    </a>
+                </td>
+                <td>
+                    <partial name="MemberTag" model="contract.VetMember" />
+                </td>
+                <td>
+                    @Html.DisplayFor(c => contract.CreateDate)
+                </td>
+                <td>
+                    @(contract.Reword)
+                </td>
+                <td>
+                    @(contract.DeliveryDate)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a>続きを見る(未実装)</a>

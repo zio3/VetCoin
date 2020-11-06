@@ -1,0 +1,32 @@
+﻿@page
+@model VetCoin.Pages.SendModel
+@{
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>名前</th>
+            <th>残高</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.UserContext.CurrentUser.Name</td>
+            <td>@Model.UserContext.Amount</td>
+        </tr>
+    </tbody>
+</table>
+
+@Html.ValidationSummary()
+
+<form method="post">
+
+    <select asp-for="ReciveVetMemberId" asp-items="@Model.MembersDdl" class="form-control"></select>
+
+    <input type="number" asp-for="SendAmount" placeholder="送金金額をいれてください" class="form-control" />
+    <input type="text" asp-for="Message" placeholder="メッセージを入力(任意)" class="form-control" />
+
+    <button type="submit" class="btn btn-primary">送信</button>
+
+</form>

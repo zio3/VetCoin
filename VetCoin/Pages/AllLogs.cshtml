@@ -1,0 +1,90 @@
+﻿@page
+@model VetCoin.Pages.AllLogsModel
+@inject Services.UrlQueryService UrlQueryService
+
+
+@{
+    ViewData["Title"] = "Logs";
+    var query = Model.CoinTransactionQuery;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 100;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.CoinTransaction();
+}
+
+<h1>Logs</h1>
+
+@*<form class="form-inline" method="get">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+</form>*@
+
+<a asp-page="AllLogs" asp-route-mode="downloadCsv">Csvダウンロード</a>
+
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.UpdateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.UpdateDate)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.TransactionType)">
+                    種別
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.SendVetMember)">
+                    送信者
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.RecivedVetMember)">
+                    受信者
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Amount)">
+                    金額
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Text)">
+                    メッセージ
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pageItems)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @item.TransactionType
+            </td>
+            <td>
+                <partial name="MemberTag" model="item.SendVetMember" />
+            </td>
+            <td>
+                <partial name="MemberTag" model="item.RecivedVetMember" />
+            </td>
+            <td>
+                <span>@item.Amount</span>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />

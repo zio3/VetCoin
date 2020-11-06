@@ -1,0 +1,39 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<a asp-page="ScheduleSummary">Summary</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>MethodName</th>
+            <th>CronExpression</th>
+            <th>OverideCronExpression</th>
+            <th>Disabled</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ScheduleInfoes)
+        {
+            <tr>
+                <td>@item.MethodName</td>
+                <td>@item.CronExpression</td>
+                <td>@item.OverideCronExpression</td>
+                <td>@item.Disabled</td>
+                <td>
+                    <a class="btn btn-primary" asp-page="Edit" asp-route-methodName="@item.MethodName">編集</a>
+                    <a class="btn btn-primary" asp-page="History" asp-route-methodName="@item.MethodName">実行履歴</a>
+                </td>
+            </tr>
+        }
+
+
+    </tbody>
+
+</table>

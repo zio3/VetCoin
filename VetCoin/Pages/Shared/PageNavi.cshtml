@@ -1,0 +1,67 @@
+﻿@model Services.PagerContext
+<nav>
+    <ul class="pagination">
+        @if (!Model.HasPrev)
+        {
+            <li class="page-item disabled">
+                <span class="page-link">&lt;&lt;</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">&lt;</span>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Model.FirstLink">&lt;&lt;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="@Model.PrevLink">&lt;</a>
+            </li>
+        }
+
+        @foreach (var item in Model.PageLinks)
+        {
+            if (item.PageNumber == Model.CurrentPage)
+            {
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        @item.PageNumber
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" href="@item.LinkUrl">@item.PageNumber</a></li>
+            }
+
+        }
+
+        @if (!Model.HasNext)
+        {
+            <li class="page-item disabled">
+                <span class="page-link">></span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">>></span>
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Model.NextLink">></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="@Model.LastLink">>></a>
+            </li>
+        }
+        <li class="page-item disabled">
+            <span class="page-link">@Model.CurrentPage / @Model.TotalPageCount</span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">@Model.TotalCount 件</span>
+        </li>
+    </ul>
+</nav>

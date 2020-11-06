@@ -1,0 +1,196 @@
+﻿@page
+@model IndexModel
+@inject Services.UrlQueryService UrlQueryService
+@inject Data.ApplicationDbContext DbContext
+
+@{
+    ViewData["Title"] = "Index";
+    var query = Model.TradeQuery.OrderByDescending(c => c.CreateDate);
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 50;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.Trade();
+
+    var ids = pageItems.Select(c => c.Id);
+    var countDic = DbContext.Trades
+        .AsQueryable()
+        .Where(c => ids.Contains(c.Id))
+            .Select(c => new
+            {
+                Id = c.Id,
+                Message = c.TradeMessages.Count(),
+                Suggestion = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Suggestion),
+                Working = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Working),
+                Compilte = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Complete),
+            }).ToDictionary(c => c.Id);
+
+}
+<div class="row">
+    @if (Model.Direction == Data.Direction.Buy)
+    {
+
+        <div class="col-9">
+            <h1>お仕事を探す</h1>
+            <p>お仕事を探すページです。依頼をうけてVECを稼ぐことができます </p>
+        </div>
+
+
+        <div class="col-3">
+            <p>
+                <a asp-page="Create" class="btn btn-primary btn-lg" asp-route-direction="@Model.Direction">働き手を募集する</a>
+            </p>
+        </div>
+
+
+
+    }
+    else if (Model.Direction == Data.Direction.Sell)
+    {
+        <div class="col-8">
+            <h1>商品・サービスを探す</h1>
+
+            <p>「商品・サービスを探す」ページです。VECを消費して商品・サービスを購入できます</p>
+
+        </div>
+
+
+        <div class="col-4">
+            <p>
+                <a asp-page="Create" class="btn btn-primary btn-lg" asp-route-direction="@Model.Direction">自分の商品・サービスを販売する</a>
+            </p>
+        </div>
+
+
+
+    }
+</div>
+
+
+
+
+<form class="form-inline" method="get">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>
+    <input asp-for="Direction" type="hidden" />
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+</form>
+
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            @*<th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.Direction)">
+                        @Html.DisplayNameFor(model => displayNameEntity.Direction)
+                    </a>
+                </th>*@
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Title)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Title)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Reward)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Reward)
+                </a>
+            </th>
+
+            @*<th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.DeliveryDate)">
+                        @Html.DisplayNameFor(model => displayNameEntity.DeliveryDate)
+                    </a>
+                </th>*@
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
+                </a>
+            </th>
+            @*<th>メッセージ件数</th>
+                <th>提案中</th>
+                <th>作業中</th>
+                <th>完了</th>*@
+
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.VetMember.Name)">
+                    @Html.DisplayNameFor(model => displayNameEntity.VetMember)
+                </a>
+            </th>
+            @*<th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.TradeStatus)">
+                        @Html.DisplayNameFor(model => displayNameEntity.TradeStatus)
+                    </a>
+                </th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pageItems)
+        {
+            var countInfo = countDic[item.Id];
+
+            var btnClass = "btn-primary";
+            var btnText = "募集中";
+
+
+
+            if (countInfo.Working != 0)
+            {
+                btnClass = "btn-success";
+                btnText = "作業中";
+            }
+
+            if (countInfo.Compilte != 0)
+            {
+                btnClass = "btn-secondary";
+                btnText = "完了";
+            }
+            <tr>
+
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn @btnClass">@btnText</a>
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Direction)
+                    </td>*@
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reward)
+                    @Html.DisplayFor(modelItem => item.RewardComment)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.DeliveryDate)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                @*<td>
+                        @countInfo.Message
+                    </td>
+                    <td>
+                        @countInfo.Suggestion
+                    </td>
+                    <td>
+                        @countInfo.Working
+                    </td>
+                    <td>
+                        @countInfo.Compilte
+                    </td>*@
+
+            <td>
+                <partial name="MemberTag" model="item.VetMember" />
+            </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.TradeStatus)
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />
