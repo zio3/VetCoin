@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VetCoin.Data
 {
-    public class Trade : ICreate,IUpdate
+    public class Trade : ICreate,IUpdate, IMember
     {
         public int Id { get; set; }
         public int VetMemberId { get; set; }
@@ -51,6 +51,13 @@ namespace VetCoin.Data
 
         public virtual VetMember VetMember { get; set; }
 
+        public virtual ICollection<TradeImage> TradeImages { get; set; }
+
+        [DisplayName("募集継続")]
+        public bool IsContinued { get; set; }
+
+        public DateTimeOffset OrderRefDate { get; set; }
+
     }
 
     public enum Direction
@@ -83,3 +90,5 @@ namespace VetCoin.Data
     }
 
 }
+
+

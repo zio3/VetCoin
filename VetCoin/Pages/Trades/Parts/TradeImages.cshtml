@@ -1,0 +1,19 @@
+﻿@model int
+@inject VetCoin.Data.ApplicationDbContext dbContext
+@{ 
+    var imageIds = dbContext.TradeImages
+        .AsQueryable()
+        .Where(c => c.TradeId == Model)
+        .Select(c=>c.Id)
+        .ToArray();
+}
+<div class="container">
+
+
+    @foreach (var imageId in imageIds)
+    {
+
+        <img src="/api/TradeImages?id=@imageId" alt="" class="img-thumbnail">
+    }
+
+</div>

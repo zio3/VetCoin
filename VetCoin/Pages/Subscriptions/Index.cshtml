@@ -1,0 +1,77 @@
+﻿@page
+@model IndexModel
+@inject Services.UrlQueryService UrlQueryService
+
+@{
+    ViewData["Title"] = "Index";
+    var query = Model.SubscriptionQuery;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 10;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.Subscription();
+}
+
+<h1>Index</h1>
+
+@*<form class="form-inline" method="get">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+</form>*@
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.VetMember)">
+                    @Html.DisplayNameFor(model => displayNameEntity.VetMember.Name)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Title)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Title)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Fee)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Fee)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pageItems) 
+        {
+        <tr>
+            <th>
+                <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+            </th>
+            <th>
+                <partial name="MemberTag" model="item.VetMember" />
+            </th>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />

@@ -5,7 +5,9 @@
 
 @{
     ViewData["Title"] = "Index";
-    var query = Model.TradeQuery.OrderByDescending(c => c.CreateDate);
+    var query = Model.TradeQuery
+        .OrderByDescending(c => c.OrderRefDate)
+        .ThenByDescending(c=>c.CreateDate);
     UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
     UrlQueryService.RowsPerPage = 50;
     var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
@@ -142,7 +144,7 @@
                 btnText = "作業中";
             }
 
-            if (countInfo.Compilte != 0)
+            if (countInfo.Compilte != 0 && !item.IsContinued)
             {
                 btnClass = "btn-secondary";
                 btnText = "完了";

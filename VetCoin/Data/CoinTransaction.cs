@@ -43,6 +43,7 @@ namespace VetCoin.Data
         Contract,
         Transfer,
         DistributionFraction,
+        Subscription,
 
         Other = 100
     }

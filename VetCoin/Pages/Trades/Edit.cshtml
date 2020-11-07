@@ -40,9 +40,10 @@
                 <span asp-validation-for="Trade.DeliveryDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Trade.CreateUser" class="control-label"></label>
-                <input asp-for="Trade.CreateUser" class="form-control" />
-                <span asp-validation-for="Trade.CreateUser" class="text-danger"></span>
+                <label asp-for="Trade.IsContinued" class="control-label"></label>
+                <input asp-for="Trade.IsContinued" />
+                <span asp-validation-for="Trade.IsContinued" class="text-danger"></span>
+                <small id="emailHelp" class="form-text text-muted">継続的に受注を受け続ける場合にチェックを入れてください</small>
             </div>
 
             <div class="form-group">

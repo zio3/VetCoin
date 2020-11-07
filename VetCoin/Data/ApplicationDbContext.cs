@@ -28,13 +28,6 @@ namespace VetCoin.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<VetMember>()
-                .HasData(new VetMember
-                {
-                    Id = 1,
-                    Name = "[System]"
-                });
-
             builder.Entity<CoinTransaction>()
                 .HasOne(c => c.SendVetMember)
                 .WithMany(c => c.SendTransactions)
@@ -72,6 +65,20 @@ namespace VetCoin.Data
                 .HasForeignKey(c => c.VetMemberId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder.Entity<SubscriptionMember>()
+                    .HasKey(t => new { t.VetMemberId, t.SubscriptionId });
+
+            builder.Entity<SubscriptionMember>()
+                .HasOne(c => c.VetMember)
+                .WithMany()
+                .HasForeignKey(c => c.VetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<SubscriptionMember>()
+                .HasOne(c => c.Subscription)
+                .WithMany()
+                .HasForeignKey(c => c.SubscriptionId)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
         }
 
@@ -89,6 +96,13 @@ namespace VetCoin.Data
         public DbSet<TradeMessage> TradeMessages { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<ContractMessage> ContractMessage { get; set; }
+
+        public DbSet<TradeImage> TradeImages { get; set; }
+        public DbSet<ContractImage> ContractImages { get; set; }
+
+        public DbSet<Subscription> Subscriptions { get; set; }
+
+        public DbSet<SubscriptionMember> SubscriptionMembers { get; set; }
 
         public override int SaveChanges()
         {

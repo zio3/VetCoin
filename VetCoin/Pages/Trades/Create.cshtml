@@ -73,6 +73,15 @@ else
                 <select asp-for="Trade.ConsultationRequest" class="form-control" asp-items="Html.GetEnumSelectList(typeof(VetCoin.Data.ConsultationRequest))"></select>
                 <span asp-validation-for="Trade.ConsultationRequest" class="text-danger"></span>
             </div>
+
+
+            <div class="form-group">
+                <label asp-for="Trade.IsContinued" class="control-label"></label>
+                <input asp-for="Trade.IsContinued" />
+                <span asp-validation-for="Trade.IsContinued" class="text-danger"></span>
+                <small id="emailHelp" class="form-text text-muted">継続的に受注を受け続ける場合にチェックを入れてください</small>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

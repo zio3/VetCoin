@@ -24,6 +24,7 @@
         @if (Model.IsOwner)
         {
             <a asp-page="./Edit" asp-route-id="@Model.Trade.Id" class="btn btn-primary">編集</a>
+            <a asp-page="./Images" asp-route-id="@Model.Trade.Id" class="btn btn-primary">画像</a>
             <a asp-page="./Delete" asp-route-id="@Model.Trade.Id" class="btn btn-primary">キャンセル</a>
         }
         else
@@ -90,6 +91,10 @@
         <dd class="col-sm-10">
             <partial name="MemberTag" model="Model.Trade.VetMember" />
         </dd>
+        <dd class="col-sm-12">
+            <partial name="Parts/TradeImages" model="Model.Trade.Id" />
+        </dd>
+
     </dl>
 </div>
 

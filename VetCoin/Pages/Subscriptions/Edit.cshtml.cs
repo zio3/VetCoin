@@ -2,29 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VetCoin.Data;
-using VetCoin.Services;
 
-namespace VetCoin.Pages.Trades
+namespace VetCoin.Pages.Subscriptions
 {
     public class EditModel : PageModel
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
-        private readonly CoreService CoreService;
 
-        public EditModel(ApplicationDbContext context, CoreService coreService)
+        public EditModel(VetCoin.Data.ApplicationDbContext context)
         {
             DbContext = context;
-            CoreService = coreService;
         }
 
         [BindProperty]
-        public Trade Trade { get; set; }
+        public Subscription Subscription { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -33,16 +29,11 @@ namespace VetCoin.Pages.Trades
                 return NotFound();
             }
 
-            Trade = await DbContext.Trades
-                .Include(t => t.VetMember).FirstOrDefaultAsync(m => m.Id == id);
+            Subscription = await DbContext.Subscriptions
+                .AsQueryable()
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            var userContext = CoreService.GetUserContext();
-            if(Trade.VetMemberId != userContext.CurrentUser.Id)
-            {
-                return NotFound();
-            }
-
-            if (Trade == null)
+            if (Subscription == null)
             {
                 return NotFound();
             }
@@ -56,14 +47,11 @@ namespace VetCoin.Pages.Trades
                 return Page();
             }
 
-            var entity = DbContext.Trades.Find(Trade.Id);
-            var userContext = CoreService.GetUserContext();
-            if (entity.VetMemberId != userContext.CurrentUser.Id)
-            {
-                return NotFound();
-            }
+            //DbContext.Attach(Subscription).State = EntityState.Modified;
 
-            await TryUpdateModelAsync(entity, nameof(Trade));
+            var entity = DbContext.Subscriptions.Find(Subscription.Id);
+            await TryUpdateModelAsync(entity, nameof(Subscription));
+
 
             try
             {
@@ -71,7 +59,7 @@ namespace VetCoin.Pages.Trades
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TradeExists(entity.Id))
+                if (!SubscriptionExists(Subscription.Id))
                 {
                     return NotFound();
                 }
@@ -84,9 +72,9 @@ namespace VetCoin.Pages.Trades
             return RedirectToPage("./Index");
         }
 
-        private bool TradeExists(int id)
+        private bool SubscriptionExists(int id)
         {
-            return DbContext.Trades.Any(e => e.Id == id);
+            return DbContext.Subscriptions.Any(e => e.Id == id);
         }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetCoin.Data;
 
 namespace VetCoin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201106235942_migration7124")]
+    partial class migration7124
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,26 +124,6 @@ namespace VetCoin.Migrations
                     b.ToTable("Contracts");
                 });
 
-            modelBuilder.Entity("VetCoin.Data.ContractImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("ImageContent")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("ContractImages");
-                });
-
             modelBuilder.Entity("VetCoin.Data.ContractMessage", b =>
                 {
                     b.Property<int>("Id")
@@ -232,73 +214,6 @@ namespace VetCoin.Migrations
                     b.ToTable("ScheduledExecutionLogs");
                 });
 
-            modelBuilder.Entity("VetCoin.Data.Subscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("CreateDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreateUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Fee")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubscriptionStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("UpdateDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VetMemberId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VetMemberId");
-
-                    b.ToTable("Subscriptions");
-                });
-
-            modelBuilder.Entity("VetCoin.Data.SubscriptionMember", b =>
-                {
-                    b.Property<int>("VetMemberId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubscriptionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreateDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreateUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SubscriptionId1")
-                        .HasColumnType("int");
-
-                    b.HasKey("VetMemberId", "SubscriptionId");
-
-                    b.HasIndex("SubscriptionId");
-
-                    b.HasIndex("SubscriptionId1");
-
-                    b.ToTable("SubscriptionMembers");
-                });
-
             modelBuilder.Entity("VetCoin.Data.Trade", b =>
                 {
                     b.Property<int>("Id")
@@ -360,26 +275,6 @@ namespace VetCoin.Migrations
                     b.ToTable("Trades");
                 });
 
-            modelBuilder.Entity("VetCoin.Data.TradeImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<byte[]>("ImageContent")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("TradeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TradeId");
-
-                    b.ToTable("TradeImages");
-                });
-
             modelBuilder.Entity("VetCoin.Data.TradeMessage", b =>
                 {
                     b.Property<int>("Id")
@@ -433,6 +328,15 @@ namespace VetCoin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VetMembers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DiscordId = 0m,
+                            MemberType = 0,
+                            Name = "[System]"
+                        });
                 });
 
             modelBuilder.Entity("VetCoin.Data.CoinTransaction", b =>
@@ -470,15 +374,6 @@ namespace VetCoin.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VetCoin.Data.ContractImage", b =>
-                {
-                    b.HasOne("VetCoin.Data.Contract", "Contract")
-                        .WithMany("ContractImages")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("VetCoin.Data.ContractMessage", b =>
                 {
                     b.HasOne("VetCoin.Data.Contract", "Contract")
@@ -494,48 +389,11 @@ namespace VetCoin.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VetCoin.Data.Subscription", b =>
-                {
-                    b.HasOne("VetCoin.Data.VetMember", "VetMember")
-                        .WithMany()
-                        .HasForeignKey("VetMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VetCoin.Data.SubscriptionMember", b =>
-                {
-                    b.HasOne("VetCoin.Data.Subscription", "Subscription")
-                        .WithMany()
-                        .HasForeignKey("SubscriptionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("VetCoin.Data.Subscription", null)
-                        .WithMany("SubscriptionMembers")
-                        .HasForeignKey("SubscriptionId1");
-
-                    b.HasOne("VetCoin.Data.VetMember", "VetMember")
-                        .WithMany()
-                        .HasForeignKey("VetMemberId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("VetCoin.Data.Trade", b =>
                 {
                     b.HasOne("VetCoin.Data.VetMember", "VetMember")
                         .WithMany()
                         .HasForeignKey("VetMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VetCoin.Data.TradeImage", b =>
-                {
-                    b.HasOne("VetCoin.Data.Trade", "Trade")
-                        .WithMany("TradeImages")
-                        .HasForeignKey("TradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

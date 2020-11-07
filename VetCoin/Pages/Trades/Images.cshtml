@@ -1,0 +1,43 @@
+﻿@page
+@model VetCoin.Pages.Trades.ImagesModel
+@{
+}
+<h1>画像</h1>
+
+<h4>画像追加</h4>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="mode" value="add" />
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label">画像</label>
+                <input asp-for="ImageFile" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<h4>画像一覧</h4>
+
+<table class="table">
+    @foreach (var imageId in Model.ImageIds)
+    {
+        <tr>
+            <td><img src="/api/TradeImages?id=@imageId" alt="" class="img-thumbnail"></td>
+            <td>
+                <form method="post">
+                    <input type="hidden" name="mode" value="remove" />
+                    <input type="hidden" name="imageId" value="@imageId" />
+                    <button type="submit" class="btn btn-danger">削除</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>

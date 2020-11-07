@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetCoin.Data;
 
 namespace VetCoin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201107034022_migration17589")]
+    partial class migration17589
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,9 +253,6 @@ namespace VetCoin.Migrations
                     b.Property<int>("Fee")
                         .HasColumnType("int");
 
-                    b.Property<int>("SubscriptionStatus")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -263,12 +262,7 @@ namespace VetCoin.Migrations
                     b.Property<string>("UpdateUser")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VetMemberId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("VetMemberId");
 
                     b.ToTable("Subscriptions");
                 });
@@ -491,15 +485,6 @@ namespace VetCoin.Migrations
                         .WithMany()
                         .HasForeignKey("VetMemberId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VetCoin.Data.Subscription", b =>
-                {
-                    b.HasOne("VetCoin.Data.VetMember", "VetMember")
-                        .WithMany()
-                        .HasForeignKey("VetMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

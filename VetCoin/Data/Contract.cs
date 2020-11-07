@@ -49,6 +49,8 @@ namespace VetCoin.Data
         public virtual Trade Trade { get; set; }
 
         public virtual ICollection<ContractMessage> ContractMessages { get; set; }
+
+        public virtual ICollection<ContractImage> ContractImages { get; set; }
     }
 
     public enum ContractStatus

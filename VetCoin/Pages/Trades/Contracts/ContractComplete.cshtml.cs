@@ -98,6 +98,12 @@ namespace VetCoin.Pages.Trades.Contracts
 
             entity.EscrowTransaction.RecivedVetMemberId = escrowReciveUser.Id;
 
+
+            if (trade.IsContinued)
+            {
+                trade.OrderRefDate = DateTimeOffset.Now;
+            }
+
             try
             {
                 await DbContext.SaveChangesAsync();

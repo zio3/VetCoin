@@ -52,6 +52,7 @@ namespace VetCoin.Pages.Trades
 
             var userContext = CoreService.GetUserContext();
             Trade.VetMemberId = userContext.CurrentUser.Id;
+            Trade.OrderRefDate = DateTimeOffset.Now;
 
             DbContext.Trades.Add(Trade);
             await DbContext.SaveChangesAsync();
