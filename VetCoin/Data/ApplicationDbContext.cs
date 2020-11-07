@@ -75,7 +75,7 @@ namespace VetCoin.Data
                 .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<SubscriptionMember>()
                 .HasOne(c => c.Subscription)
-                .WithMany()
+                .WithMany(c=>c.SubscriptionMembers)
                 .HasForeignKey(c => c.SubscriptionId)
                 .OnDelete(DeleteBehavior.NoAction);
 

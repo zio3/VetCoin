@@ -12,7 +12,7 @@
     var pagerContext = pageUrlContext.GetPagerContext();
     var displayNameEntity = new VetCoin.Data.Subscription();
 
-    var ids = pageItems.Select(c => c.Id);
+    var ids = pageItems.Select(c => c.Id).ToArray();
 
     var countDic = DbContext.Subscriptions
 .AsQueryable()
