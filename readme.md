@@ -2,10 +2,10 @@
 とあるコミュニティのコミュニティ通貨管理です。
 
 ### 動作させるには？
-VisualStudio 2019(Comunity以上)
-VisualStudioCode
+- VisualStudio 2019(Comunity以上)
+- VisualStudioCode
 
-のいずれかを利用すれば動作させれると思います。
+上記いずれかを利用すれば動作させれると思います。
 
 ### 作業にあたって
 機密情報を利用する開発は、開発者に相談してください。
