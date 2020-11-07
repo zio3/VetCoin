@@ -20,52 +20,6 @@
 </table>
 <a asp-page="Edit">名前変更はこちら</a>
 
-<h3>送受金記録</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>日時</th>
-            <th>送信者</th>
-            <th>受信者</th>
-            <th>送金</th>
-            <th>受金</th>
-            <th>メッセージ</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Transactions)
-        {
-
-            <tr>
-                <td>@Html.DisplayFor(c => item.CreateDate)</td>
-                <td>
-                    <partial name="MemberTag" model="item.SendVetMember" />
-                </td>
-
-                <td>
-                    <partial name="MemberTag" model="item.RecivedVetMember" />
-                </td>
-                <td class="num">
-                    @if (item.SendVetMember.Id == Model.UserContext.CurrentUser.Id)
-                    {
-                        <span>@item.Amount</span>
-                    }
-                </td>
-                <td class="num">
-                    @if (item.RecivedVetMember.Id == Model.UserContext.CurrentUser.Id)
-                    {
-                        <span>@item.Amount</span>
-                    }
-                </td>
-                <td>
-                    @item.Text
-                </td>
-            </tr>
-        }
-
-    </tbody>
-</table><a>続きを見る(未実装)</a>
-
 <hr />
 <h3>あなたの依頼</h3>
 <table class="table">
@@ -254,3 +208,50 @@
 </table>
 
 <a>続きを見る(未実装)</a>
+<hr />
+
+<h3>送受金記録</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>日時</th>
+            <th>送信者</th>
+            <th>受信者</th>
+            <th>送金</th>
+            <th>受金</th>
+            <th>メッセージ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Transactions)
+        {
+
+            <tr>
+                <td>@Html.DisplayFor(c => item.CreateDate)</td>
+                <td>
+                    <partial name="MemberTag" model="item.SendVetMember" />
+                </td>
+
+                <td>
+                    <partial name="MemberTag" model="item.RecivedVetMember" />
+                </td>
+                <td class="num">
+                    @if (item.SendVetMember.Id == Model.UserContext.CurrentUser.Id)
+                    {
+                        <span>@item.Amount</span>
+                    }
+                </td>
+                <td class="num">
+                    @if (item.RecivedVetMember.Id == Model.UserContext.CurrentUser.Id)
+                    {
+                        <span>@item.Amount</span>
+                    }
+                </td>
+                <td>
+                    @item.Text
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table><a>続きを見る(未実装)</a>

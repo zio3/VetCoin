@@ -57,8 +57,14 @@ namespace VetCoin.Pages.Trades
             DbContext.Trades.Add(Trade);
             await DbContext.SaveChangesAsync();
 
-            await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, $@"Title:{Trade.Title}
-From:{userContext.CurrentUser.Name}
+
+
+
+            await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, $@"{Trade.Direction}
+タイトル:{Trade.Title}
+依頼主:{userContext.CurrentUser.Name}
+料金:{Trade.Reward} {Trade.RewardComment}
+納期:{Trade.DeliveryDate}
 
 {Trade.Content}
 
