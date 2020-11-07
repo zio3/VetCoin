@@ -32,6 +32,12 @@ namespace VetCoin.Pages.Subscriptions
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if(Subscription.Fee <= 0)
+            {
+                ModelState.AddModelError("Fee", "1以上の金額を指定してください");
+            }
+
+
             if (!ModelState.IsValid)
             {
                 return Page();

@@ -28,21 +28,6 @@ else
 </form>
 }
 
-<form method="post">
-    @if (Model.IsSubscribedUser)
-    {
-        <input type="hidden" name="mode" value="unsubscribe" />
-        <button type="submit" class="btn btn-primary">登録解除</button>
-    }
-    else
-    {
-        <input type="hidden" name="mode" value="subscribe" />
-        <button type="submit" class="btn btn-primary">登録</button>
-    }
-</form>
-
-
-
 <div>
     <h4>Subscription</h4>
     <hr />
@@ -104,6 +89,5 @@ else
 </table>
 
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Subscription.Id">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>

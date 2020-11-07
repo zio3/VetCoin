@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @inject Services.UrlQueryService UrlQueryService
-
+@inject Data.ApplicationDbContext DbContext
 @{
     ViewData["Title"] = "Index";
     var query = Model.SubscriptionQuery;
@@ -11,18 +11,31 @@
     var pageItems = UrlQueryService.PageRows(query);
     var pagerContext = pageUrlContext.GetPagerContext();
     var displayNameEntity = new VetCoin.Data.Subscription();
+
+    var ids = pageItems.Select(c => c.Id);
+
+    var countDic = DbContext.Subscriptions
+.AsQueryable()
+.Where(c => ids.Contains(c.Id))
+.Select(c => new
+{
+    Id = c.Id,
+    SubscribeCount = c.SubscriptionMembers.Count(),
+}).ToDictionary(c => c.Id);
+
+
 }
 
 <h1>Index</h1>
 
 @*<form class="form-inline" method="get">
-    <div class="form-group mb-2">
-        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
-    </div>
-    <button type="submit" class="btn btn-primary mb-2">検索</button>
-</form>*@
+        <div class="form-group mb-2">
+            <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">検索</button>
+    </form>*@
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create" class="btn btn-primary">新規作成</a>
 </p>
 <partial name="PageNavi" model="pagerContext" />
 <table class="table">
@@ -45,6 +58,9 @@
                 </a>
             </th>
             <th>
+                登録者数
+            </th>
+            <th>
                 <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateDate)">
                     @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
                 </a>
@@ -52,8 +68,9 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in pageItems) 
+        @foreach (var item in pageItems)
         {
+            var countInfo = countDic[item.Id];
         <tr>
             <th>
                 <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
@@ -68,10 +85,13 @@
                 @Html.DisplayFor(modelItem => item.Fee)
             </td>
             <td>
+                @countInfo.SubscribeCount
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.CreateDate)
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
 <partial name="PageNavi" model="pagerContext" />

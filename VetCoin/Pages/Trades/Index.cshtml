@@ -44,17 +44,12 @@
                 <a asp-page="Create" class="btn btn-primary btn-lg" asp-route-direction="@Model.Direction">働き手を募集する</a>
             </p>
         </div>
-
-
-
     }
     else if (Model.Direction == Data.Direction.Sell)
     {
         <div class="col-8">
             <h1>商品・サービスを探す</h1>
-
             <p>「商品・サービスを探す」ページです。VECを消費して商品・サービスを購入できます</p>
-
         </div>
 
 
@@ -63,9 +58,6 @@
                 <a asp-page="Create" class="btn btn-primary btn-lg" asp-route-direction="@Model.Direction">自分の商品・サービスを販売する</a>
             </p>
         </div>
-
-
-
     }
 </div>
 

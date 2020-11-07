@@ -16,6 +16,7 @@ namespace VetCoin.Data
 
         public string Content { get; set; }
 
+        [DisplayName("月額料金")]
         public int Fee { get; set; }
 
         public virtual ICollection<SubscriptionMember> SubscriptionMembers { get; set; }

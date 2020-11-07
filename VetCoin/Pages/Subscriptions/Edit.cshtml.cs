@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VetCoin.Data;
+using VetCoin.Services;
 
 namespace VetCoin.Pages.Subscriptions
 {
@@ -14,13 +15,15 @@ namespace VetCoin.Pages.Subscriptions
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public EditModel(VetCoin.Data.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context, CoreService coreService)
         {
             DbContext = context;
+            CoreService = coreService;
         }
 
         [BindProperty]
         public Subscription Subscription { get; set; }
+        public CoreService CoreService { get; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,6 +35,15 @@ namespace VetCoin.Pages.Subscriptions
             Subscription = await DbContext.Subscriptions
                 .AsQueryable()
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
+            var userContext = CoreService.GetUserContext();
+            if (Subscription.VetMemberId != userContext.CurrentUser.Id)
+            {
+                return NotFound();
+            }
+
+
 
             if (Subscription == null)
             {

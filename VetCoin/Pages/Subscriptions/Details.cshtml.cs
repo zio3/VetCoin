@@ -93,7 +93,7 @@ namespace VetCoin.Pages.Subscriptions
             });
             await DbContext.SaveChangesAsync();
 
-            await CoreService.SendDirectMessage(new[] { subscription.VetMember }, $@"{userContext.CurrentUser.Name}さんが{Subscription.Title}に登録されました");
+            await CoreService.SendDirectMessage(new[] { subscription.VetMember }, $@"{userContext.CurrentUser.Name}さんが{subscription.Title}に登録されました");
 
             return await OnGetAsync(id);
         }
@@ -101,7 +101,7 @@ namespace VetCoin.Pages.Subscriptions
         public async Task<IActionResult> Unsubscribe(int id)
         {
             var userContext = CoreService.GetUserContext();
-            var ss = DbContext.Subscriptions
+            var subscription = DbContext.Subscriptions
                 .Include(c => c.VetMember)
                 .FirstOrDefault(c => c.Id == id);
 
@@ -111,7 +111,7 @@ namespace VetCoin.Pages.Subscriptions
             await DbContext.SaveChangesAsync();
 
 
-            await CoreService.SendDirectMessage(new[] { ss.VetMember }, $@"{userContext.CurrentUser.Name}さんが{Subscription.Title}の登録を解除しました");
+            await CoreService.SendDirectMessage(new[] { subscription.VetMember }, $@"{userContext.CurrentUser.Name}さんが{subscription.Title}の登録を解除しました");
 
             return await OnGetAsync(id);
         }
