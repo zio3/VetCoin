@@ -85,6 +85,16 @@ namespace VetCoin.Services.HostedServices
                 amount = 50;
             }
 
+            if (arg3.Emote.Name == "100vec")
+            {
+                amount = 100;
+            }
+
+            if (arg3.Emote.Name == "500vec")
+            {
+                amount = 500;
+            }
+
             if (amount == 0)
             {
                 return;
