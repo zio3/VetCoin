@@ -82,28 +82,19 @@ namespace VetCoin.Pages.Trades
             return await OnGetAsync(id);
         }
 
-
-        private async Task<VetMember[]> GetStakeHolders(int id)
-        {
-            var tradeMember = DbContext.Trades.AsQueryable().Where(c => c.Id == id).Select(c => c.VetMember);
-            var messageMembers = DbContext.TradeMessages.AsQueryable().Where(c => c.TradeId == id).Select(c => c.VetMember);
-
-            var stakeHolders = tradeMember.Concat(messageMembers).Distinct();
-            return await stakeHolders.ToArrayAsync();
-        }
-
         private async Task SendMessages(Trade trade, VetMember sender,string message)
         {
-            var stakeHolders = await GetStakeHolders(trade.Id);
+            var senderIsOwner = trade.VetMemberId == sender.Id;
 
+            var messageTargets =
+                senderIsOwner ? DbContext.TradeMessages.AsQueryable().Where(c => c.TradeId == trade.Id).Select(c => c.VetMember).ToArray()
+                            : new[] { Trade.VetMember };
 
             var dmMessage = $@"
 メッセージ元:{trade.Title}
 URL:https://vetcoin.azurewebsites.net/Trades/Details?id={trade.Id}
 差出人:{sender.Name}
 {message}";
-
-            var messageTargets = stakeHolders.Where(c => c.Id != sender.Id).ToArray();
 
             await CoreService.SendDirectMessage(messageTargets, dmMessage);
 

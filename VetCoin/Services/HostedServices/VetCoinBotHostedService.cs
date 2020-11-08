@@ -116,8 +116,9 @@ namespace VetCoin.Services.HostedServices
 
             using (var scope = Services.CreateScope())
             {
+                var junmUrl = message.GetJumpUrl();
                 var service = ActivatorUtilities.CreateInstance<ReactionSendService>(scope.ServiceProvider);
-                await service.SendCoin(fromId, toId, amount, fromDmChannel, toDmChannel);
+                await service.SendCoin(fromId, toId, amount, fromDmChannel, toDmChannel, junmUrl);
             }
 
 
@@ -387,7 +388,7 @@ namespace VetCoin.Services.HostedServices
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
 
-        public async Task SendCoin(ulong fromId, ulong toId, int amount, IDMChannel fromDmChannel, IDMChannel toDmChannel)
+        public async Task SendCoin(ulong fromId, ulong toId, int amount, IDMChannel fromDmChannel, IDMChannel toDmChannel,string jumpUrl)
         {
             var fromMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == fromId);
             if (fromMember == null)
@@ -426,7 +427,8 @@ namespace VetCoin.Services.HostedServices
                 {
                     await fromDmChannel.SendMessageAsync($@"{toMember.Name} へ {amount} VEC を送金しました");
                 }
-                await toDmChannel.SendMessageAsync($@"{fromMember.Name} から {amount} VEC をもらいました(Reaction)");
+                await toDmChannel.SendMessageAsync($@"{fromMember.Name} から {amount} VEC をもらいました(Reaction)
+{jumpUrl}");
             }
             catch
             {

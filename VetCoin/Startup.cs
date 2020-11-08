@@ -96,6 +96,8 @@ namespace VetCoin
             services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
 #endif
 
+            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
+
 
         }
 

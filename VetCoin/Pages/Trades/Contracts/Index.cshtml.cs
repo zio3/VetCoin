@@ -84,11 +84,8 @@ namespace VetCoin.Pages.Trades.Contracts
         {
             var contractMember = DbContext.Contracts.AsQueryable().Where(c => c.Id == id).Select(c => c.VetMember);
             var tradeMember = DbContext.Contracts.AsQueryable().Where(c => c.Id == id).Select(c => c.Trade.VetMember);
-            var messageMembers = DbContext.TradeMessages.AsQueryable().Where(c => c.TradeId == id).Select(c => c.VetMember);
-
-            var stakeHolders = contractMember.Concat(tradeMember).Concat(messageMembers).Distinct();
-
-
+            
+            var stakeHolders = contractMember.Concat(tradeMember).Distinct();
             return await stakeHolders.ToArrayAsync();
         }
 
