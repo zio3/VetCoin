@@ -54,7 +54,7 @@ namespace VetCoin.Services.HostedServices
             string token = Configuration.GetValue<string>("DiscordBotToken");
 
             //トークンが取得出来ない場合、BOTは活動しません。
-            if(string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
             {
                 return;
             }
@@ -75,7 +75,7 @@ namespace VetCoin.Services.HostedServices
         private async Task _client_ReactionAdded(Cacheable<IUserMessage, ulong> arg1, ISocketMessageChannel arg2, SocketReaction arg3)
         {
             var amount = 0;
-            if(arg3.Emote.Name == "10")
+            if (arg3.Emote.Name == "10")
             {
                 amount = 10;
             }
@@ -182,7 +182,7 @@ namespace VetCoin.Services.HostedServices
                     using (var scope = Services.CreateScope())
                     {
                         var service = ActivatorUtilities.CreateInstance<SuperChatService>(scope.ServiceProvider);
-                        await service.PostSuperChat(message.Channel, message.Author.Id,toId, amount, messageText, fromDmChannel, toDmChannel);
+                        await service.PostSuperChat(message.Channel, message.Author.Id, toId, amount, messageText, fromDmChannel, toDmChannel);
                     }
                 }
                 else
@@ -215,17 +215,17 @@ namespace VetCoin.Services.HostedServices
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
 
-        public async Task PostSuperChat(ISocketMessageChannel channel,ulong fromId,ulong toId,int amount,string message, IDMChannel fromDmChannel, IDMChannel toDmChannel)
+        public async Task PostSuperChat(ISocketMessageChannel channel, ulong fromId, ulong toId, int amount, string message, IDMChannel fromDmChannel, IDMChannel toDmChannel)
         {
             var fromMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == fromId);
-            if(fromMember == null)
+            if (fromMember == null)
             {
                 await fromDmChannel.SendMessageAsync("VetCoin 登録者以外はSuperChatを送信できません");
                 return;
             }
-            
+
             var fromAmount = CoreService.CalcAmount(fromMember);
-            if(fromAmount < amount)
+            if (fromAmount < amount)
             {
                 await fromDmChannel.SendMessageAsync($"VEC残高が不足しています。({fromAmount}VEC)");
                 return;
@@ -238,7 +238,7 @@ namespace VetCoin.Services.HostedServices
             }
 
 
-            if ( amount > 50000)
+            if (amount > 50000)
             {
                 await fromDmChannel.SendMessageAsync($"送金上限は50000VECです。それ以上は送れません");
                 return;
@@ -252,11 +252,18 @@ namespace VetCoin.Services.HostedServices
                 //toMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == 287434171570192384);
             }
 
+            var toAmount = CoreService.CalcAmount(toMember);
+            if (toMember.Id == fromMember.Id)
+            {   //念のため同一人物の対応
+                toAmount += amount;
+                fromAmount -= amount;
+            }
+
             try
             {
 
-                await fromDmChannel.SendMessageAsync($@"{toMember.Name}へ{amount}VEC 送金しました");
-                await toDmChannel.SendMessageAsync($@"{fromMember.Name}から{amount}VEC をもらいました(SuperChat)");
+                await fromDmChannel.SendMessageAsync($@"SuperChat:{toMember.Name}へ{amount}VEC 送金しました [{toAmount - amount}vec]");
+                await toDmChannel.SendMessageAsync($@"SuperChat:{fromMember.Name}から{amount}VEC をもらいました [{fromAmount + amount}vec]");
 
                 DbContext.CoinTransactions.Add(new CoinTransaction
                 {
@@ -289,19 +296,19 @@ namespace VetCoin.Services.HostedServices
         {
             HttpClient hc = new HttpClient();
             var tmpFilePath = Path.GetTempPath();
-            var imageFilePath = Path.Combine(tmpFilePath,$"{member.DiscordId}_{member.AvatarId}.png");
+            var imageFilePath = Path.Combine(tmpFilePath, $"{member.DiscordId}_{member.AvatarId}.png");
 
             if (!File.Exists(imageFilePath))
             {
                 var url = $"https://cdn.discordapp.com/avatars/{member.DiscordId}/{member.AvatarId}.png?size=128";
                 var bytes = await hc.GetByteArrayAsync(url);
 
-                await File.WriteAllBytesAsync(imageFilePath,bytes);
+                await File.WriteAllBytesAsync(imageFilePath, bytes);
             }
             return imageFilePath;
         }
 
-        public async Task<MemoryStream> CreateImage(VetMember from,VetMember to,int amount)
+        public async Task<MemoryStream> CreateImage(VetMember from, VetMember to, int amount)
         {
             var colorCode = AmountToColor(amount);
 
@@ -315,7 +322,7 @@ namespace VetCoin.Services.HostedServices
                 //var  hc.GetByteArrayAsync($"https://cdn.discordapp.com/avatars/{from.DiscordId}/{from.AvatarId}.png?size=128"));
                 var tmpFilePath = Path.GetTempPath();
                 var fromImageFilePath = await GetImagePath(from);
-                var toImageFilePath = await GetImagePath(to);               
+                var toImageFilePath = await GetImagePath(to);
 
                 using (var icon = new ImageMagick.MagickImage(fromImageFilePath))
                 {
@@ -342,7 +349,7 @@ namespace VetCoin.Services.HostedServices
               .Draw(myMagick);
 
                 MemoryStream ms = new MemoryStream();
-                myMagick.Write(ms,MagickFormat.Png);
+                myMagick.Write(ms, MagickFormat.Png);
 
                 ms.Seek(0, SeekOrigin.Begin);
                 return ms;
@@ -398,7 +405,7 @@ namespace VetCoin.Services.HostedServices
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
 
-        public async Task SendCoin(ulong fromId, ulong toId, int amount, IDMChannel fromDmChannel, IDMChannel toDmChannel,string jumpUrl)
+        public async Task SendCoin(ulong fromId, ulong toId, int amount, IDMChannel fromDmChannel, IDMChannel toDmChannel, string jumpUrl)
         {
             var fromMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == fromId);
             if (fromMember == null)
@@ -422,6 +429,14 @@ namespace VetCoin.Services.HostedServices
                 //toMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == 287434171570192384);
             }
 
+            var toAmount = CoreService.CalcAmount(toMember);
+
+            if (toMember.Id == fromMember.Id)
+            {   //念のため同一人物の対応
+                toAmount += amount;
+                fromAmount -= amount;
+            }
+
             try
             {
                 DbContext.CoinTransactions.Add(new CoinTransaction
@@ -435,9 +450,9 @@ namespace VetCoin.Services.HostedServices
                 await DbContext.SaveChangesAsync();
                 if (fromDmChannel != null)
                 {
-                    await fromDmChannel.SendMessageAsync($@"{toMember.Name} へ {amount} VEC を送金しました");
+                    await fromDmChannel.SendMessageAsync($@"Reaction:{toMember.Name} へ {amount} VEC を送金しました[{toAmount - amount}vec]");
                 }
-                await toDmChannel.SendMessageAsync($@"{fromMember.Name} から {amount} VEC をもらいました(Reaction)
+                await toDmChannel.SendMessageAsync($@"Reaction: {fromMember.Name} から {amount} VEC をもらいました[{fromAmount + amount}vec]
 {jumpUrl}");
             }
             catch
