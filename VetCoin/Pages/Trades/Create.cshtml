@@ -83,6 +83,13 @@ else
             </div>
 
             <div class="form-group">
+                <label asp-for="IsSkipNotification" class="control-label"></label>
+                <input asp-for="IsSkipNotification" />
+                <span asp-validation-for="IsSkipNotification" class="text-danger"></span>
+                <small id="emailHelp" class="form-text text-muted">依頼相手が決まっているなど、全体通知を行わない場合にチェックを入れてください</small>
+            </div>
+
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

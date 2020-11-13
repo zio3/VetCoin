@@ -58,6 +58,11 @@ namespace VetCoin.Data
 
         public DateTimeOffset OrderRefDate { get; set; }
 
+        public Trade Clone()
+        {
+            return this.MemberwiseClone() as Trade;
+        }
+
     }
 
     public enum Direction

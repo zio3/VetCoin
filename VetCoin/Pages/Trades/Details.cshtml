@@ -36,11 +36,14 @@
         {
             <a asp-page="./Contracts/Create" asp-route-tradeId="@Model.Trade.Id" class="btn btn-primary">取引提案[デバッグ用]</a>
         }
-
-
     }
-    <a asp-page="./Index">Back to List</a>
-</div>
+    @if (Model.IsOwner)
+    {
+        <a asp-page="./Create" asp-route-cloneSrcId="@Model.Trade.Id" class="btn btn-primary">依頼再作成</a>
+    }
+
+        <a asp-page="./Index">Back to List</a>
+    </div>
 
 <div>
     <h4>Trade</h4>

@@ -186,7 +186,7 @@
                     <partial name="MemberTag" model="contract.Trade.VetMember" />
                 </td>
                 <td>
-                    <a asp-page="/Trades/Contracts/Index" asp-route-contractId="@contract.Trade.Id">
+                    <a asp-page="/Trades/Contracts/Index" asp-route-contractId="@contract.Id">
                         @Html.DisplayFor(modelItem => contract.Trade.Title)
                     </a>
                 </td>
