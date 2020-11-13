@@ -252,11 +252,13 @@ namespace VetCoin.Services.HostedServices
                 //toMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == 287434171570192384);
             }
 
+            var toAmount = CoreService.CalcAmount(toMember);
+
             try
             {
 
-                await fromDmChannel.SendMessageAsync($@"{toMember.Name}へ{amount}VEC 送金しました");
-                await toDmChannel.SendMessageAsync($@"{fromMember.Name}から{amount}VEC をもらいました(SuperChat)");
+                await fromDmChannel.SendMessageAsync($@"SuperChat:{toMember.Name}へ{amount}VEC 送金しました [{toAmount-amount}vec]");
+                await toDmChannel.SendMessageAsync($@"SuperChat:{fromMember.Name}から{amount}VEC をもらいました [{fromAmount + amount}vec]");
 
                 DbContext.CoinTransactions.Add(new CoinTransaction
                 {
@@ -422,6 +424,8 @@ namespace VetCoin.Services.HostedServices
                 //toMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == 287434171570192384);
             }
 
+            var toAmount = CoreService.CalcAmount(toMember);
+
             try
             {
                 DbContext.CoinTransactions.Add(new CoinTransaction
@@ -435,9 +439,9 @@ namespace VetCoin.Services.HostedServices
                 await DbContext.SaveChangesAsync();
                 if (fromDmChannel != null)
                 {
-                    await fromDmChannel.SendMessageAsync($@"{toMember.Name} へ {amount} VEC を送金しました");
+                    await fromDmChannel.SendMessageAsync($@"Reaction:{toMember.Name} へ {amount} VEC を送金しました[{toAmount - amount}vec]");
                 }
-                await toDmChannel.SendMessageAsync($@"{fromMember.Name} から {amount} VEC をもらいました(Reaction)
+                await toDmChannel.SendMessageAsync($@"Reaction: {fromMember.Name} から {amount} VEC をもらいました[{fromAmount + amount}vec]
 {jumpUrl}");
             }
             catch
