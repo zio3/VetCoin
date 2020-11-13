@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,12 @@ namespace VetCoin.Pages.Trades
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
         private readonly CoreService CoreService;
 
+        [BindProperty(SupportsGet =true)]
         public Direction? Direction { get; set; }
+
+        [BindProperty]
+        [DisplayName("通知不要")]
+        public bool IsSkipNotification { get; set; }
 
         public CreateModel(ApplicationDbContext context, CoreService coreService,DiscordService discordService)
         {
@@ -25,7 +31,7 @@ namespace VetCoin.Pages.Trades
             DiscordService = discordService;
         }
 
-        public IActionResult OnGet(Direction? direction)
+        public IActionResult OnGet(Direction? direction,int? cloneSrcId)
         {
             Direction = direction;
 
@@ -34,7 +40,11 @@ namespace VetCoin.Pages.Trades
                 Trade = new Trade { Direction = Direction.Value };
             }
 
-            
+            if(cloneSrcId.HasValue)
+            {
+                var src = DbContext.Trades.Find(cloneSrcId);
+                Trade = src.Clone();
+            }            
 
             return Page();
         }
@@ -58,9 +68,10 @@ namespace VetCoin.Pages.Trades
             await DbContext.SaveChangesAsync();
 
 
+            if (IsSkipNotification)
+            {
 
-
-            await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, $@"{Trade.Direction}
+                await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, $@"{Trade.Direction}
 タイトル:{Trade.Title}
 依頼主:{userContext.CurrentUser.Name}
 料金:{Trade.Reward} {Trade.RewardComment}
@@ -69,6 +80,7 @@ namespace VetCoin.Pages.Trades
 {Trade.Content}
 
 https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}");
+            }
 
             return RedirectToPage("./Index",new {direction=Trade.Direction });
         }
