@@ -68,7 +68,7 @@ namespace VetCoin.Pages.Trades
             await DbContext.SaveChangesAsync();
 
 
-            if (IsSkipNotification)
+            if (!IsSkipNotification)
             {
 
                 await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, $@"{Trade.Direction}
