@@ -86,7 +86,7 @@ namespace VetCoin.Pages.Trades.Contracts
             var trade = DbContext.Trades.Find(entity.TradeId);
             //await TryUpdateModelAsync(entity, nameof(Contract));
 
-            //TODO:Œ_–ñ‚ğŒ‹‚Ô‚½‚ß‚ÌƒR[ƒh
+            //TODO:ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ß‚ÌƒRï¿½[ï¿½h
             entity.ContractStatus = ContractStatus.Complete;
 
             var escrowReciveUser = trade.Direction == Direction.Sell ?
@@ -151,12 +151,21 @@ namespace VetCoin.Pages.Trades.Contracts
             var trade = DbContext.Contracts.AsQueryable().Where(c => c.Id == contract.Id).Select(c => c.Trade).First();
 
 
-            var dmMessage = $@"Œ_–ñ‚ªŠ®—¹‚µ‚Ü‚µ‚½BŠm”F‚µ‚Ä‚­‚¾‚³‚¢B
-ƒ^ƒCƒgƒ‹:{trade.Title}
-URL:https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}
-{contract.AgreementContent}";
+
+
+            Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
+            builder.WithTitle(trade.Title)
+            .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
+            .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
+                .AddField("ã‚¢ã‚¯ã‚·ãƒ§ãƒ³", "å¥‘ç´„ãŒå®Œäº†ã•ã‚Œã¾ã—ãŸ");
+            //.AddField("ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å†…å®¹", message);
+
+
             var messageTargets = new[] { reciver };
-            await CoreService.SendDirectMessage(messageTargets, dmMessage);
+#if DEBUG
+            messageTargets = new[] { sender };
+#endif
+            await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
         }
 
     }

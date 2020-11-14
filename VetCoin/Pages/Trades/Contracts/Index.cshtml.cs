@@ -95,14 +95,27 @@ namespace VetCoin.Pages.Trades.Contracts
             var trade = DbContext.Contracts.AsQueryable().Where(c => c.Id == contract.Id).Select(c => c.Trade).First();
 
 
-            var dmMessage = $@"
-メッセージ元:{trade.Title}
-URL:https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}
-差出人:{sender.Name}
-{message}";
+            //            var dmMessage = $@"
+            //メッセージ元:{trade.Title}
+            //URL:https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}
+            //差出人:{sender.Name}
+            //{message}";
+            Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
+            builder.WithTitle(trade.Title)
+                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
+                .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
+                // .AddField("アクション", "メッセージがあります")
+                .AddField("メッセージ内容", message);
+
 
             var messageTargets = stakeHolders.Where(c => c.Id != sender.Id).ToArray();
-            await CoreService.SendDirectMessage(messageTargets, dmMessage);
+
+
+//#if DEBUG
+//            messageTargets = new[] { sender };
+//#endif
+
+            await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
         }
     }
 }

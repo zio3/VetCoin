@@ -16,7 +16,7 @@ namespace VetCoin.Data
 
         public int TradeId { get; set; }
 
-        [DisplayName("報酬")]
+        [DisplayName("価格")]
         public int Reword { get; set; }
         
         [DisplayName("納期")]

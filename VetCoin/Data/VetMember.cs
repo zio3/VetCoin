@@ -20,6 +20,15 @@ namespace VetCoin.Data
         public virtual ICollection<CoinTransaction> RecivedTransactions { get; set; }
         public virtual ICollection<CoinTransaction> SendTransactions { get; set; }
 
+
+        public string GetAvaterIconUrl()
+        {
+            return $"https://cdn.discordapp.com/avatars/{DiscordId}/{AvatarId}.png?size=128";
+        }
+        public string GetMemberPageUrl()
+        {
+            return $"https://vetcoin.azurewebsites.net/Member/{DiscordId}";
+        }
     }
 
 

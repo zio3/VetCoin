@@ -96,7 +96,18 @@ URL:https://vetcoin.azurewebsites.net/Trades/Details?id={trade.Id}
 差出人:{sender.Name}
 {message}";
 
-            await CoreService.SendDirectMessage(messageTargets, dmMessage);
+            Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
+            builder.WithTitle(trade.Title)
+                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
+                .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Details?id={trade.Id}")
+               // .AddField("アクション", "メッセージがあります")
+                .AddField("メッセージ内容", message);
+
+
+
+
+
+            await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
 
         }
     }
