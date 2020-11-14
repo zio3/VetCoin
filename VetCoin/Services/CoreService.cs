@@ -203,7 +203,7 @@ namespace VetCoin.Services
             return ExportCsv(recodes);
         }
 
-        public async Task SendDirectMessage(VetMember[] members,string message)
+        public async Task SendDirectMessage(VetMember[] members,string message,Discord.Embed enbed = null)
         {
             var rclient = new DiscordRestClient(new DiscordRestConfig { });
             string token = Configuration.GetValue<string>("DiscordBotToken");
@@ -220,7 +220,17 @@ namespace VetCoin.Services
             {
                 var user = await rclient.GetUserAsync(member.DiscordId);
                 var dmc = await user.GetOrCreateDMChannelAsync();
-                await dmc.SendMessageAsync(message);
+
+                if(enbed == null)
+                {
+                    await dmc.SendMessageAsync(message);
+                }
+                else
+                {
+                    await dmc.SendMessageAsync(message,false,enbed);
+                }
+
+                
             }
         }
 

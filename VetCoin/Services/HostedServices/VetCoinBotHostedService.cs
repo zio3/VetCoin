@@ -255,15 +255,15 @@ namespace VetCoin.Services.HostedServices
             var toAmount = CoreService.CalcAmount(toMember);
             if (toMember.Id == fromMember.Id)
             {   //念のため同一人物の対応
-                toAmount += amount;
-                fromAmount -= amount;
+                toAmount -= amount;
+                fromAmount += amount;
             }
 
             try
             {
 
-                await fromDmChannel.SendMessageAsync($@"SuperChat:{toMember.Name}へ{amount}VEC 送金しました [{toAmount - amount}vec]");
-                await toDmChannel.SendMessageAsync($@"SuperChat:{fromMember.Name}から{amount}VEC をもらいました [{fromAmount + amount}vec]");
+                await fromDmChannel.SendMessageAsync($@"SuperChat:{toMember.Name}へ{amount}VEC 送金しました [{fromAmount - amount}vec]");
+                await toDmChannel.SendMessageAsync($@"SuperChat:{fromMember.Name}から{amount}VEC をもらいました [{toAmount + amount}vec]");
 
                 DbContext.CoinTransactions.Add(new CoinTransaction
                 {
@@ -433,8 +433,8 @@ namespace VetCoin.Services.HostedServices
 
             if (toMember.Id == fromMember.Id)
             {   //念のため同一人物の対応
-                toAmount += amount;
-                fromAmount -= amount;
+                toAmount -= amount;
+                fromAmount += amount;
             }
 
             try
@@ -450,9 +450,9 @@ namespace VetCoin.Services.HostedServices
                 await DbContext.SaveChangesAsync();
                 if (fromDmChannel != null)
                 {
-                    await fromDmChannel.SendMessageAsync($@"Reaction:{toMember.Name} へ {amount} VEC を送金しました[{toAmount - amount}vec]");
+                    await fromDmChannel.SendMessageAsync($@"Reaction:{toMember.Name} へ {amount} VEC を送金しました[{fromAmount - amount}vec]");
                 }
-                await toDmChannel.SendMessageAsync($@"Reaction: {fromMember.Name} から {amount} VEC をもらいました[{fromAmount + amount}vec]
+                await toDmChannel.SendMessageAsync($@"Reaction: {fromMember.Name} から {amount} VEC をもらいました[{toAmount + amount}vec]
 {jumpUrl}");
             }
             catch
