@@ -80,6 +80,19 @@ namespace VetCoin.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
 
+            builder.Entity<TradeLikeVote>()
+                .HasOne(c => c.Trade)
+                .WithMany(c=>c.TradeLikeVotes)
+                .HasForeignKey(c => c.TradeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<TradeLikeVote>()
+                .HasOne(c => c.VetMember)
+                .WithMany()
+                .HasForeignKey(c => c.VetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
         }
 
         public DbSet<ScheduledExecutionLog> ScheduledExecutionLogs { get; set; }
@@ -103,7 +116,8 @@ namespace VetCoin.Data
         public DbSet<Subscription> Subscriptions { get; set; }
 
         public DbSet<SubscriptionMember> SubscriptionMembers { get; set; }
-
+        public DbSet<TradeLikeVote> TradeLikeVotes { get; set; }
+        
         public override int SaveChanges()
         {
             EntryModifyInfo();

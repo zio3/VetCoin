@@ -123,7 +123,7 @@ namespace VetCoin.Services
         {
             var httpContext = HttpContextAccessor.HttpContext;
 
-            var discordIdStr = httpContext.User.Claims.First(c => c.Type == "DiscordId").Value;
+            var discordIdStr = httpContext.User.Claims.FirstOrDefault(c => c.Type == "DiscordId")?.Value??string.Empty;
             if (!ulong.TryParse(discordIdStr, out ulong discordId))
             {
                 return null;

@@ -14,6 +14,10 @@ namespace VetCoin.Pages.Trades
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
+        public bool IsVoted { get; set; }
+
+        public int VoteCount { get; set; }
+
         public DetailsModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService)
         {
             DbContext = context;
@@ -50,6 +54,14 @@ namespace VetCoin.Pages.Trades
             {
                 return NotFound();
             }
+
+            VoteCount = await DbContext.TradeLikeVotes
+                .AsQueryable()
+                .CountAsync(c => c.TradeId == id);
+            IsVoted = await DbContext.TradeLikeVotes
+                .AsQueryable()
+                .AnyAsync(c => c.TradeId == id && c.VetMemberId == userContext.CurrentUser.Id);
+
             return Page();
         }
         public async Task<IActionResult> OnPostAsync(int? id,string postMessage)
