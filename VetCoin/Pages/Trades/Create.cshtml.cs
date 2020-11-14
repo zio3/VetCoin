@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VetCoin.Data;
+using VetCoin.Codes;
 using VetCoin.Services;
 using VetCoin.Services.Chat;
 
@@ -17,34 +19,34 @@ namespace VetCoin.Pages.Trades
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
         private readonly CoreService CoreService;
 
-        [BindProperty(SupportsGet =true)]
+        [BindProperty(SupportsGet = true)]
         public Direction? Direction { get; set; }
 
         [BindProperty]
         [DisplayName("通知不要")]
         public bool IsSkipNotification { get; set; }
 
-        public CreateModel(ApplicationDbContext context, CoreService coreService,DiscordService discordService)
+        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService)
         {
             DbContext = context;
             CoreService = coreService;
             DiscordService = discordService;
         }
 
-        public IActionResult OnGet(Direction? direction,int? cloneSrcId)
+        public IActionResult OnGet(Direction? direction, int? cloneSrcId)
         {
             Direction = direction;
 
-            if(Direction.HasValue)
+            if (Direction.HasValue)
             {
                 Trade = new Trade { Direction = Direction.Value };
             }
 
-            if(cloneSrcId.HasValue)
+            if (cloneSrcId.HasValue)
             {
                 var src = DbContext.Trades.Find(cloneSrcId);
                 Trade = src.Clone();
-            }            
+            }
 
             return Page();
         }
@@ -52,6 +54,13 @@ namespace VetCoin.Pages.Trades
         [BindProperty]
         public Trade Trade { get; set; }
         public DiscordService DiscordService { get; }
+
+
+
+        private string GetDisplayName(Direction direction)
+        {
+            return direction.GetApplied<DisplayAttribute>().First().Name;
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -71,18 +80,58 @@ namespace VetCoin.Pages.Trades
             if (!IsSkipNotification)
             {
 
-                await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, $@"{Trade.Direction}
-タイトル:{Trade.Title}
-依頼主:{userContext.CurrentUser.Name}
-料金:{Trade.Reward} {Trade.RewardComment}
-納期:{Trade.DeliveryDate}
+                //                await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, $@"{Trade.Direction}
+                //タイトル:{Trade.Title}
+                //依頼主:{userContext.CurrentUser.Name}
+                //料金:{Trade.Reward} {Trade.RewardComment}
+                //納期:{Trade.DeliveryDate}
 
-{Trade.Content}
+                //{Trade.Content}
 
-https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}");
+                //https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}");
+
+                await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, string.Empty, new DiscordService.DiscordEmbed
+                {
+                    title = Trade.Title,
+                    url = $"https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}",
+                    author = new DiscordService.DiscordEmbed.Author
+                    {
+                        url = $"https://vetcoin.azurewebsites.net/Member/{userContext.CurrentUser.DiscordId}",
+                        icon_url = $"https://cdn.discordapp.com/avatars/{userContext.CurrentUser.DiscordId}/{userContext.CurrentUser.AvatarId}.png?size=128",
+                        name = userContext.CurrentUser.Name
+                    },
+                    fields = new DiscordService.DiscordEmbed.Field[]
+                {
+                    new DiscordService.DiscordEmbed.Field
+                    {
+                        name = "売買",
+                        value = $"{GetDisplayName(Trade.Direction)}",
+                        inline = false
+                    },
+                    new DiscordService.DiscordEmbed.Field
+                    {
+                        name = "料金",
+                        value = $"{Trade.Reward} {Trade.RewardComment}",
+                        inline = true
+                    },
+                    new DiscordService.DiscordEmbed.Field
+                    {
+                        name = "納期",
+                        value = Trade.DeliveryDate,
+                        inline = true
+                    },
+                    new DiscordService.DiscordEmbed.Field
+                    {
+                        name = "依頼内容",
+                        value = Trade.Content,
+                        inline = false
+                    }
+                },
+                });
+
             }
 
-            return RedirectToPage("./Index",new {direction=Trade.Direction });
+            return RedirectToPage("./Index", new { direction = Trade.Direction });
         }
     }
 }
