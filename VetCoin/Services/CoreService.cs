@@ -185,15 +185,22 @@ namespace VetCoin.Services
 
         }
 
-        public string CsvExportAllTransactions()
+        public string CsvExportAllTransactions(bool exceptSamePersonTransaction)
         {
-            var recodes = DbContext.CoinTransactions.AsQueryable().Select(c => new CoinTransactionsCsvrow
+            var query = DbContext.CoinTransactions.AsQueryable();
+
+            if(exceptSamePersonTransaction)
+            {
+                query = query.Where(c => c.SendeVetMemberId != c.RecivedVetMemberId);
+            }
+
+            var recodes = query.Select(c => new CoinTransactionsCsvrow
             {
                 Id = c.Id,
-                DateTime = c.UpdateDate.ToOffset(Consts.JstOffset).DateTime,
+                DateTime = c.UpdateDate.ToOffset(Consts.JstOffset).DateTime.ToString("yyyy/MM/dd HH:mm:ss"),
                 Type = c.TransactionType.ToString(),
-                SnendMemberId = c.SendVetMember.DiscordId,
-                SnendMemberName = c.SendVetMember.Name,
+                SendMemberId = c.SendVetMember.DiscordId,
+                SendMemberName = c.SendVetMember.Name,
                 ReciveMemberId = c.RecivedVetMember.DiscordId,
                 ReciveMemberName = c.RecivedVetMember.Name,
                 Amount = c.Amount,
@@ -419,14 +426,14 @@ namespace VetCoin.Services
     {
         public int Id { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; }
 
         public string Type { get; set; }
 
         
 
-        public ulong SnendMemberId { get; set; }
-        public string SnendMemberName { get; set; }
+        public ulong SendMemberId { get; set; }
+        public string SendMemberName { get; set; }
 
 
         public ulong ReciveMemberId { get; set; }
