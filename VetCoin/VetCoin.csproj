@@ -1731,21 +1731,6 @@
 		<Content Remove="wwwroot\fa\svgs\solid\x-ray.svg" />
 		<Content Remove="wwwroot\fa\svgs\solid\yen-sign.svg" />
 		<Content Remove="wwwroot\fa\svgs\solid\yin-yang.svg" />
-		<Content Remove="wwwroot\fa\webfonts\fa-brands-400.eot" />
-		<Content Remove="wwwroot\fa\webfonts\fa-brands-400.svg" />
-		<Content Remove="wwwroot\fa\webfonts\fa-brands-400.ttf" />
-		<Content Remove="wwwroot\fa\webfonts\fa-brands-400.woff" />
-		<Content Remove="wwwroot\fa\webfonts\fa-brands-400.woff2" />
-		<Content Remove="wwwroot\fa\webfonts\fa-regular-400.eot" />
-		<Content Remove="wwwroot\fa\webfonts\fa-regular-400.svg" />
-		<Content Remove="wwwroot\fa\webfonts\fa-regular-400.ttf" />
-		<Content Remove="wwwroot\fa\webfonts\fa-regular-400.woff" />
-		<Content Remove="wwwroot\fa\webfonts\fa-regular-400.woff2" />
-		<Content Remove="wwwroot\fa\webfonts\fa-solid-900.eot" />
-		<Content Remove="wwwroot\fa\webfonts\fa-solid-900.svg" />
-		<Content Remove="wwwroot\fa\webfonts\fa-solid-900.ttf" />
-		<Content Remove="wwwroot\fa\webfonts\fa-solid-900.woff" />
-		<Content Remove="wwwroot\fa\webfonts\fa-solid-900.woff2" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Pages\Shared\DisplayTemplates\DateTimeOffset.cshtml" />
@@ -3447,21 +3432,6 @@
 		<None Include="wwwroot\fa\svgs\solid\x-ray.svg" />
 		<None Include="wwwroot\fa\svgs\solid\yen-sign.svg" />
 		<None Include="wwwroot\fa\svgs\solid\yin-yang.svg" />
-		<None Include="wwwroot\fa\webfonts\fa-brands-400.eot" />
-		<None Include="wwwroot\fa\webfonts\fa-brands-400.svg" />
-		<None Include="wwwroot\fa\webfonts\fa-brands-400.ttf" />
-		<None Include="wwwroot\fa\webfonts\fa-brands-400.woff" />
-		<None Include="wwwroot\fa\webfonts\fa-brands-400.woff2" />
-		<None Include="wwwroot\fa\webfonts\fa-regular-400.eot" />
-		<None Include="wwwroot\fa\webfonts\fa-regular-400.svg" />
-		<None Include="wwwroot\fa\webfonts\fa-regular-400.ttf" />
-		<None Include="wwwroot\fa\webfonts\fa-regular-400.woff" />
-		<None Include="wwwroot\fa\webfonts\fa-regular-400.woff2" />
-		<None Include="wwwroot\fa\webfonts\fa-solid-900.eot" />
-		<None Include="wwwroot\fa\webfonts\fa-solid-900.svg" />
-		<None Include="wwwroot\fa\webfonts\fa-solid-900.ttf" />
-		<None Include="wwwroot\fa\webfonts\fa-solid-900.woff" />
-		<None Include="wwwroot\fa\webfonts\fa-solid-900.woff2" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Update="wwwroot\fa\metadata\icons.json">

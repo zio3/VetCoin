@@ -23,68 +23,72 @@
     <button type="submit" class="btn btn-primary mb-2">検索</button>
 </form>*@
 
-<a asp-page="AllLogs" asp-route-mode="downloadCsv">Csvダウンロード</a>
+<form class="form-inline" method="get">
+    <label><input type="checkbox" asp-for="ExceptSamePersonTransaction" />同一人物の処理を外す</label>
+    <input type="hidden" name="mode" value="downloadCsv" />
 
-<partial name="PageNavi" model="pagerContext" />
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <a href="@pageUrlContext.GetSortUrlFor(s=>s.UpdateDate)">
-                    @Html.DisplayNameFor(model => displayNameEntity.UpdateDate)
-                </a>
-            </th>
-            <th>
-                <a href="@pageUrlContext.GetSortUrlFor(s=>s.TransactionType)">
-                    種別
-                </a>
-            </th>
-            <th>
-                <a href="@pageUrlContext.GetSortUrlFor(s=>s.SendVetMember)">
-                    送信者
-                </a>
-            </th>
-            <th>
-                <a href="@pageUrlContext.GetSortUrlFor(s=>s.RecivedVetMember)">
-                    受信者
-                </a>
-            </th>
-            <th>
-                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Amount)">
-                    金額
-                </a>
-            </th>
-            <th>
-                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Text)">
-                    メッセージ
-                </a>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in pageItems)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateDate)
-            </td>
-            <td>
-                @item.TransactionType
-            </td>
-            <td>
-                <partial name="MemberTag" model="item.SendVetMember" />
-            </td>
-            <td>
-                <partial name="MemberTag" model="item.RecivedVetMember" />
-            </td>
-            <td>
-                <span>@item.Amount</span>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
-<partial name="PageNavi" model="pagerContext" />
+    <button class="btn btn-primary" >Csvダウンロード</button>
+</form>
+    <partial name="PageNavi" model="pagerContext" />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.UpdateDate)">
+                        @Html.DisplayNameFor(model => displayNameEntity.UpdateDate)
+                    </a>
+                </th>
+                <th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.TransactionType)">
+                        種別
+                    </a>
+                </th>
+                <th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.SendVetMember)">
+                        送信者
+                    </a>
+                </th>
+                <th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.RecivedVetMember)">
+                        受信者
+                    </a>
+                </th>
+                <th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.Amount)">
+                        金額
+                    </a>
+                </th>
+                <th>
+                    <a href="@pageUrlContext.GetSortUrlFor(s=>s.Text)">
+                        メッセージ
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in pageItems)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdateDate)
+                    </td>
+                    <td>
+                        @item.TransactionType
+                    </td>
+                    <td>
+                        <partial name="MemberTag" model="item.SendVetMember" />
+                    </td>
+                    <td>
+                        <partial name="MemberTag" model="item.RecivedVetMember" />
+                    </td>
+                    <td>
+                        <span>@item.Amount</span>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <partial name="PageNavi" model="pagerContext" />

@@ -25,22 +25,25 @@ namespace VetCoin.Pages
         public CoreService CoreService { get; }
         public IQueryable<CoinTransaction> CoinTransactionQuery { get; set; }
 
-        public async Task<IActionResult> OnGet(string searchKey, string mode )
+        [BindProperty(SupportsGet =true)]
+        public bool ExceptSamePersonTransaction { get; set; }
+
+        public async Task<IActionResult> OnGet(string searchKey, string mode, bool exceptSamePersonTransaction )
         {
             switch (mode)
             {
                 case "downloadCsv":
-                    return await DownloadCsv();
+                    return await DownloadCsv(exceptSamePersonTransaction);
                 default:
                     return await Search(searchKey);
             }
 
         }
 
-        public async Task<IActionResult> DownloadCsv()
+        public async Task<IActionResult> DownloadCsv(bool exceptSamePersonTransaction)
         {
             await Task.Yield();
-            var csv = CoreService.CsvExportAllTransactions();
+            var csv = CoreService.CsvExportAllTransactions(exceptSamePersonTransaction);
             return File(sjisEnc.GetBytes(csv), "text/csv", "VetCointTransactions.csv");
         }
 
