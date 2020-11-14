@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using VetCoin.Data;
+using VetCoin.Services;
 
 namespace VetCoin.Pages.Trades
 {
@@ -15,18 +16,23 @@ namespace VetCoin.Pages.Trades
 
         public string SearchKey { get; set; }
 
-        public IndexModel(VetCoin.Data.ApplicationDbContext context)
+        public UserContext UserContext { get; set; }
+
+        public IndexModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService)
         {
             DbContext = context;
+            CoreService = coreService;
         }
 
         public IQueryable<Trade> TradeQuery { get; set; }
 
         public Direction? Direction { get; set; }
+        public CoreService CoreService { get; }
 
         public void OnGet(string searchKey, Direction? direction)
         {
             Direction = direction;
+            UserContext = CoreService.GetUserContext();
 
             TradeQuery = DbContext.Trades
                 .Include(t => t.VetMember)

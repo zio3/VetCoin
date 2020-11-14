@@ -375,6 +375,34 @@ namespace VetCoin.Migrations
                     b.ToTable("TradeImages");
                 });
 
+            modelBuilder.Entity("VetCoin.Data.TradeLikeVote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreateDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreateUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TradeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VetMemberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TradeId");
+
+                    b.HasIndex("VetMemberId");
+
+                    b.ToTable("TradeLikeVotes");
+                });
+
             modelBuilder.Entity("VetCoin.Data.TradeMessage", b =>
                 {
                     b.Property<int>("Id")
@@ -528,6 +556,21 @@ namespace VetCoin.Migrations
                         .WithMany("TradeImages")
                         .HasForeignKey("TradeId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VetCoin.Data.TradeLikeVote", b =>
+                {
+                    b.HasOne("VetCoin.Data.Trade", "Trade")
+                        .WithMany("TradeLikeVotes")
+                        .HasForeignKey("TradeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("VetCoin.Data.VetMember", "VetMember")
+                        .WithMany()
+                        .HasForeignKey("VetMemberId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 

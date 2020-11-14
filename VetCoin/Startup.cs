@@ -112,14 +112,9 @@ namespace VetCoin
             }
 
             app.UseCors(builder =>
-                 //builder.AllowAnyOrigin()
-                 //.AllowAnyMethod()
-                 //.AllowAnyHeader()
-
-                 builder.WithOrigins("http://localhost:8080")
+                 builder.AllowAnyOrigin()
+                 .AllowAnyMethod()
                  .AllowAnyHeader()
-                .WithMethods("GET", "POST")
-                .AllowCredentials()
             );
 
 

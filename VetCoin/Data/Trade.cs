@@ -53,6 +53,8 @@ namespace VetCoin.Data
 
         public virtual ICollection<TradeImage> TradeImages { get; set; }
 
+        public virtual ICollection<TradeLikeVote> TradeLikeVotes { get; set; }
+
         [DisplayName("募集継続")]
         public bool IsContinued { get; set; }
 
