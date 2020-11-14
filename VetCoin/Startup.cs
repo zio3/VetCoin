@@ -95,10 +95,6 @@ namespace VetCoin
             services.AddHostedService<Services.HostedServices.ScheduledExecutionHostedService<ScheduledExecutionService>>();
             services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
 #endif
-
-            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -96,8 +96,8 @@ namespace VetCoin.Pages.Trades
                     url = $"https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}",
                     author = new DiscordService.DiscordEmbed.Author
                     {
-                        url = $"https://vetcoin.azurewebsites.net/Member/{userContext.CurrentUser.DiscordId}",
-                        icon_url = $"https://cdn.discordapp.com/avatars/{userContext.CurrentUser.DiscordId}/{userContext.CurrentUser.AvatarId}.png?size=128",
+                        url = userContext.CurrentUser.GetMemberPageUrl(),
+                        icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
                         name = userContext.CurrentUser.Name
                     },
                     fields = new DiscordService.DiscordEmbed.Field[]
@@ -110,7 +110,7 @@ namespace VetCoin.Pages.Trades
                     },
                     new DiscordService.DiscordEmbed.Field
                     {
-                        name = "料金",
+                        name = "希望価格",
                         value = $"{Trade.Reward} {Trade.RewardComment}",
                         inline = true
                     },

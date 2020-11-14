@@ -86,7 +86,6 @@ namespace VetCoin.Pages.Trades.Contracts
             var trade = DbContext.Trades.Find(entity.TradeId);
             //await TryUpdateModelAsync(entity, nameof(Contract));
 
-            //TODO:Œ_–ñ‚ðƒLƒƒƒ“ƒZƒ‹‚·‚é
             entity.ContractStatus = ContractStatus.Canceled;
             DbContext.CoinTransactions.Remove(entity.EscrowTransaction);
             entity.EscrowTransaction = null;

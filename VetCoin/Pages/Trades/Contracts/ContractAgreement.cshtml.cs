@@ -142,13 +142,28 @@ namespace VetCoin.Pages.Trades.Contracts
             var trade = DbContext.Contracts.AsQueryable().Where(c => c.Id == contract.Id).Select(c => c.Trade).First();
 
 
-            var dmMessage = $@"提案が受理され契約されました。確認してください。
-タイトル:{trade.Title}
-契約主:{sender.Name}
-URL:https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}
-{contract.AgreementContent}";
+//            var dmMessage = $@"提案が受理され契約されました。確認してください。
+//タイトル:{trade.Title}
+//契約主:{sender.Name}
+//URL:https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}
+//{contract.AgreementContent}";
             var messageTargets = new[] { reciver };
-            await CoreService.SendDirectMessage(messageTargets, dmMessage);
+
+
+            Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
+            builder.WithTitle(trade.Title)
+            .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
+            .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
+                .AddField("アクション", "提案が受理され契約されました。");
+                //.AddField("メッセージ内容", message);
+
+
+
+//#if DEBUG
+//            messageTargets = new[] { sender };
+//#endif
+
+            await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
         }
 
     }

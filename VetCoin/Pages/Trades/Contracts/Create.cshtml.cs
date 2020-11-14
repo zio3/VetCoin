@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -85,14 +86,24 @@ namespace VetCoin.Pages.Trades.Contracts
             var stakeHolders = await GetStakeHolders(contract.Id);
             var trade = DbContext.Contracts.AsQueryable().Where(c => c.Id == contract.Id).Select(c => c.Trade).First();
 
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.WithTitle(trade.Title)
+                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
+                .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
+                .AddField("アクション", "提案がありました")
+                .AddField("報酬", contract.Reword,true)
+                .AddField("価格", contract.DeliveryDate, true)
+                .AddField("提案内容", contract.AgreementContent);
 
-            var dmMessage = $@"提案がありました。確認してください。
-タイトル:{trade.Title}
-提案主:{sender.Name}
-URL:https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}
-{contract.AgreementContent}";
+//            var dmMessage = $@"提案がありました。確認してください。
+//タイトル:{trade.Title}
+//提案主:{sender.Name}
+//URL:https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}
+//{contract.AgreementContent}";
+
             var messageTargets = stakeHolders.Where(c => c.Id != sender.Id).ToArray();
-            await CoreService.SendDirectMessage(messageTargets, dmMessage);
+
+            await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
         }
     }
 }
