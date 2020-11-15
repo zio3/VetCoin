@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +45,7 @@ namespace VetCoin.Controllers
                 };
             }
 #endif
-
+            
             var vetMemberId = uc.CurrentUser.Id;
 
             var isVoted = false;
@@ -69,7 +71,6 @@ namespace VetCoin.Controllers
                 .AsQueryable()
                 .CountAsync(c => c.TradeId == tradeId);
 
-            //return CreatedAtAction("GetTradeLikeVote", new { id = tradeLikeVote.Id }, tradeLikeVote);
             return new VoteResult
             {
                 Count = count,
