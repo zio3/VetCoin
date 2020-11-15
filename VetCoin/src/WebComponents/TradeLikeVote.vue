@@ -30,12 +30,20 @@
                 return this.tradeId;
             }
         }
+        
 
         get localVoteCount() {
             if (this.isDevMode) {
                 return this.devVoteCount;
             } else {
                 return this.voteCount;
+            }
+        }
+        set localVoteCount(value) {
+            if (this.isDevMode) {
+                this.devVoteCount = value;
+            } else {
+                this.voteCount = value;
             }
         }
 
@@ -58,7 +66,6 @@
 </script>
 
 <style>
-    @import "../assets/fontawesome-free-5.15.1-web/css/all.css";
 
 
     .btn {

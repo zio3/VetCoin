@@ -93,6 +93,9 @@ namespace VetCoin.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
 
+            builder.Entity<VetMember>()
+                .HasIndex(b => b.DiscordId);
+
         }
 
         public DbSet<ScheduledExecutionLog> ScheduledExecutionLogs { get; set; }

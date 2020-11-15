@@ -59,7 +59,7 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Trade.Title)
-            <vue-trade-like-vote trade-id="@Model.Trade.Id" vote-count="@Model.VoteCount" is-voted="@Model.IsVoted.ToString()"></vue-trade-like-vote>
+            <vue-trade-like-vote trade-id="@Model.Trade.Id" vote-count="@Model.VoteCount" is-voted="@Model.IsVoted.ToString().ToLower()"></vue-trade-like-vote>
         </dd>
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Trade.Content)</dt>
         <dd class="col-sm-10" style="white-space:pre-wrap">@Html.DisplayFor(model => model.Trade.Content)</dd>
