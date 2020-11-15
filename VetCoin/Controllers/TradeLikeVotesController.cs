@@ -35,10 +35,6 @@ namespace VetCoin.Controllers
         {
             //_context.TradeLikeVotes.Add(tradeLikeVote);
             //CoreService.GetCu
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"{sw.Elapsed}");
             var uc = CoreService.GetUserContext();
 #if DEBUG
             if (uc == null)
@@ -49,17 +45,13 @@ namespace VetCoin.Controllers
                 };
             }
 #endif
-            sb.AppendLine($"{sw.Elapsed}");
-
+            
             var vetMemberId = uc.CurrentUser.Id;
 
             var isVoted = false;
-            sb.AppendLine($"{sw.Elapsed}");
             var existItem = _context.TradeLikeVotes.FirstOrDefault(c => c.TradeId == tradeId && c.VetMemberId == vetMemberId);
-            sb.AppendLine($"{sw.Elapsed}");
             if (existItem == null)
             {
-                sb.AppendLine($"{sw.Elapsed}");
                 _context.TradeLikeVotes.Add(new TradeLikeVote
                 {
                     TradeId = tradeId,
@@ -69,22 +61,16 @@ namespace VetCoin.Controllers
             }
             else
             {
-                sb.AppendLine($"{sw.Elapsed}");
                 _context.TradeLikeVotes.Remove(existItem);
                 isVoted = false;
             }
-            sb.AppendLine($"{sw.Elapsed}");
 
             await _context.SaveChangesAsync();
-            sb.AppendLine($"{sw.Elapsed}");
 
             var count = await _context.TradeLikeVotes
                 .AsQueryable()
                 .CountAsync(c => c.TradeId == tradeId);
 
-            sb.AppendLine($"{sw.Elapsed}");
-            //return CreatedAtAction("GetTradeLikeVote", new { id = tradeLikeVote.Id }, tradeLikeVote);
-            var x = sb.ToString();
             return new VoteResult
             {
                 Count = count,
