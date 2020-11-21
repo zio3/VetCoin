@@ -83,11 +83,8 @@ namespace VetCoin
 
             services.AddScoped<UrlQueryService>();
             
-
             services.AddTransient<DiscordService>();
             services.AddTransient<ScheduledExecutionService>();
-
-
 
 #if !DEBUG
             services.AddHostedService<Services.HostedServices.DbSeedHostedService>();
