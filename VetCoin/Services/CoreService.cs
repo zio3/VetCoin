@@ -273,7 +273,10 @@ namespace VetCoin.Services
                 .Where(c => c.MemberType == MemberType.User)
                 .ToArrayAsync();
 
-            var trades = await DbContext.Trades.AsQueryable().ToArrayAsync();
+            var trades = await DbContext.Trades
+                .AsQueryable()
+                .Where(c=>c.TradeStatus != TradeStatus.Cancel)
+                .ToArrayAsync();
 
             var summary =  members.Select(c => new
             {
