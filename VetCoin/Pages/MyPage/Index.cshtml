@@ -18,7 +18,25 @@
         </tr>
     </tbody>
 </table>
-<a asp-page="Edit">名前変更はこちら</a>
+
+@*<h2>自己紹介</h2>
+<hr />
+<div>
+    @if (!string.IsNullOrEmpty(Model.VetMember.Markdown))
+    {
+        var md = new MarkdownSharp.Markdown();
+        var html = md.Transform(Model.VetMember.Markdown);
+        @Html.Raw(html);
+    }
+    else
+    {
+        <p>自己紹介がまだ設定されていません。</p>
+    }
+</div>
+<hr />*@
+
+<a asp-page="Edit">名前変更</a>
+@*<a asp-page="MarkdownEdit">自己紹介の編集</a>*@
 
 <hr />
 <h3>あなたの依頼</h3>

@@ -26,13 +26,13 @@ namespace VetCoin.Services
         //}
 
 
-        //[Cron("0 0 * * *")]
-        //public async Task CollectEngage()
-        //{
-        //    //await DiscordService.SendMessage(DiscordService.Channel.TEST, "VetCoin SendTest");
-        //    await CoreService.RegularDistribution();
-        //    await CoreService.DbContext.SaveChangesAsync();
-        //}
+        [Cron("0 0 1 * *")]
+        public async Task RegularDistribution()
+        {
+            //await DiscordService.SendMessage(DiscordService.Channel.TEST, "VetCoin SendTest");
+            await CoreService.RegularDistribution();
+            await CoreService.DbContext.SaveChangesAsync();
+        }
     }
 
 

@@ -25,6 +25,7 @@ namespace VetCoin.Services.Chat
         {
             TradeEntryNotification,
             ScheduleError,
+            WebRequestError,
         }
 
         string GetChannelUrl(Channel chanel)
@@ -36,6 +37,8 @@ namespace VetCoin.Services.Chat
 
                 case Channel.ScheduleError:
                     return Configuration.GetValue<string>("DiscordWebhookScheduleError");
+                case Channel.WebRequestError:
+                    return Configuration.GetValue<string>("DiscordWebhookWebRequestError");
 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -48,14 +51,33 @@ namespace VetCoin.Services.Chat
             {
                 var hc = HttpClientFactory.CreateClient();
 
-                var json = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                string json;
+
+                if(msg.Length >= 1900)
                 {
-                    content = msg,
-                    embeds = new[]
+                    msg = msg.Substring(0, 1900);
+                }
+
+                
+                if(embed == null)
+                {
+                    json = Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
+                        content = msg
+                    });
+                }
+                else
+                {
+
+                    json = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    {
+                        content = msg,
+                        embeds = new[]
+                        {
                         embed,
                     }
-                });
+                    });
+                }
 
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
