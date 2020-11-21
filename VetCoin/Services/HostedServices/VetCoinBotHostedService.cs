@@ -177,7 +177,20 @@ namespace VetCoin.Services.HostedServices
                     var amount = int.Parse(m.Groups[2].Value);
                     var messageText = m.Groups[3].Value;
                     var toId = message.MentionedUsers.First().Id;
-                    var toDmChannel = await message.MentionedUsers.First().GetOrCreateDMChannelAsync();
+
+                    var targetUser = message.MentionedUsers.First();
+
+                    IDMChannel toDmChannel = null;
+                    try
+                    {
+
+                        toDmChannel = await targetUser.GetOrCreateDMChannelAsync();
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine();
+                    }
+
 
                     using (var scope = Services.CreateScope())
                     {
@@ -261,9 +274,15 @@ namespace VetCoin.Services.HostedServices
 
             try
             {
+                if (fromDmChannel != null)
+                {
+                    await fromDmChannel.SendMessageAsync($@"SuperChat:{toMember.Name}へ{amount}VEC 送金しました [{fromAmount - amount}vec]");
+                }
 
-                await fromDmChannel.SendMessageAsync($@"SuperChat:{toMember.Name}へ{amount}VEC 送金しました [{fromAmount - amount}vec]");
-                await toDmChannel.SendMessageAsync($@"SuperChat:{fromMember.Name}から{amount}VEC をもらいました [{toAmount + amount}vec]");
+                if(toDmChannel != null)
+                {
+                    await toDmChannel.SendMessageAsync($@"SuperChat:{fromMember.Name}から{amount}VEC をもらいました [{toAmount + amount}vec]");
+                }                
 
                 DbContext.CoinTransactions.Add(new CoinTransaction
                 {
