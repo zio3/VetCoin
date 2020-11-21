@@ -29,6 +29,12 @@ namespace VetCoin.Pages.Trades
         public Direction? Direction { get; set; }
         public CoreService CoreService { get; }
 
+        [BindProperty(SupportsGet = true)]
+        public bool IsWorking { get; set; }
+        
+        [BindProperty(SupportsGet = true)]
+        public bool IsCpmplited { get; set; }
+
         public void OnGet(string searchKey, Direction? direction)
         {
             Direction = direction;
@@ -38,6 +44,17 @@ namespace VetCoin.Pages.Trades
                 .Include(t => t.VetMember)
                 .Where(c=>c.TradeStatus != TradeStatus.Cancel)
                 .AsQueryable();
+
+
+            if (!IsWorking)
+            {
+                TradeQuery = TradeQuery.Where(c => !c.Contracts.Any(d => d.ContractStatus == ContractStatus.Working ));
+            }
+            if (!IsCpmplited)
+            {
+                TradeQuery = TradeQuery.Where(c => !c.Contracts.Any(d => d.ContractStatus == ContractStatus.Complete) || c.IsContinued);
+            }
+
 
 
             if (direction.HasValue)

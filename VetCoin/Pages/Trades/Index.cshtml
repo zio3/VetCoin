@@ -54,7 +54,6 @@
             <p>「商品・サービスを探す」ページです。VECを消費して商品・サービスを購入できます</p>
         </div>
 
-
         <div class="col-4">
             <p>
                 <a asp-page="Create" class="btn btn-primary btn-lg" asp-route-direction="@Model.Direction">自分の商品・サービスを販売する</a>
@@ -70,6 +69,19 @@
     <div class="form-group mb-2">
         <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
     </div>
+
+    <div class="form-group mb-2">
+        <label>
+            <input type="checkbox" asp-for="IsWorking">作業中を含む
+        </label>
+    </div>
+    <div class="form-group mb-2">
+        <label>
+            <input type="checkbox" asp-for="IsCpmplited">完了を含む
+        </label>
+    </div>
+
+
     <input asp-for="Direction" type="hidden" />
     <button type="submit" class="btn btn-primary mb-2">検索</button>
 </form>
