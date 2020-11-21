@@ -24,8 +24,7 @@ namespace VetCoin
         {
             if (context.ApiDescription.ActionDescriptor is ControllerActionDescriptor controller)
             {
-                operation.OperationId =
-                    $"{controller.ActionName}";
+                operation.OperationId = $"{controller.ActionName}";
             }
         }
     }
@@ -90,8 +89,10 @@ namespace VetCoin
             services.AddHostedService<Services.HostedServices.DbSeedHostedService>();
             services.AddHostedService<Services.HostedServices.DbMigrationHostedService<Data.ApplicationDbContext>>();
             services.AddHostedService<Services.HostedServices.ScheduledExecutionHostedService<ScheduledExecutionService>>();
-            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
+            
 #endif
+            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

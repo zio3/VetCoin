@@ -29,18 +29,14 @@
                 VoteCount = c.TradeLikeVotes.Count(),
                 IsVoted = c.TradeLikeVotes.Any(c=>c.VetMemberId == Model.UserContext.CurrentUser.Id)
             }).ToDictionary(c => c.Id);
-
 }
 <div class="row">
     @if (Model.Direction == Data.Direction.Buy)
     {
-
         <div class="col-9">
             <h1>お仕事を探す</h1>
             <p>お仕事を探すページです。依頼をうけてVECを稼ぐことができます </p>
         </div>
-
-
         <div class="col-3">
             <p>
                 <a asp-page="Create" class="btn btn-primary btn-lg" asp-route-direction="@Model.Direction">働き手を募集する</a>
