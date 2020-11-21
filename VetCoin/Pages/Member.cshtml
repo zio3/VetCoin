@@ -26,6 +26,22 @@
     </tbody>
 </table>
 
+@*<h3>自己紹介</h3>
+<hr />
+<div>
+    @if (!string.IsNullOrEmpty(Model.VetMember.Markdown))
+    {
+        var md = new MarkdownSharp.Markdown();
+        var html = md.Transform(Model.VetMember.Markdown);
+        @Html.Raw(html);
+    }
+    else
+    {
+        <p>自己紹介がまだ設定されていません。</p>
+    }
+</div>
+<hr />*@
+
 
 <hr />
 <h3>@(Model.VetMember.Name)の依頼</h3>

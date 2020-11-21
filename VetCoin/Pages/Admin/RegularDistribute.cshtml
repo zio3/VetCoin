@@ -1,0 +1,54 @@
+﻿@page
+@model VetCoin.Pages.Admin.RegularDistributeModel
+@{
+}
+
+<ul>
+
+    <li>分配総額:@Model.TotalDistributeAmount</li>
+    <li>人数:@Model.MemberDistributeAmounts.Count()</li>
+    <li>評価値合計:@Model.MemberDistributeAmounts.Sum(c => c.BuyTradeCount + c.SellTradeCount)</li>
+</ul>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>メンバー</th>
+            <th>出品数(Sell)</th>
+            <th>出品数(Buy)</th>
+            <th>補正後出品数(Sell)</th>
+            <th>補正後出品数(Buy)</th>
+            <th>評価値</th>
+            <th>分配金額</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var mda in Model.MemberDistributeAmounts)
+        {
+            <tr>
+                <td><partial name="MemberTag" model="mda.VetMember" /></td>
+                <td>
+                    @mda.RawBuyTradeCount
+                </td>
+                <td>
+                    @mda.RawSellTradeCount
+                </td>
+                <td>
+                    @mda.BuyTradeCount
+                </td>
+                <td>
+                    @mda.SellTradeCount
+                </td>
+                <td>
+                    @(mda.BuyTradeCount+mda.SellTradeCount)
+                </td>
+                <td>
+                    @mda.Amount
+                </td>
+            </tr>
+
+        }
+    </tbody>
+
+</table>

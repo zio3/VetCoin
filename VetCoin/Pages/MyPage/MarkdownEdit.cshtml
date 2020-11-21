@@ -1,0 +1,41 @@
+﻿@page
+@model MarkdownEditModel
+
+@{
+    ViewData["Title"] = "MarkdownEdit";
+}
+
+<h1>自己紹介編集</h1>
+<p>Markdown形式で記述出来ます</p>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="VetMember.Id" />
+
+            <div class="form-group">
+                <label asp-for="VetMember.Markdown" class="control-label"></label>
+                <textarea asp-for="VetMember.Markdown" class="form-control" rows="30" ></textarea>
+                <span asp-validation-for="VetMember.Markdown" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<p>Markdown記法:<a href="https://ja.wikipedia.org/wiki/Markdown">Markdown(Wikipedia)</a></p>
+<p>Online MarkdownEditor:<a href="https://dillinger.io/">https://dillinger.io/</a></p>
+
+
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

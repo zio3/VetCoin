@@ -19,7 +19,7 @@ namespace VetCoin.Data
 
         public virtual ICollection<CoinTransaction> RecivedTransactions { get; set; }
         public virtual ICollection<CoinTransaction> SendTransactions { get; set; }
-
+        public string Markdown { get; set; }
 
         public string GetAvaterIconUrl()
         {

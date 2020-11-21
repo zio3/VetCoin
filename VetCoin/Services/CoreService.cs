@@ -268,15 +268,48 @@ namespace VetCoin.Services
 
         public async Task<MemberDistributeAmount[]> CalcMemberDistributeAmount(int totalAmount)
         {
-            return await DbContext
-                .VetMembers
+            var members = await DbContext.VetMembers
                 .AsQueryable()
                 .Where(c => c.MemberType == MemberType.User)
-                .Select(c =>new MemberDistributeAmount
-                {
-                    VetMember = c,
-                    Amount = 4000
-                }).ToArrayAsync();
+                .ToArrayAsync();
+
+            var trades = await DbContext.Trades.AsQueryable().ToArrayAsync();
+
+            var summary =  members.Select(c => new
+            {
+                Member = c,
+                RawBuyTradeCount = trades.Count(d => d.VetMemberId == c.Id && d.Direction == Data.Direction.Buy),
+                RawSellTradeCount = trades.Count(d => d.VetMemberId == c.Id && d.Direction == Data.Direction.Sell),
+                BuyTradeCount = Math.Min(3, trades.Count(d => d.VetMemberId == c.Id && d.Direction == Data.Direction.Buy)),
+                SellTradeCount = Math.Min(3, trades.Count(d => d.VetMemberId == c.Id && d.Direction == Data.Direction.Sell)),
+            }).ToArray();
+
+            var buyTradeTotal = summary.Sum(c => c.BuyTradeCount);
+            var sellTradeTotal = summary.Sum(c => c.SellTradeCount);
+
+            var tradeTotal = buyTradeTotal + sellTradeTotal;
+
+            var results = summary.Select(c => new MemberDistributeAmount
+            {
+                VetMember = c.Member,
+                RawBuyTradeCount = c.RawBuyTradeCount,
+                RawSellTradeCount = c.RawSellTradeCount,
+                BuyTradeCount = c.BuyTradeCount,
+                SellTradeCount = c.SellTradeCount,
+                Amount = (int)Math.Floor((double)totalAmount * (double)(c.BuyTradeCount + c.SellTradeCount) / (double)tradeTotal)
+            }).ToArray();
+
+            return results;
+
+            //return await DbContext
+            //    .VetMembers
+            //    .AsQueryable()
+            //    .Where(c => c.MemberType == MemberType.User)
+            //    .Select(c =>new MemberDistributeAmount
+            //    {
+            //        VetMember = c,
+            //        Amount = 4000
+            //    }).ToArrayAsync();
         }
 
         public async Task<AuthenticationResult> StubAuthentication()
@@ -404,6 +437,17 @@ namespace VetCoin.Services
     {
         public VetMember VetMember { get; set; }
         public int Amount { get; set; }
+
+
+        public int RawSellTradeCount { get; set; }
+        public int RawBuyTradeCount { get; set; }
+
+        public int SellTradeCount { get; set; }
+        public int BuyTradeCount { get; set; }
+
+ 
+
+
     }
 
 
