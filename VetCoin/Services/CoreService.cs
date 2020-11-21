@@ -278,6 +278,9 @@ namespace VetCoin.Services
                 .Where(c=>c.TradeStatus != TradeStatus.Cancel)
                 .ToArrayAsync();
 
+            var baseDistribute = members.Count() * 500;
+            var tradeDistribute = totalAmount - baseDistribute;
+
             var summary =  members.Select(c => new
             {
                 Member = c,
@@ -299,7 +302,7 @@ namespace VetCoin.Services
                 RawSellTradeCount = c.RawSellTradeCount,
                 BuyTradeCount = c.BuyTradeCount,
                 SellTradeCount = c.SellTradeCount,
-                Amount = (int)Math.Floor((double)totalAmount * (double)(c.BuyTradeCount + c.SellTradeCount) / (double)tradeTotal)
+                Amount = (int)Math.Floor((double)tradeDistribute * (double)(c.BuyTradeCount + c.SellTradeCount) / (double)tradeTotal) + 500
             }).ToArray();
 
             return results;
