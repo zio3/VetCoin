@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using VetCoin.Codes;
 using VetCoin.Data;
 using VetCoin.Services;
 
@@ -15,10 +16,11 @@ namespace VetCoin.Pages.Trades.Contracts
 
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public ContractAgreementModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService)
+        public ContractAgreementModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService,SiteContext siteContext)
         {
             DbContext = context;
             CoreService = coreService;
+            SiteContext = siteContext;
         }
 
         [BindProperty]
@@ -27,7 +29,7 @@ namespace VetCoin.Pages.Trades.Contracts
 
         public UserContext UserContext { get; set; }
         public CoreService CoreService { get; }
-
+        public SiteContext SiteContext { get; }
         public bool IsInsufficientFunds { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -106,7 +108,7 @@ namespace VetCoin.Pages.Trades.Contracts
                 RecivedVetMemberId = escrowUser.Id,
                 Amount=entity.Reword,
                 SendeVetMemberId = escrowSendUser.Id,
-                Text = $"{trade.Title } 代金 {entity.Reword}VEC",       
+                Text = $"{trade.Title } 代金 {entity.Reword}{SiteContext.CurrenryUnit}",       
                 TransactionType = CoinTransactionType.Contract
             };
 

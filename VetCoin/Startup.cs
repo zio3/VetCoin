@@ -15,6 +15,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using VetCoin.Services.HostedServices;
+using VetCoin.Codes;
 
 namespace VetCoin
 {
@@ -48,13 +49,19 @@ namespace VetCoin
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", policy => policy.RequireClaim("AdminUser"));
+            });
+
 
             services.AddRazorPages()
                 .AddRazorPagesOptions(options =>
                 {
-                    options.Conventions.AllowAnonymousToPage("/Account/Login");
+                    options.Conventions.AllowAnonymousToFolder("/Account");
                     options.Conventions.AllowAnonymousToPage("/Index");
                     options.Conventions.AuthorizeFolder("/");
+                    options.Conventions.AuthorizeFolder("/Admin", "AdminPolicy");
 
                 })
                 .AddRazorRuntimeCompilation();
@@ -76,6 +83,8 @@ namespace VetCoin
             services.AddCors();
             services.AddHttpContextAccessor();
 
+            services.AddSingleton<SiteContext>();
+
             services.AddScoped<CoreService>();
             services.AddScoped<SuperChatService>();
             services.AddScoped<ReactionSendService>();
@@ -89,8 +98,10 @@ namespace VetCoin
             services.AddHostedService<Services.HostedServices.DbSeedHostedService>();
             services.AddHostedService<Services.HostedServices.DbMigrationHostedService<Data.ApplicationDbContext>>();
             services.AddHostedService<Services.HostedServices.ScheduledExecutionHostedService<ScheduledExecutionService>>();      
-            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();      
+            
 #endif
+
+            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
 
         }
 

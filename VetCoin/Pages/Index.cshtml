@@ -1,5 +1,6 @@
 ﻿@page
 @inject VetCoin.Services.CoreService coreService
+@inject Codes.SiteContext SiteContext
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -11,86 +12,86 @@
 @if (!User.Identity.IsAuthenticated)
 {
 
-<div class="row">
-    <div class="col-6">
-        <img src="~/img/senri.png" style="width:100%;max-width:600px;" />
-    </div>
-    <div class="col-6">
+    <div class="row">
+        <div class="col-6">
+            <img src="@SiteContext.TopImageUrl" style="width:100%;max-width:600px;" />
+        </div>
+        <div class="col-6">
 
-        <div class="form-group row">
-            <div class="col-md-8">
-                <p>利用するにはログインしてください</p>
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <p>利用するにはログインしてください</p>
+                </div>
             </div>
+
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <a class="btn btn-primary" href="@loginUrl">Sign in</a>
+                </div>
+            </div>
+
+
         </div>
 
-        <div class="form-group row">
-            <div class="col-md-8">
-                <a class="btn btn-primary" href="@loginUrl">Sign in</a>
-            </div>
-        </div>
-
-
     </div>
-
-</div>
 }
 else
 {
-<div class="row">
-    <div class="col-6">
-        <img src="~/img/senri.png" style="width:100%;max-width:600px;" />
+    <div class="row">
+        <div class="col-6">
+            <img src="~/img/senri.png" style="width:100%;max-width:600px;" />
+        </div>
+        <div class="col-6">
+
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <p>@Model.UserContext.CurrentUser.Name さん おかえりなさい</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <p>現在の残高は @Model.UserContext.Amount @SiteContext.CurrenryUnit です</p>
+                </div>
+            </div>
+
+
+
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <a asp-page="/MyPage/Index" class="btn btn-primary">MyPage</a>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <a asp-page="/Send" class="btn btn-primary">送金</a>
+                </div>
+            </div>
+
+
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <a asp-page="/Logs" class="btn btn-primary">ログ</a>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-8">
+
+                    <a asp-page="/Trades/Index" asp-route-direction="Sell" class="btn btn-primary">商品・サービスを探す</a>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-8">
+                    <a asp-page="/Trades/Index" asp-route-direction="Buy" class="btn btn-primary">お仕事を探す</a>
+                </div>
+            </div>
+
+
+        </div>
+
     </div>
-    <div class="col-6">
 
-        <div class="form-group row">
-            <div class="col-md-8">
-                <p>@Model.UserContext.CurrentUser.Name さん おかえりなさい</p>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-8">
-                <p>現在の残高は @Model.UserContext.Amount VECです</p>
-            </div>
-        </div>
+    <hr />
 
-
-
-        <div class="form-group row">
-            <div class="col-md-8">
-                <a asp-page="/MyPage/Index" class="btn btn-primary">MyPage</a>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-8">
-                <a asp-page="/Send" class="btn btn-primary">送金</a>
-            </div>
-        </div>
-
-
-        <div class="form-group row">
-            <div class="col-md-8">
-                <a asp-page="/Logs" class="btn btn-primary">ログ</a>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-8">
-
-                <a asp-page="/Trades/Index" asp-route-direction="Sell" class="btn btn-primary">商品・サービスを探す</a>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-8">
-                <a asp-page="/Trades/Index" asp-route-direction="Buy" class="btn btn-primary">お仕事を探す</a>
-            </div>
-        </div>
-
-
-    </div>
-
-</div>
-
-<hr />
-
-<p>VETメンバーがじゃぶじゃぶ課金したくなるような射幸心を煽りまくる説明文章を誰かに書いてもらう</p>
+    <p>VETメンバーがじゃぶじゃぶ課金したくなるような射幸心を煽りまくる説明文章を誰かに書いてもらう</p>
 
 }

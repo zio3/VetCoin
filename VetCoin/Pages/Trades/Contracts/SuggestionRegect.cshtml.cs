@@ -85,7 +85,7 @@ namespace VetCoin.Pages.Trades.Contracts
             //    RecivedVetMemberId = escrowUser.Id,
             //    Amount = entity.Reword,
             //    SendeVetMemberId = escrowTargetUser.Id,
-            //    Text = $"{trade.Title } ‘ã‹à {entity.Reword}VEC",
+            //    Text = $"{trade.Title }  {entity.Reword}VEC",
             //};
 
             try
