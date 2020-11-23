@@ -49,7 +49,7 @@ export default class Template extends Vue {
 
     async toggle() {
 
-        this.lovalVoteCount += this.currentState ? -1 : 1;
+        this.lovalVoteCount = Number(this.lovalVoteCount) + (this.currentState ? -1 : 1);
         this.currentState = !this.currentState;
         const responce = await this.tradeLikeVotesClient.postTradeLikeVote(this.tradeId);
 
