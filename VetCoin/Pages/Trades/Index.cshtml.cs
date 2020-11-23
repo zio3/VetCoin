@@ -30,10 +30,10 @@ namespace VetCoin.Pages.Trades
         public CoreService CoreService { get; }
 
         [BindProperty(SupportsGet = true)]
-        public bool IsWorking { get; set; }
+        public bool IsWorking { get; set; } = true;
         
         [BindProperty(SupportsGet = true)]
-        public bool IsCpmplited { get; set; }
+        public bool IsCpmplited { get; set; } = true;
 
         public void OnGet(string searchKey, Direction? direction)
         {
