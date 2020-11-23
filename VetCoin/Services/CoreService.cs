@@ -21,24 +21,27 @@ namespace VetCoin.Services
 {
     public class CoreService
     {
-        const ulong VET_GUILD_ID = 627003812892114985;
+        //const ulong VET_GUILD_ID = 627003812892114985;
         const ulong STUB_USER_ID = 999999999;
 
         public CoreService(IHttpContextAccessor httpContextAccessor,
             ApplicationDbContext dbContext, 
             IConfiguration configuration, 
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            SiteContext siteContext)
         {
             HttpContextAccessor = httpContextAccessor;
             DbContext = dbContext;
             Configuration = configuration;
             HttpClientFactory = httpClientFactory;
+            SiteContext = siteContext;
         }
 
         public IHttpContextAccessor HttpContextAccessor { get; }
         public ApplicationDbContext DbContext { get; }
         public IConfiguration Configuration { get; }
         public IHttpClientFactory HttpClientFactory { get; }
+        public SiteContext SiteContext { get; }
 
         public IQueryable<CoinTransaction> GetCoinTransactionQuery(VetMember vetMember)
         {
@@ -68,7 +71,7 @@ namespace VetCoin.Services
             var dc = new DiscordRestClient();
             await dc.LoginAsync(Discord.TokenType.Bearer, accessToken);
             var gs = dc.GetGuildSummariesAsync();
-            var isVetMember = (await gs.ToArrayAsync()).SelectMany(c => c).Any(c => c.Id == VET_GUILD_ID);
+            var isVetMember = (await gs.ToArrayAsync()).SelectMany(c => c).Any(c => c.Id == SiteContext.LoginCheckDiscordServerId);
 
             return (isVetMember, dc.CurrentUser);
         }
@@ -174,7 +177,7 @@ namespace VetCoin.Services
         {
             var httpContext = HttpContextAccessor.HttpContext;
             var encoeeHostName = HttpUtility.UrlEncode(httpContext.Request.Host.ToString());
-            return $"https://discord.com/api/oauth2/authorize?client_id=756087315440599050&redirect_uri=https%3A%2F%2F{encoeeHostName}%2Fapi%2FAuthentication&response_type=code&scope=identify%20guilds";
+            return $"https://discord.com/api/oauth2/authorize?client_id={SiteContext.DiscordAppClientId}&redirect_uri=https%3A%2F%2F{encoeeHostName}%2Fapi%2FAuthentication&response_type=code&scope=identify%20guilds";
         }
 
         public string GetRedirectUrl()
@@ -353,7 +356,7 @@ namespace VetCoin.Services
             }
 
             var form = new Dictionary<string, string>();
-            form.Add("client_id", "756087315440599050");
+            form.Add("client_id", SiteContext.DiscordAppClientId);
             form.Add("client_secret", clientSecret);
             form.Add("grant_type", "authorization_code");
             form.Add("redirect_uri", GetRedirectUrl());

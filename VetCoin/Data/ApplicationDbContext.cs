@@ -120,7 +120,9 @@ namespace VetCoin.Data
 
         public DbSet<SubscriptionMember> SubscriptionMembers { get; set; }
         public DbSet<TradeLikeVote> TradeLikeVotes { get; set; }
-        
+
+        public DbSet<ReactionMap> ReactionMaps { get; set; }
+
         public override int SaveChanges()
         {
             EntryModifyInfo();

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+using VetCoin.Codes;
 using VetCoin.Data;
 using VetCoin.Services;
 
@@ -23,11 +24,13 @@ namespace VetCoin.Controller
     {
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
+        public SiteContext SiteContext { get; }
 
-        public AuthenticationController(ApplicationDbContext dbContext, CoreService coreService)
+        public AuthenticationController(ApplicationDbContext dbContext, CoreService coreService, Codes.SiteContext siteContext)
         {
             DbContext = dbContext;
             CoreService = coreService;
+            SiteContext = siteContext;
         }
 
         //public SignInManager SignInManager { get; }
@@ -54,6 +57,14 @@ namespace VetCoin.Controller
                 new Claim("AvatarId",result.User.AvatarId),
                 new Claim("DiscordId",result.User.DiscordId.ToString()),
             };
+
+            if(SiteContext.AdminDiscordId == result.User.DiscordId ||
+                SiteContext.DeveloperDiscordId == result.User.DiscordId )
+            {
+                claims.Add(new Claim("AdminUSer", ""));
+            }
+
+         //   claims.Add(new Claim("AdminUSer", ""));
 
             //必要に応じてUserを作る
 
