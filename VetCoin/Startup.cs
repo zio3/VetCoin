@@ -97,11 +97,11 @@ namespace VetCoin
 #if !DEBUG
             services.AddHostedService<Services.HostedServices.DbSeedHostedService>();
             services.AddHostedService<Services.HostedServices.DbMigrationHostedService<Data.ApplicationDbContext>>();
-            services.AddHostedService<Services.HostedServices.ScheduledExecutionHostedService<ScheduledExecutionService>>();      
+            services.AddHostedService<Services.HostedServices.ScheduledExecutionHostedService<ScheduledExecutionService>>(); 
+            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();     
             
 #endif
 
-            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
 
         }
 
