@@ -261,12 +261,16 @@ namespace VetCoin.Services
         }
         public int TotalDistibutionAmount()
         {
-            var userCount = DbContext.VetMembers.Count(c => c.MemberType == MemberType.User);
-            //現在は仮で (人数 * 50000 /12)
+            //var userCount = DbContext.VetMembers.Count(c => c.MemberType == MemberType.User);
+            ////現在は仮で (人数 * 50000 /12)
 
-            //12ヶ月経過後毎の半減をあとで組み入れる
+            ////12ヶ月経過後毎の半減をあとで組み入れる
 
-            return userCount * 50000 / 12;
+            //return userCount * 50000 / 12;
+
+            //月あたり100,000固定になりました。
+
+            return 100000;
         }
 
         public async Task<MemberDistributeAmount[]> CalcMemberDistributeAmount(int totalAmount)
