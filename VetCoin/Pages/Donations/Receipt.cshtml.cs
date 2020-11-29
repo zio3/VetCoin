@@ -36,6 +36,7 @@ namespace VetCoin.Pages.Donations
                 return NotFound();
             }
             Doners = DbContext.Doners
+                .Include(c=>c.VetMember)
                 .AsQueryable()
                 .Where(c => c.DonationId == donationId)
                 .ToArray();
