@@ -184,8 +184,6 @@ namespace VetCoin.Services.HostedServices
                 var m = regex.Match(CommandContext);
                 if (m.Success)
                 {
-
-
                     var amount = int.Parse(m.Groups[2].Value);
                     var messageText = m.Groups[3].Value;
                     var toId = message.MentionedUsers.First().Id;
