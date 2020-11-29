@@ -178,7 +178,7 @@ namespace VetCoin.Services.HostedServices
                 //  await message.Channel.SendMessageAsync($"スーパーチャットテストメッセージ");
 
                 RegexOptions options = RegexOptions.Singleline;
-                Regex regex = new Regex(@"!(superchat|spc)[\s　]+<@!?(\d+)>[\s　]+(\d+)[\s　]?(.*)?", options);
+                Regex regex = new Regex(@"!superchat[\s　]+<@!?(\d+)>[\s　]+(\d+)[\s　]?(.*)?", options);
 
                 var fromDmChannel = await message.Author.GetOrCreateDMChannelAsync();
                 var m = regex.Match(CommandContext);
@@ -186,8 +186,8 @@ namespace VetCoin.Services.HostedServices
                 {
 
 
-                    var amount = int.Parse(m.Groups[3].Value);
-                    var messageText = m.Groups[4].Value;
+                    var amount = int.Parse(m.Groups[2].Value);
+                    var messageText = m.Groups[3].Value;
                     var toId = message.MentionedUsers.First().Id;
 
                     var targetUser = message.MentionedUsers.First();
