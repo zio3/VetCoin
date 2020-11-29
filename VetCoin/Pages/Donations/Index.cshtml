@@ -39,22 +39,26 @@
                     @Html.DisplayNameFor(model => displayNameEntity.VetMember)
                 </a>
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in pageItems)
         {
-            <tr>
-                <td>
-                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
-                </td>
-                <td>
-                    <a asp-page="./Details" asp-route-id="@item.Id" >@Html.DisplayFor(modelItem => item.Title)</a>
-                </td>
-                <td>
-                    <partial name="MemberTag" model="item.VetMember" />
-                </td>
-            </tr>
+        <tr>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+            </td>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+            </td>
+            <td>
+                <partial name="MemberTag" model="item.VetMember" />
+            </td>
+            <td>
+                @Html.DisplayFor(c=>c.ModelState)
+            </td>
+        </tr>
         }
     </tbody>
 </table>

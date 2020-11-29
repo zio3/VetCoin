@@ -25,7 +25,9 @@ namespace VetCoin.Pages.Donations
         public void OnGet(string searchKey)
         {
             DonationQuery = DbContext.Donations
-                .Include(d => d.VetMember).AsQueryable();
+                .Include(d => d.VetMember)
+                .Where(c=>c.DonationState != DonationState.Cancel)
+                .AsQueryable();
 
             if(!string.IsNullOrEmpty(searchKey))
         {
