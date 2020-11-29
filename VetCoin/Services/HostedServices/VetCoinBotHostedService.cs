@@ -186,8 +186,8 @@ namespace VetCoin.Services.HostedServices
                 {
 
 
-                    var amount = int.Parse(m.Groups[2].Value);
-                    var messageText = m.Groups[3].Value;
+                    var amount = int.Parse(m.Groups[3].Value);
+                    var messageText = m.Groups[4].Value;
                     var toId = message.MentionedUsers.First().Id;
 
                     var targetUser = message.MentionedUsers.First();
