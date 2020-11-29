@@ -96,6 +96,19 @@ namespace VetCoin.Data
             builder.Entity<VetMember>()
                 .HasIndex(b => b.DiscordId);
 
+
+            builder.Entity<Donation>()
+                .HasOne(c => c.VetMember)
+                .WithMany()
+                .HasForeignKey(c => c.VetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            builder.Entity<Doner>()
+                .HasOne(c => c.VetMember)
+                .WithMany()
+                .HasForeignKey(c => c.VetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
 
         public DbSet<ScheduledExecutionLog> ScheduledExecutionLogs { get; set; }
@@ -122,6 +135,13 @@ namespace VetCoin.Data
         public DbSet<TradeLikeVote> TradeLikeVotes { get; set; }
 
         public DbSet<ReactionMap> ReactionMaps { get; set; }
+
+
+        public DbSet<Donation> Donations { get; set; }
+        public DbSet<DonationLog> DonationLogs { get; set; }
+        public DbSet<Doner> Doners { get; set; }
+
+        public DbSet<DonationMessage> DonationMessages { get; set; }
 
         public override int SaveChanges()
         {
@@ -265,5 +285,7 @@ namespace VetCoin.Data
 
     }
 }
+
+
 
 

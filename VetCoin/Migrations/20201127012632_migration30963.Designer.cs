@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetCoin.Data;
 
 namespace VetCoin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201127012632_migration30963")]
+    partial class migration30963
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,37 +242,6 @@ namespace VetCoin.Migrations
                     b.ToTable("DonationLogs");
                 });
 
-            modelBuilder.Entity("VetCoin.Data.DonationMessage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTimeOffset>("CreateDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreateUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DonationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VetMemberId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DonationId");
-
-                    b.HasIndex("VetMemberId");
-
-                    b.ToTable("DonationMessages");
-                });
-
             modelBuilder.Entity("VetCoin.Data.Doner", b =>
                 {
                     b.Property<int>("Id")
@@ -279,9 +250,6 @@ namespace VetCoin.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CoinTransactionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
@@ -296,15 +264,10 @@ namespace VetCoin.Migrations
                     b.Property<int>("DonationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DonerState")
-                        .HasColumnType("int");
-
                     b.Property<int>("VetMemberId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CoinTransactionId");
 
                     b.HasIndex("DonationId");
 
@@ -698,27 +661,8 @@ namespace VetCoin.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VetCoin.Data.DonationMessage", b =>
-                {
-                    b.HasOne("VetCoin.Data.Donation", "Donation")
-                        .WithMany("DonationMessages")
-                        .HasForeignKey("DonationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VetCoin.Data.VetMember", "VetMember")
-                        .WithMany()
-                        .HasForeignKey("VetMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("VetCoin.Data.Doner", b =>
                 {
-                    b.HasOne("VetCoin.Data.CoinTransaction", "CoinTransaction")
-                        .WithMany()
-                        .HasForeignKey("CoinTransactionId");
-
                     b.HasOne("VetCoin.Data.Donation", "Donation")
                         .WithMany("Doners")
                         .HasForeignKey("DonationId")

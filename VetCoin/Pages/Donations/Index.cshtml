@@ -1,0 +1,61 @@
+﻿@page
+@model IndexModel
+@inject Services.UrlQueryService UrlQueryService
+
+@{
+    ViewData["Title"] = "Index";
+    var query = Model.DonationQuery;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 10;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.Donation();
+}
+
+<h1>寄付・クラファン (β機能)</h1>
+
+<form class="form-inline" method="get">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+</form>
+<p>
+    <a asp-page="Create" class="btn btn-primary">新規募集</a>
+</p>
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Title)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Title)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.VetMember)">
+                    @Html.DisplayNameFor(model => displayNameEntity.VetMember)
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pageItems)
+        {
+            <tr>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id" >@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+                <td>
+                    <partial name="MemberTag" model="item.VetMember" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />

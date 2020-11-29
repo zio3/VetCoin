@@ -1,0 +1,161 @@
+﻿@page
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+@if (Model.Donation.DonationState == Data.DonationState.Cancel)
+{
+    <div class="alert alert-danger" role="alert">
+        寄付/クラファンはキャンセルされています。
+    </div>
+}
+
+
+<h1>寄付/クラファン詳細</h1>
+@if (Model.Donation.DonationState == Data.DonationState.Open)
+{
+    @if (Model.IsOwner)
+    {
+        <a asp-page="./Edit" asp-route-id="@Model.Donation.Id" class="btn btn-primary">編集</a>
+        @*<a asp-page="./Images" asp-route-id="@Model.Donation.Id" class="btn btn-primary">画像</a>*@
+        <a asp-page="./Receipt" asp-route-donationId="@Model.Donation.Id" class="btn btn-primary">受領管理</a>
+    }
+}
+<div>
+    <a asp-page="./EditLog" asp-route-donationid="@Model.Donation.Id">Log</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Donation.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Donation.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Donation.Content)
+        </dt>
+
+        <dd class="col-sm-10" style="white-space:pre-wrap">@Html.DisplayFor(model => model.Donation.Content)</dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Donation.VetMember)
+        </dt>
+        <dd class="col-sm-10">
+            <partial name="MemberTag" model="Model.Donation.VetMember" />
+        </dd>
+    </dl>
+</div>
+
+<hr />
+
+@if (Model.IsSuppotError)
+{
+    <div class="alert alert-danger" role="alert">
+        残高不足です
+    </div>
+}
+
+
+<form class="form" method="post">
+    <div class="form-group mb-2">
+        <label>
+            支援額
+            <input type="text" class="form-control" asp-for="DonateAmount" placeholder="寄付額を入力" />
+        </label>
+    </div>
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="PostMessage" placeholder="一言メッセージ" />
+    </div>
+    <button type="submit" class="btn btn-primary mb-2" name="mode" value="SupprtEntry">支援する</button>
+</form>
+
+
+<h3>支援一覧</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>VetMember</th>
+            <th>日時</th>
+            <th>支援額</th>
+            <th>メッセージ</th>
+            <th>ステータス</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doner in Model.Donation.Doners.Where(c => c.DonerState != Data.DonerState.Cancel).OrderBy(c => c.CreateDate))
+        {
+            <tr>
+                <td>
+                    <partial name="MemberTag" model="doner.VetMember" />
+                </td>
+                <td>
+                    @Html.DisplayFor(c => doner.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(c => doner.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(c => doner.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(c => doner.DonerState)
+                </td>
+            </tr>
+        }
+        @{
+            var sum = Model.Donation.Doners.Where(c => c.DonerState != Data.DonerState.Cancel).Sum(c => c.Amount);
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td>@sum</td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+
+<hr />
+<h3>メッセージ</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>VetMember</th>
+            <th>日時</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in @Model.Donation.DonationMessages.OrderBy(c => c.CreateDate))
+        {
+            <tr>
+                <td>
+                    <partial name="MemberTag" model="message.VetMember" />
+                </td>
+                <td>
+                    @Html.DisplayFor(c => message.CreateDate)
+                </td>
+                <td class="col-sm-10" style="white-space:pre-wrap">@message.Message</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form class="form" method="post">
+    <div class="form-group mb-2">
+        <textarea type="text" class="form-control" asp-for="PostMessage" placeholder="メッセージを記入してください"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2" name="mode" value="PostMessage">投稿</button>
+</form>
+

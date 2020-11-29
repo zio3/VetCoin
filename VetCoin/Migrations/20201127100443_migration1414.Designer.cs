@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetCoin.Data;
 
 namespace VetCoin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201127100443_migration1414")]
+    partial class migration1414
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,9 +283,6 @@ namespace VetCoin.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CoinTransactionId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
@@ -296,15 +295,10 @@ namespace VetCoin.Migrations
                     b.Property<int>("DonationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DonerState")
-                        .HasColumnType("int");
-
                     b.Property<int>("VetMemberId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CoinTransactionId");
 
                     b.HasIndex("DonationId");
 
@@ -715,10 +709,6 @@ namespace VetCoin.Migrations
 
             modelBuilder.Entity("VetCoin.Data.Doner", b =>
                 {
-                    b.HasOne("VetCoin.Data.CoinTransaction", "CoinTransaction")
-                        .WithMany()
-                        .HasForeignKey("CoinTransactionId");
-
                     b.HasOne("VetCoin.Data.Donation", "Donation")
                         .WithMany("Doners")
                         .HasForeignKey("DonationId")

@@ -111,13 +111,13 @@ namespace VetCoin.Pages.Trades
                     new DiscordService.DiscordEmbed.Field
                     {
                         name = "希望価格",
-                        value = $"{Trade.Reward} {Trade.RewardComment}",
+                        value = GetPriceStr(Trade),
                         inline = true
                     },
                     new DiscordService.DiscordEmbed.Field
                     {
                         name = "納期",
-                        value = Trade.DeliveryDate,
+                        value = Trade.DeliveryDate??"[未設定]",
                         inline = true
                     },
                     new DiscordService.DiscordEmbed.Field
@@ -128,10 +128,19 @@ namespace VetCoin.Pages.Trades
                     }
                 },
                 });
-
             }
 
             return RedirectToPage("./Index", new { direction = Trade.Direction });
+        }
+
+        string GetPriceStr(Trade trade)
+        {
+            var str = $"{Trade.Reward} {Trade.RewardComment ?? string.Empty}";
+            if(string.IsNullOrEmpty(str.Trim()))
+            {
+                str = "[未設定]";
+            }
+            return str;
         }
     }
 }

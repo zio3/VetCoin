@@ -1,0 +1,40 @@
+﻿@page
+@model CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>寄付・クラファン 新規募集</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Donation.Title" class="control-label"></label>
+                <input asp-for="Donation.Title" class="form-control" />
+                <span asp-validation-for="Donation.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Donation.Content" class="control-label"></label>
+                <textarea asp-for="Donation.Content" class="form-control" rows="20"></textarea>
+                <span asp-validation-for="Donation.Content" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="募集開始" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
