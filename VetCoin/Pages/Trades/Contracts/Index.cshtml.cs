@@ -77,7 +77,7 @@ namespace VetCoin.Pages.Trades.Contracts
                 await SendMessages(contract, userContext.CurrentUser, postMessage);
 
             }
-            return await OnGetAsync(contractId);
+            return RedirectToPage("./Index",new { contractId  = contractId });
         }
 
         private async Task<VetMember[]> GetStakeHolders(int id)

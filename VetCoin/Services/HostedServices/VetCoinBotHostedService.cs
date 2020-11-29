@@ -172,13 +172,13 @@ namespace VetCoin.Services.HostedServices
             var CommandContext = message.Content;
 
             // コマンド("おはよう")かどうか判定
-            if (CommandContext.StartsWith("!superchat"))
+            if (CommandContext.StartsWith("!superchat") || CommandContext.StartsWith("!spc"))
             {
                 //  await message.Channel.SendMessageAsync($"SuperChate @zio To @VetCoin 1000Ven");
                 //  await message.Channel.SendMessageAsync($"スーパーチャットテストメッセージ");
 
                 RegexOptions options = RegexOptions.Singleline;
-                Regex regex = new Regex(@"!superchat[\s　]+<@!?(\d+)>[\s　]+(\d+)[\s　]?(.*)?", options);
+                Regex regex = new Regex(@"!(superchat|spc)[\s　]+<@!?(\d+)>[\s　]+(\d+)[\s　]?(.*)?", options);
 
                 var fromDmChannel = await message.Author.GetOrCreateDMChannelAsync();
                 var m = regex.Match(CommandContext);
@@ -195,14 +195,11 @@ namespace VetCoin.Services.HostedServices
                     IDMChannel toDmChannel = null;
                     try
                     {
-
                         toDmChannel = await targetUser.GetOrCreateDMChannelAsync();
                     }
-                    catch(Exception e)
+                    catch
                     {
-                        Console.WriteLine();
                     }
-
 
                     using (var scope = Services.CreateScope())
                     {

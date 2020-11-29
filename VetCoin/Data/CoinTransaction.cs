@@ -44,6 +44,7 @@ namespace VetCoin.Data
         Transfer,
         DistributionFraction,
         Subscription,
+        Donate,
 
         Other = 100
     }

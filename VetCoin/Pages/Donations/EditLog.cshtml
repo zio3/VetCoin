@@ -1,0 +1,30 @@
+﻿@page
+@model VetCoin.Pages.Donations.EditLogModel
+@{
+}
+
+<h3>変更履歴</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>変更日</th>
+            <th>タイトル</th>
+            <th>内容</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.DonationLogs)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(c=>item.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(c => item.Title)
+                </td>
+                <td style="white-space:pre-wrap">@Html.DisplayFor(c => item.Content)</td>
+            </tr>
+        }
+    </tbody>
+</table>

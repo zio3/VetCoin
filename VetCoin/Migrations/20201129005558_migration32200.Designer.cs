@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetCoin.Data;
 
 namespace VetCoin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201129005558_migration32200")]
+    partial class migration32200
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,7 +283,7 @@ namespace VetCoin.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CoinTransactionId")
+                    b.Property<int>("CoinTransactionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
@@ -294,9 +296,6 @@ namespace VetCoin.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DonationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DonerState")
                         .HasColumnType("int");
 
                     b.Property<int>("VetMemberId")
@@ -717,7 +716,9 @@ namespace VetCoin.Migrations
                 {
                     b.HasOne("VetCoin.Data.CoinTransaction", "CoinTransaction")
                         .WithMany()
-                        .HasForeignKey("CoinTransactionId");
+                        .HasForeignKey("CoinTransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("VetCoin.Data.Donation", "Donation")
                         .WithMany("Doners")

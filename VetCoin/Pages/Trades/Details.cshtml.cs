@@ -91,7 +91,7 @@ namespace VetCoin.Pages.Trades
 
                 PostMessage = null;
             }
-            return await OnGetAsync(id);
+            return RedirectToPage("./Details", new { id = id });
         }
 
         private async Task SendMessages(Trade trade, VetMember sender,string message)
@@ -99,7 +99,7 @@ namespace VetCoin.Pages.Trades
             var senderIsOwner = trade.VetMemberId == sender.Id;
 
             var messageTargets =
-                senderIsOwner ? DbContext.TradeMessages.AsQueryable().Where(c => c.TradeId == trade.Id).Select(c => c.VetMember).ToArray()
+                senderIsOwner ? DbContext.TradeMessages.AsQueryable().Where(c => c.TradeId == trade.Id).Select(c => c.VetMember).Distinct().ToArray()
                             : new[] { Trade.VetMember };
 
             var dmMessage = $@"
