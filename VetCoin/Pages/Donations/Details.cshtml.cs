@@ -69,7 +69,6 @@ namespace VetCoin.Pages.Donations
                 case "SupprtEntry":
                     return await SupprtEntry(id);
                 default:
-
                     break;
             }
             return NotFound();
@@ -117,13 +116,17 @@ namespace VetCoin.Pages.Donations
             var userContext = CoreService.GetUserContext();
             var escrowUser = DbContext.VetMembers.FirstOrDefault(c => c.MemberType == MemberType.Escrow);
 
-            if(userContext.Amount < DonateAmount)
+            if (DonateAmount <= 0)
             {
                 IsSuppotError = true;
                 return await OnGetAsync(id);
             }
 
-
+            if (userContext.Amount < DonateAmount)
+            {
+                IsSuppotError = true;
+                return await OnGetAsync(id);
+            }
             var coinTransaction = new CoinTransaction
             {
                 SendeVetMemberId = userContext.CurrentUser.Id,
