@@ -1,5 +1,6 @@
 ﻿@page
 @model DetailsModel
+@inject Codes.SiteContext SiteContext
 
 @{
     ViewData["Title"] = "Details";
@@ -15,6 +16,14 @@
 
 
 <h1>寄付/クラファン詳細</h1>
+@{
+    var sum = Model.Donation.Doners.Where(c => c.DonerState != Data.DonerState.Cancel).Sum(c => c.Amount);
+
+    <h2>現在 @sum @SiteContext.CurrenryUnit 支援されています</h2>
+
+}
+<p></p>
+
 @if (Model.Donation.DonationState == Data.DonationState.Open)
 {
     @if (Model.IsOwner)
@@ -106,18 +115,6 @@
                 </td>
             </tr>
         }
-        @{
-            var sum = Model.Donation.Doners.Where(c => c.DonerState != Data.DonerState.Cancel).Sum(c => c.Amount);
-
-            <tr>
-                <td></td>
-                <td></td>
-                <td>@sum</td>
-                <td></td>
-                <td></td>
-            </tr>
-        }
-
     </tbody>
 </table>
 

@@ -1,6 +1,7 @@
 ﻿@page
 @model IndexModel
 @inject Services.UrlQueryService UrlQueryService
+@inject Codes.SiteContext SiteContext
 
 @{
     ViewData["Title"] = "Index";
@@ -39,12 +40,16 @@
                     @Html.DisplayNameFor(model => displayNameEntity.VetMember)
                 </a>
             </th>
+            <th>現在の支援額</th>
+            <th>支援者数</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in pageItems)
         {
+            var sum = item.Doners.Where(c => c.DonerState != Data.DonerState.Cancel).Sum(c => c.Amount);
+            var numOfDonner = item.Doners.Select(c=>c.VetMemberId).Distinct().Count();
         <tr>
             <td>
                 <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
@@ -56,7 +61,13 @@
                 <partial name="MemberTag" model="item.VetMember" />
             </td>
             <td>
-                @Html.DisplayFor(c=>c.ModelState)
+                @sum @SiteContext.CurrenryUnit
+            </td>
+            <td>
+                @numOfDonner 人
+            </td>
+            <td>
+                @Html.DisplayFor(c => c.ModelState)
             </td>
         </tr>
         }

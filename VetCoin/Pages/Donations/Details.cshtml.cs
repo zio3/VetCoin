@@ -33,6 +33,8 @@ namespace VetCoin.Pages.Donations
 
         public bool IsSuppotError { get; set; }
 
+        public string ErrorMessage { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -119,12 +121,14 @@ namespace VetCoin.Pages.Donations
             if (DonateAmount <= 0)
             {
                 IsSuppotError = true;
+                ErrorMessage = "残高不足です";
                 return await OnGetAsync(id);
             }
 
             if (userContext.Amount < DonateAmount)
             {
                 IsSuppotError = true;
+                ErrorMessage = "数値の入力が必要です";
                 return await OnGetAsync(id);
             }
             var coinTransaction = new CoinTransaction
