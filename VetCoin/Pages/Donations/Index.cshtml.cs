@@ -26,6 +26,7 @@ namespace VetCoin.Pages.Donations
         {
             DonationQuery = DbContext.Donations
                 .Include(d => d.VetMember)
+                .Include(c=>c.Doners)
                 .Where(c=>c.DonationState != DonationState.Cancel)
                 .AsQueryable();
 
