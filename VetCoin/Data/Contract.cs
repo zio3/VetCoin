@@ -22,6 +22,7 @@ namespace VetCoin.Data
         [DisplayName("納期")]
         public string DeliveryDate { get; set; }
 
+        [Required]
         [DisplayName("提案内容")]
         public string AgreementContent { get; set; }
 

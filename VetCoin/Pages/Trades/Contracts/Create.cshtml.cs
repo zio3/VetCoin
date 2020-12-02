@@ -40,7 +40,7 @@ namespace VetCoin.Pages.Trades.Contracts
             {
                 Contract.Reword = Trade.Reward.Value;
             }
-            Contract.AgreementContent = Trade.Content;
+            //Contract.AgreementContent = Trade.Content;
             Contract.DeliveryDate = Trade.DeliveryDate;
             return Page();
         }
@@ -92,8 +92,8 @@ namespace VetCoin.Pages.Trades.Contracts
                 .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
                 .AddField("アクション", "提案がありました")
                 .AddField("報酬", contract.Reword,true)
-                .AddField("価格", contract.DeliveryDate, true)
-                .AddField("提案内容", contract.AgreementContent);
+                .AddField("納期", GetNotEmptyStr(contract.DeliveryDate), true)
+                .AddField("提案内容", GetNotEmptyStr(contract.AgreementContent));
 
 //            var dmMessage = $@"提案がありました。確認してください。
 //タイトル:{trade.Title}
@@ -104,6 +104,15 @@ namespace VetCoin.Pages.Trades.Contracts
             var messageTargets = stakeHolders.Where(c => c.Id != sender.Id).ToArray();
 
             await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
+        }
+
+        string GetNotEmptyStr(string src)
+        {
+            if (string.IsNullOrEmpty(src.Trim()))
+            {
+                src = "[未設定]";
+            }
+            return src;
         }
     }
 }
