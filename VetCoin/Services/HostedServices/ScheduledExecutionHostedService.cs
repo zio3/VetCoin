@@ -54,7 +54,7 @@ namespace VetCoin.Services.HostedServices
                     var cronAttributes = mi.GetCustomAttributes(typeof(CronAttribute), false).Cast<CronAttribute>();
                     foreach (var cronAttribute in cronAttributes)
                     {
-                        ScheduleTasks.Add(CronTaskLoop(mi, cronAttribute.CronExpression));
+                        ScheduleTasks.Add(CronTaskLoop(mi, cronAttribute.CronExpression, cancellationToken));
                     }
                 }
             }
@@ -67,12 +67,12 @@ namespace VetCoin.Services.HostedServices
             return entity;
         }
 
-        async Task CronTaskLoop(MethodInfo mi, string cronExpression)
+        async Task CronTaskLoop(MethodInfo mi, string cronExpression, CancellationToken cancellationToken)
         {
             try
             {
 
-                while (true)
+                while (!cancellationToken.IsCancellationRequested)
                 {
                     Logger.LogWarning($"LoopStart {mi.Name}");
 
@@ -80,7 +80,7 @@ namespace VetCoin.Services.HostedServices
 
                     if (scheduleInfo.Disabled)
                     {
-                        await Task.Delay(TimeSpan.FromMinutes(5));
+                        await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);
                         continue;
                     }
 
@@ -89,21 +89,28 @@ namespace VetCoin.Services.HostedServices
 
                     if (nextTime == null)
                     {
-                        await Task.Delay(TimeSpan.FromMinutes(5));
+                        await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);
+                        continue;
+                    }
+
+                    var diff = nextTime.Value - now;
+                    if(diff.TotalDays >= 10)
+                    {
+                        await Task.Delay(TimeSpan.FromDays(1), cancellationToken);
                         continue;
                     }
 
 
                     //await DiscordService.SendMessage(DiscordService.Channel.Verbose, $"Method:{mi.Name} Now:{now} Next:{nextTime} Diff{nextTime.Value - now}");
                     Logger.LogInformation($"Method:{mi.Name} Now:{now} Next:{nextTime} Diff{nextTime.Value - now}");
-                    await Task.Delay(nextTime.Value - now);
+                    await Task.Delay(nextTime.Value - now, cancellationToken);
 
                     var ticketKey = $"Service:{typeof(T).Name} Method:{mi.Name} Time:{nextTime.Value.ToString("yyyy/MM/dd HH:mm:ss")}";
 
                     scheduleInfo = GetScheduleInfo(mi.Name);
                     if (scheduleInfo.Disabled)
                     {
-                        await Task.Delay(TimeSpan.FromMinutes(5));
+                        await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);
                         continue;
                     }
 
