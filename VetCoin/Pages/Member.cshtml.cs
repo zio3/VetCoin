@@ -42,7 +42,8 @@ namespace VetCoin.Pages
                                 .GetCoinTransactionQuery(VetMember)
                                 .Include(c => c.RecivedVetMember)
                                 .Include(c => c.SendVetMember)
-                                .OrderByDescending(c => c.CreateDate);
+                                .OrderByDescending(c => c.CreateDate)
+                                .Take(5);
 
             Trades = CoreService.DbContext
                             .Trades

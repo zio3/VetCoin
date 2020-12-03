@@ -60,10 +60,12 @@ namespace VetCoin.Data
         Suggestion,
         [Display(Name = "作業中")]
         Working,
-        [Display(Name = "完了")]
+        [Display(Name = "取引完了")]
         Complete,
         [Display(Name = "キャンセル")]
-        Canceled
+        Canceled,
+        [Display(Name = "作業完了")]
+        Deliveryed
     }
 
 }

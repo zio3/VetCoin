@@ -32,15 +32,23 @@
 
     @if (Model.Contract.ContractStatus == Data.ContractStatus.Working)
     {
-        @if (isSeller)
+        if (isSeller)
         {
             <a asp-page="./ContractCancel" asp-route-id="@Model.Contract.Id" class="btn btn-primary">契約キャンセル</a>
+            <a asp-page="./ContractDelivery" asp-route-id="@Model.Contract.Id" class="btn btn-primary">作業完了通知</a>
         }
-        @if (isBuyer)
+
+    }
+
+    @if (Model.Contract.ContractStatus == Data.ContractStatus.Deliveryed)
+    {
+        if (isBuyer)
         {
             <a asp-page="./ContractComplete" asp-route-id="@Model.Contract.Id" class="btn btn-primary">契約内容の完了</a>
         }
     }
+
+
     <a asp-page="../details" asp-route-id="@Model.Contract.Trade.Id">Back to List</a>
 </div>
 
