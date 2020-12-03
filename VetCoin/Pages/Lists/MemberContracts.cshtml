@@ -1,0 +1,111 @@
+﻿@page "/Member/{MemberId}/Contracts"
+@model MemberContractsModel
+@inject Services.UrlQueryService UrlQueryService
+
+@{
+    ViewData["Title"] = "MemberContracts";
+    var query = Model.ContractQuery;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 10;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.Contract();
+}
+
+<h1>@Model.VetMember.Name の 提案一覧</h1>
+
+@*<form class="form-inline" method="get">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+</form>*@
+
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Trade.Direction)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Trade.Direction)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Trade.TradeStatus)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Trade.TradeStatus)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Trade.VetMember.Name)">
+                    依頼者
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Trade.Title)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Trade.Title)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.VetMember.Name)">
+                    @Html.DisplayNameFor(model => displayNameEntity.VetMember.Name)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Reword)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Reword)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.DeliveryDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.DeliveryDate)
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contract in pageItems)
+        {
+        <tr>
+            <th>
+                <a asp-page="/Trades/Contracts/Index" asp-route-contractId="@contract.Id" class="btn btn-primary">確認</a>
+            </th>
+
+            <td>
+                @Html.DisplayFor(c => contract.Trade.Direction)
+            </td>
+            <td>
+                @Html.DisplayFor(c => contract.Trade.TradeStatus)
+            </td>
+            <td>
+                <partial name="MemberTag" model="contract.Trade.VetMember" />
+            </td>
+            <td>
+                <a asp-page="/Trades/Contracts/Index" asp-route-contractId="@contract.Id">
+                    @Html.DisplayFor(modelItem => contract.Trade.Title)
+                </a>
+            </td>
+            <td>
+                <partial name="MemberTag" model="contract.VetMember" />
+            </td>
+            <td>
+                @Html.DisplayFor(c => contract.CreateDate)
+            </td>
+            <td>
+                @(contract.Reword)
+            </td>
+            <td>
+                @(contract.DeliveryDate)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />

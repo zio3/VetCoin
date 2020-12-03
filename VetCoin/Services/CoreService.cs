@@ -400,12 +400,15 @@ namespace VetCoin.Services
 
             DbContext.SaveChanges();
 
+#if DEBUG
+            entity = DbContext.VetMembers.Find(3);
+#endif
+
             return new AuthenticationResult
             {
                 IsAuthenticated = true,
                 User = entity
             };
-
         }
 
         public async Task RegularDistribution()
@@ -457,10 +460,6 @@ namespace VetCoin.Services
 
         public int SellTradeCount { get; set; }
         public int BuyTradeCount { get; set; }
-
- 
-
-
     }
 
 
@@ -509,7 +508,4 @@ namespace VetCoin.Services
         public string scope { get; set; }
         public string token_type { get; set; }
     }
-
-
-
 }

@@ -123,7 +123,6 @@
                 <a asp-page="./Contracts/Index" asp-route-contractId="@contract.Id" class="btn btn-primary">確認</a>
             </th>
             <td>
-
                 <partial name="MemberTag" model="contract.VetMember" />
             </td>
             <td>
@@ -136,7 +135,7 @@
                 @(contract.DeliveryDate)
             </td>
             <td>
-                @(contract.ContractStatus)
+                @Html.DisplayFor(c => contract.ContractStatus)
             </td>
         </tr>
         }

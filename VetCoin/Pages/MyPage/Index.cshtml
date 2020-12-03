@@ -20,20 +20,20 @@
 </table>
 
 @*<h2>自己紹介</h2>
-<hr />
-<div>
-    @if (!string.IsNullOrEmpty(Model.VetMember.Markdown))
-    {
-        var md = new MarkdownSharp.Markdown();
-        var html = md.Transform(Model.VetMember.Markdown);
-        @Html.Raw(html);
-    }
-    else
-    {
-        <p>自己紹介がまだ設定されていません。</p>
-    }
-</div>
-<hr />*@
+    <hr />
+    <div>
+        @if (!string.IsNullOrEmpty(Model.VetMember.Markdown))
+        {
+            var md = new MarkdownSharp.Markdown();
+            var html = md.Transform(Model.VetMember.Markdown);
+            @Html.Raw(html);
+        }
+        else
+        {
+            <p>自己紹介がまだ設定されていません。</p>
+        }
+    </div>
+    <hr />*@
 
 <a asp-page="Edit">名前変更</a>
 @*<a asp-page="MarkdownEdit">自己紹介の編集</a>*@
@@ -107,7 +107,8 @@
         }
     </tbody>
 </table>
-<a>続きを見る(未実装)</a>
+<a asp-page="/Lists/MemberTrades" asp-route-memberId="@Model.UserContext.CurrentUser.Id">すべて見る</a>
+
 
 <h3>コメントを付けた提案依頼</h3>
 <table class="table">
@@ -177,7 +178,6 @@
         }
     </tbody>
 </table>
-<a>続きを見る(未実装)</a>
 
 <h3>あなたの提案</h3>
 <table class="table">
@@ -224,8 +224,7 @@
         }
     </tbody>
 </table>
-
-<a>続きを見る(未実装)</a>
+<a asp-page="/Lists/MemberContracts" asp-route-memberId="@Model.UserContext.CurrentUser.Id">すべて見る</a>
 <hr />
 
 <h3>送受金記録</h3>
@@ -272,4 +271,5 @@
         }
 
     </tbody>
-</table><a>続きを見る(未実装)</a>
+</table>
+<a asp-page="/Lists/MemberTransactions" asp-route-memberId="@Model.UserContext.CurrentUser.Id">すべて見る</a>

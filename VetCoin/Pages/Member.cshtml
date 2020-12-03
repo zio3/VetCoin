@@ -112,6 +112,8 @@
         }
     </tbody>
 </table>
+<a asp-page="/Lists/MemberTrades" asp-route-memberId="@Model.VetMember.Id">すべて見る</a>
+<hr />
 
 <h3>@(Model.VetMember.Name)の提案</h3>
 <table class="table">
@@ -158,6 +160,8 @@
         }
     </tbody>
 </table>
+<a asp-page="/Lists/MemberContracts" asp-route-memberId="@Model.VetMember.Id">すべて見る</a>
+<hr />
 
 <h3>送受金記録</h3>
 <table class="table">
@@ -194,4 +198,4 @@
 
     </tbody>
 </table>
-<a>続きを見る</a>
+<a asp-page="/Lists/MemberTransactions" asp-route-memberId="@Model.VetMember.Id">すべて見る</a>

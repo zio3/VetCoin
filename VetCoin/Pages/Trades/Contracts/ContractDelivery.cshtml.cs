@@ -10,11 +10,11 @@ using VetCoin.Services;
 
 namespace VetCoin.Pages.Trades.Contracts
 {
-    public class ContractCompleteModel : PageModel
+    public class ContractDeliveryModel : PageModel
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public ContractCompleteModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService)
+        public ContractDeliveryModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService)
         {
             DbContext = context;
             CoreService = coreService;
@@ -42,11 +42,11 @@ namespace VetCoin.Pages.Trades.Contracts
 
             Trade = Contract.Trade;
 
-            var buyUser = Trade.Direction == Direction.Buy ?
+            var sellUser = Trade.Direction == Direction.Sell ?
                           DbContext.VetMembers.Find(Trade.VetMemberId) :
                           DbContext.VetMembers.Find(Contract.VetMemberId);
-            
-            if(UserContext.CurrentUser.Id != buyUser.Id)
+
+            if (UserContext.CurrentUser.Id != sellUser.Id)
             {
                 return NotFound();
             }
@@ -56,17 +56,10 @@ namespace VetCoin.Pages.Trades.Contracts
                 return NotFound();
             }
 
-            if (buyUser.Id != UserContext.CurrentUser.Id)
+            if (Contract.ContractStatus != ContractStatus.Working)
             {
                 return NotFound();
             }
-
-            if (Contract.ContractStatus != ContractStatus.Deliveryed)
-            {
-                return NotFound();
-            }
-
-
 
             return Page();
         }
@@ -77,25 +70,20 @@ namespace VetCoin.Pages.Trades.Contracts
             {
                 return Page();
             }
-
             //DbContext.Attach(Contract).State = EntityState.Modified;
-
             var entity = DbContext.Contracts
-                .Include(c=>c.EscrowTransaction)
-                .First(c=>c.Id == Contract.Id);
+                .Include(c => c.EscrowTransaction)
+                .First(c => c.Id == Contract.Id);
             var trade = DbContext.Trades.Find(entity.TradeId);
             //await TryUpdateModelAsync(entity, nameof(Contract));
+            entity.ContractStatus = ContractStatus.Deliveryed;
 
-            entity.ContractStatus = ContractStatus.Complete;
-
-            var escrowReciveUser = trade.Direction == Direction.Sell ?
+            var escrowReciveUser = trade.Direction == Direction.Buy ?
+                          DbContext.VetMembers.Find(trade.VetMemberId) :
+                          DbContext.VetMembers.Find(entity.VetMemberId);
+            var escrowSendUser = trade.Direction == Direction.Buy ?
                                       DbContext.VetMembers.Find(trade.VetMemberId) :
                                       DbContext.VetMembers.Find(entity.VetMemberId);
-            var escrowSendUser = trade.Direction == Direction.Sell ?
-                                      DbContext.VetMembers.Find(trade.VetMemberId) :
-                                      DbContext.VetMembers.Find(entity.VetMemberId);
-
-            entity.EscrowTransaction.RecivedVetMemberId = escrowReciveUser.Id;
 
 
             if (trade.IsContinued)
@@ -120,8 +108,6 @@ namespace VetCoin.Pages.Trades.Contracts
             }
 
             await SendMessages(entity, escrowSendUser, escrowReciveUser);
-
-
 
             return RedirectToPage("./Index", new { contractId = Contract.Id });
         }
@@ -149,23 +135,19 @@ namespace VetCoin.Pages.Trades.Contracts
             //var stakeHolders = await GetStakeHolders(contract.Id);
             var trade = DbContext.Contracts.AsQueryable().Where(c => c.Id == contract.Id).Select(c => c.Trade).First();
 
-
-
-
             Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
             builder.WithTitle(trade.Title)
             .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
             .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
-                .AddField("アクション", "契約が完了されました");
-            //.AddField("メッセージ内容", message);
+                .AddField("アクション", "作業完了通知")
+                .AddField("メッセージ内容", @"作業完了したようです。
+納品物などを確認して契約完了ボタンをおしてください");
 
 
-            var messageTargets = new[] { reciver };
-#if DEBUG
-            messageTargets = new[] { sender };
-#endif
+
+            var messageTargets = new[] { sender };
+
             await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
         }
-
     }
 }

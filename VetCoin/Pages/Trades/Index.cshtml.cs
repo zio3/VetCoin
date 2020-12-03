@@ -30,6 +30,14 @@ namespace VetCoin.Pages.Trades
         public CoreService CoreService { get; }
 
         [BindProperty(SupportsGet = true)]
+        public int? UnderRewordLimit { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int? OverRewordLimit { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public bool IsExceptRewardNull { get; set; } = false;
+
+        [BindProperty(SupportsGet = true)]
         public bool IsWorking { get; set; } = true;
         
         [BindProperty(SupportsGet = true)]
@@ -45,17 +53,32 @@ namespace VetCoin.Pages.Trades
                 .Where(c=>c.TradeStatus != TradeStatus.Cancel)
                 .AsQueryable();
 
+            if(UnderRewordLimit.HasValue)
+            {
+                TradeQuery = TradeQuery
+                    .Where(c => c.Reward >= UnderRewordLimit || c.Reward == null);
+            }
+
+            if (OverRewordLimit.HasValue)
+            {
+                TradeQuery = TradeQuery
+                    .Where(c => c.Reward <= OverRewordLimit || c.Reward == null);
+            }
+
+            if(IsExceptRewardNull)
+            {
+                TradeQuery = TradeQuery
+                    .Where(c => c.Reward != null);
+            }
 
             if (!IsWorking)
             {
-                TradeQuery = TradeQuery.Where(c => !c.Contracts.Any(d => d.ContractStatus == ContractStatus.Working ));
+                TradeQuery = TradeQuery.Where(c => !c.Contracts.Any(d => d.ContractStatus == ContractStatus.Working || d.ContractStatus == ContractStatus.Deliveryed ));
             }
             if (!IsCpmplited)
             {
                 TradeQuery = TradeQuery.Where(c => !c.Contracts.Any(d => d.ContractStatus == ContractStatus.Complete) || c.IsContinued);
             }
-
-
 
             if (direction.HasValue)
             {
@@ -70,6 +93,8 @@ namespace VetCoin.Pages.Trades
                     c.Content.Contains(searchKey) ||
                     c.VetMember.Name.Contains(searchKey));
             }
+
+            Response.Cookies.Append("Test", "{ a:'BBB'}");
         }
     }
 }
