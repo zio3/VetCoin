@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "api.ClientScaffold": "nswag run ApiGenerateSetting.nswag"
+  }
+}

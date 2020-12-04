@@ -15,6 +15,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using VetCoin.Services.HostedServices;
 using VetCoin.Codes;
+using System.Net.Http;
 
 namespace VetCoin
 {
@@ -31,6 +32,8 @@ namespace VetCoin
 
     public class Startup
     {
+        private object builder;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -93,6 +96,10 @@ namespace VetCoin
             services.AddTransient<DiscordService>();
             services.AddTransient<ScheduledExecutionService>();
 
+            //DummyApi
+            services.AddScoped<VetCoinWasm.Api.ITradeLikeVotesClient>(sp => new VetCoinWasm.Api.TradeLikeVotesClient(string.Empty, new HttpClient()));
+            services.AddScoped<VetCoinWasm.Api.IDonateLikeVotesClient>(sp => new VetCoinWasm.Api.DonateLikeVotesClient(string.Empty, new HttpClient()));
+
 #if !DEBUG
             services.AddHostedService<Services.HostedServices.DbSeedHostedService>();
             services.AddHostedService<Services.HostedServices.DbMigrationHostedService<Data.ApplicationDbContext>>();
@@ -128,10 +135,15 @@ namespace VetCoin
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseBlazorFrameworkFiles();
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            
+
 
             app.UseEndpoints(endpoints =>
             {

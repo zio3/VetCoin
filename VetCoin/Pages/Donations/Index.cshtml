@@ -2,8 +2,10 @@
 @model IndexModel
 @inject Services.UrlQueryService UrlQueryService
 @inject Codes.SiteContext SiteContext
+@inject Data.ApplicationDbContext DbContext
 
 @{
+    ViewBag.HostBlazor = true;
     ViewData["Title"] = "Index";
     var query = Model.DonationQuery;
     UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
@@ -12,6 +14,19 @@
     var pageItems = UrlQueryService.PageRows(query);
     var pagerContext = pageUrlContext.GetPagerContext();
     var displayNameEntity = new VetCoin.Data.Donation();
+
+    var ids = pageItems.Select(c => c.Id);
+    var countDic = DbContext.Donations
+            .AsQueryable()
+            .Where(c => ids.Contains(c.Id))
+            .Select(c => new
+            {
+                Id = c.Id,
+
+                VoteCount = c.DonationLikeVotes.Count(),
+                IsVoted = c.DonationLikeVotes.Any(c => c.VetMemberId == Model.UserContext.CurrentUser.Id)
+            }).ToDictionary(c => c.Id);
+
 }
 
 <h1>寄付・クラファン (β機能)</h1>
@@ -36,6 +51,8 @@
                 </a>
             </th>
             <th>
+            </th>
+            <th>
                 <a href="@pageUrlContext.GetSortUrlFor(s=>s.VetMember)">
                     @Html.DisplayNameFor(model => displayNameEntity.VetMember)
                 </a>
@@ -49,27 +66,36 @@
         @foreach (var item in pageItems)
         {
             var sum = item.Doners.Where(c => c.DonerState != Data.DonerState.Cancel).Sum(c => c.Amount);
-            var numOfDonner = item.Doners.Select(c=>c.VetMemberId).Distinct().Count();
-        <tr>
-            <td>
-                <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
-            </td>
-            <td>
-                <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
-            </td>
-            <td>
-                <partial name="MemberTag" model="item.VetMember" />
-            </td>
-            <td>
-                @sum @SiteContext.CurrenryUnit
-            </td>
-            <td>
-                @numOfDonner 人
-            </td>
-            <td>
-                @Html.DisplayFor(c => c.ModelState)
-            </td>
-        </tr>
+            var numOfDonner = item.Doners.Select(c => c.VetMemberId).Distinct().Count();
+            var countInfo = countDic[item.Id];
+            <tr>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+                <td>
+                    <component type="typeof(VetCoinWasm.Pages.LikeVote)"
+                               render-mode="WebAssemblyPrerendered"
+                               param-IsVoted="countInfo.IsVoted"
+                               param-TargetId="item.Id"
+                               param-VoteCount="countInfo.VoteCount"
+                               param-VoteTarget="@("Donation")" />
+                </td>
+                <td>
+                    <partial name="MemberTag" model="item.VetMember" />
+                </td>
+                <td>
+                    @sum @SiteContext.CurrenryUnit
+                </td>
+                <td>
+                    @numOfDonner 人
+                </td>
+                <td>
+                    @Html.DisplayFor(c => c.ModelState)
+                </td>
+            </tr>
         }
     </tbody>
 </table>
