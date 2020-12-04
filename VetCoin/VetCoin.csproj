@@ -3,9 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 		<UserSecretsId>aspnet-MyAllInTemplate-98CB18F9-7DB3-425A-BB88-00D9D82DAE7C</UserSecretsId>
-		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-		<TypeScriptEnabled>false</TypeScriptEnabled>
 	</PropertyGroup>
 
 
@@ -30,7 +27,6 @@
 
 	<ItemGroup>
 		<Folder Include="Migrations\" />
-		<Folder Include="src\api\" />
 	</ItemGroup>
 
 	<ItemGroup>
