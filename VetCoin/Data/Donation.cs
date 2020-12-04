@@ -29,6 +29,8 @@ namespace VetCoin.Data
 
         public virtual ICollection<DonationMessage> DonationMessages { get; set; }
 
+        public virtual ICollection<DonationLikeVote> DonationLikeVotes { get; set; }
+
     }
 
     public enum DonationState

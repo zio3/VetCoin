@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using VetCoin.Codes;
 using VetCoin.Data;
 using VetCoin.Services;
 
@@ -12,15 +13,16 @@ namespace VetCoin.Pages.Donations
 {
     public class ReceiptModel : PageModel
     {
-        public ReceiptModel(ApplicationDbContext dbContext, CoreService coreService)
+        public ReceiptModel(ApplicationDbContext dbContext, CoreService coreService,SiteContext siteContext)
         {
             DbContext = dbContext;
             CoreService = coreService;
+            SiteContext = siteContext;
         }
 
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
-
+        public SiteContext SiteContext { get; }
         public Doner[] Doners { get; set; }
 
         [BindProperty(SupportsGet =true)]
@@ -29,7 +31,9 @@ namespace VetCoin.Pages.Donations
         public async Task<IActionResult> OnGetAsync(int donationId)
         {
             var uc = CoreService.GetUserContext();
-            var entity = DbContext.Donations.Find(donationId);
+            var entity = await DbContext.Donations
+                .Include(c=>c.VetMember)
+                .FirstOrDefaultAsync(c=>c.Id == donationId);
 
             if (entity.VetMemberId != uc.CurrentUser.Id)
             {

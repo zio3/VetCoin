@@ -38,6 +38,66 @@
 <a asp-page="Edit">名前変更</a>
 @*<a asp-page="MarkdownEdit">自己紹介の編集</a>*@
 
+@if(Model.WaitingContracts.Count() != 0)
+{
+    <h2>完了待ちのお仕事</h2>
+    <div class="alert alert-danger" role="alert">確認して、終了していた場合は契約を完了させてください</div>
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th></th>
+                <th>依頼者</th>
+                <th>依頼</th>
+                <th>VetMember</th>
+                <th>日時</th>
+                <th>報酬</th>
+                <th>納期</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contract in Model.WaitingContracts)
+            {
+                <tr>
+                    <th>
+                        <a asp-page="/Trades/Contracts/Index" asp-route-contractId="@contract.Id" class="btn btn-primary">確認</a>
+                    </th>
+
+                    <td>
+                        <partial name="MemberTag" model="contract.Trade.VetMember" />
+                    </td>
+                    <td>
+                        <a asp-page="/Trades/Contracts/Index" asp-route-contractId="@contract.Id">
+                            @Html.DisplayFor(modelItem => contract.Trade.Title)
+                        </a>
+                    </td>
+                    <td>
+                        <partial name="MemberTag" model="contract.VetMember" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(c => contract.CreateDate)
+                    </td>
+                    <td>
+                        @(contract.Reword)
+                    </td>
+                    <td>
+                        @(contract.DeliveryDate)
+                    </td>
+                </tr>
+
+            }
+            <tr></tr>
+
+        </tbody>
+
+
+    </table>
+
+}
+
+
+
+
 <hr />
 <h3>あなたの依頼</h3>
 <table class="table">
@@ -108,7 +168,6 @@
     </tbody>
 </table>
 <a asp-page="/Lists/MemberTrades" asp-route-memberId="@Model.UserContext.CurrentUser.Id">すべて見る</a>
-
 
 <h3>コメントを付けた提案依頼</h3>
 <table class="table">

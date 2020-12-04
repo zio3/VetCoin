@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using VetCoin.Codes;
 using VetCoin.Data;
 using VetCoin.Services;
 
@@ -16,10 +17,11 @@ namespace VetCoin.Pages.Trades.Contracts
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public CreateModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService)
+        public CreateModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService, SiteContext siteContext)
         {
             DbContext = context;
             CoreService = coreService;
+            SiteContext = siteContext;
         }
 
 
@@ -51,6 +53,7 @@ namespace VetCoin.Pages.Trades.Contracts
         [BindProperty]
         public Contract Contract { get; set; }
         public CoreService CoreService { get; }
+        public SiteContext SiteContext { get; }
 
         public async Task<IActionResult> OnPostAsync(int tradeId)
         {
@@ -88,7 +91,7 @@ namespace VetCoin.Pages.Trades.Contracts
 
             EmbedBuilder builder = new EmbedBuilder();
             builder.WithTitle(trade.Title)
-                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
+                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(SiteContext.SiteBaseUrl))
                 .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
                 .AddField("アクション", "提案がありました")
                 .AddField("報酬", contract.Reword,true)

@@ -76,6 +76,18 @@ namespace VetCoin.Services
             return (isVetMember, dc.CurrentUser);
         }
 
+        public async Task<IEnumerable<Contract>> EnumWaitingContracts(VetMember vetMember )
+        {
+            return await DbContext
+                .Contracts
+                .AsQueryable()
+                .Where(c => c.ContractStatus == ContractStatus.Deliveryed)
+                .Where(c =>
+                    (c.Trade.Direction == Data.Direction.Buy && c.Trade.VetMemberId == vetMember.Id) ||
+                    (c.Trade.Direction == Data.Direction.Sell && c.VetMemberId == vetMember.Id))
+                .ToArrayAsync();
+        }
+
         public async Task<VetMember> JoinUser(RestSelfUser user)
         {
             var addUser = new VetMember
@@ -91,9 +103,6 @@ namespace VetCoin.Services
                 .VetMembers
                 .AsQueryable().FirstOrDefaultAsync(c => c.MemberType == MemberType.Vault);
 
- 
-
-            
 
             //var initTran = new CoinTransaction
             //{
@@ -230,8 +239,9 @@ namespace VetCoin.Services
             {
                 var user = await rclient.GetUserAsync(member.DiscordId);
                 var dmc = await user.GetOrCreateDMChannelAsync();
+                
 
-                if(enbed == null)
+                if (enbed == null)
                 {
                     await dmc.SendMessageAsync(message);
                 }

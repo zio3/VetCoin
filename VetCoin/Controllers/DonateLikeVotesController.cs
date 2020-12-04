@@ -14,11 +14,11 @@ namespace VetCoin.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TradeLikeVotesController : ControllerBase
+    public class DonateLikeVotesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public TradeLikeVotesController(ApplicationDbContext context, CoreService coreService)
+        public DonateLikeVotesController(ApplicationDbContext context, CoreService coreService)
         {
             _context = context;
             CoreService = coreService;
@@ -27,13 +27,13 @@ namespace VetCoin.Controllers
         public CoreService CoreService { get; }
 
 
-        // POST: api/TradeLikeVotes
+        // POST: api/DonationLikeVotes
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<VoteResult>> PostTradeLikeVote(int tradeId)
+        public async Task<ActionResult<VoteResult>> PostTradeLikeVote(int donationId)
         {
-            //_context.TradeLikeVotes.Add(tradeLikeVote);
+            //_context.DonationLikeVotes.Add(tradeLikeVote);
             //CoreService.GetCu
             var uc = CoreService.GetUserContext();
 #if DEBUG
@@ -49,27 +49,27 @@ namespace VetCoin.Controllers
             var vetMemberId = uc.CurrentUser.Id;
 
             var isVoted = false;
-            var existItem = _context.TradeLikeVotes.FirstOrDefault(c => c.TradeId == tradeId && c.VetMemberId == vetMemberId);
+            var existItem = _context.DonationLikeVotes.FirstOrDefault(c => c.DonationId == donationId && c.VetMemberId == vetMemberId);
             if (existItem == null)
             {
-                _context.TradeLikeVotes.Add(new TradeLikeVote
+                _context.DonationLikeVotes.Add(new DonationLikeVote
                 {
-                    TradeId = tradeId,
+                    DonationId = donationId,
                     VetMemberId = vetMemberId
                 });
                 isVoted = true;
             }
             else
             {
-                _context.TradeLikeVotes.Remove(existItem);
+                _context.DonationLikeVotes.Remove(existItem);
                 isVoted = false;
             }
 
             await _context.SaveChangesAsync();
 
-            var count = await _context.TradeLikeVotes
+            var count = await _context.DonationLikeVotes
                 .AsQueryable()
-                .CountAsync(c => c.TradeId == tradeId);
+                .CountAsync(c => c.DonationId == donationId);
 
             return new VoteResult
             {
@@ -81,13 +81,13 @@ namespace VetCoin.Controllers
 
         private bool TradeLikeVoteExists(int id)
         {
-            return _context.TradeLikeVotes.Any(e => e.Id == id);
+            return _context.DonationLikeVotes.Any(e => e.Id == id);
         }
     }
 
-    //public class VoteResult
-    //{
-    //    public int Count { get; set; }
-    //    public bool IsVoted{ get; set; }
-    //}
+    public class VoteResult
+    {
+        public int Count { get; set; }
+        public bool IsVoted{ get; set; }
+    }
 }

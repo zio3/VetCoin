@@ -28,7 +28,10 @@ namespace VetCoin.Codes
 
             AdminDiscordId = configuration.GetValue<ulong>(nameof(AdminDiscordId));
             DeveloperDiscordId = configuration.GetValue<ulong>(nameof(DeveloperDiscordId));
-            
+
+            SiteBaseUrl = configuration.GetValue<string>(nameof(SiteBaseUrl));
+
+
         }
 
         public string SiteTitle { get; private set; }
@@ -42,6 +45,7 @@ namespace VetCoin.Codes
 
         public int SuperChatLowLimit { get; private set; }
         public int SuperChatHeightLimit { get; private set; }
+        public string SiteBaseUrl { get; private set; }
 
         public ulong AdminDiscordId { get; private set; }
 

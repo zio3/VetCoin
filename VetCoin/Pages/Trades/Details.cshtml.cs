@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using VetCoin.Codes;
 using VetCoin.Data;
 using VetCoin.Services;
 
@@ -18,17 +19,18 @@ namespace VetCoin.Pages.Trades
 
         public int VoteCount { get; set; }
 
-        public DetailsModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService)
+        public DetailsModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService,SiteContext siteContext)
         {
             DbContext = context;
             CoreService = coreService;
+            SiteContext = siteContext;
         }
 
         public Trade Trade { get; set; }
 
         public bool IsOwner { get; set; }
         public CoreService CoreService { get; }
-
+        public SiteContext SiteContext { get; }
         public string PostMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -66,7 +68,9 @@ namespace VetCoin.Pages.Trades
         }
         public async Task<IActionResult> OnPostAsync(int? id,string postMessage)
         {
-            var trade = await DbContext.Trades.FindAsync(id);
+            var trade = await DbContext.Trades
+                .Include(c=>c.VetMember)
+                .FirstOrDefaultAsync(c=>c.Id == id);
             if(trade == null)
             {
                 return NotFound();
@@ -100,18 +104,18 @@ namespace VetCoin.Pages.Trades
 
             var messageTargets =
                 senderIsOwner ? DbContext.TradeMessages.AsQueryable().Where(c => c.TradeId == trade.Id).Select(c => c.VetMember).Distinct().ToArray()
-                            : new[] { Trade.VetMember };
+                            : new[] { trade.VetMember };
 
             var dmMessage = $@"
 メッセージ元:{trade.Title}
-URL:https://vetcoin.azurewebsites.net/Trades/Details?id={trade.Id}
+URL:{SiteContext.SiteBaseUrl}Trades/Details?id={trade.Id}
 差出人:{sender.Name}
 {message}";
 
             Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
             builder.WithTitle(trade.Title)
-                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
-                .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Details?id={trade.Id}")
+                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(SiteContext.SiteBaseUrl))
+                .WithUrl($"{SiteContext.SiteBaseUrl}Trades/Details?id={trade.Id}")
                // .AddField("アクション", "メッセージがあります")
                 .AddField("メッセージ内容", message);
 
