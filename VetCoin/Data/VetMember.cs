@@ -25,9 +25,9 @@ namespace VetCoin.Data
         {
             return $"https://cdn.discordapp.com/avatars/{DiscordId}/{AvatarId}.png?size=128";
         }
-        public string GetMemberPageUrl()
+        public string GetMemberPageUrl(string siteBaseUrl)
         {
-            return $"https://vetcoin.azurewebsites.net/Member/{DiscordId}";
+            return $"{siteBaseUrl}Member/{DiscordId}";
         }
     }
 

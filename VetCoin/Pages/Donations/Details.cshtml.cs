@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using VetCoin.Codes;
 using VetCoin.Data;
 using VetCoin.Services;
+using VetCoin.Services.Chat;
 
 namespace VetCoin.Pages.Donations
 {
@@ -14,10 +16,12 @@ namespace VetCoin.Pages.Donations
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public DetailsModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService)
+        public DetailsModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService, DiscordService discordService,Codes.SiteContext siteContext)
         {
             DbContext = context;
             CoreService = coreService;
+            DiscordService = discordService;
+            SiteContext = siteContext;
         }
 
         public Donation Donation { get; set; }
@@ -30,7 +34,8 @@ namespace VetCoin.Pages.Donations
 
         public bool IsOwner { get; set; }
         public CoreService CoreService { get; }
-
+        public DiscordService DiscordService { get; }
+        public SiteContext SiteContext { get; }
         public bool IsSuppotError { get; set; }
 
         public string ErrorMessage { get; set; }
@@ -154,8 +159,57 @@ namespace VetCoin.Pages.Donations
 
             await DbContext.SaveChangesAsync();
 
-            return RedirectToPage("Details", new { id = id });
+            await Notification(userContext,donation,doner);
 
+            return RedirectToPage("Details", new { id = id });
+        }
+
+        private async Task Notification(UserContext userContext,Donation donation, Doner doner)
+        {
+            var fields = new List<DiscordService.DiscordEmbed.Field>();
+
+
+
+
+            fields.Add(new DiscordService.DiscordEmbed.Field
+            {
+                name = "金額",
+                value = $"{doner.Amount}{SiteContext.CurrenryUnit}",
+                inline = false
+            });
+
+            if (!string.IsNullOrWhiteSpace(doner.Comment))
+            {
+                fields.Add(new DiscordService.DiscordEmbed.Field
+                {
+                    name = "メッセージ",
+                    value = doner.Comment,
+                    inline = false
+                });
+            }
+
+            var total = DbContext.Doners.AsQueryable().Where(c => c.DonationId == donation.Id).Sum(c => c.Amount);
+
+            fields.Add(new DiscordService.DiscordEmbed.Field
+            {
+                name = "支援総額",
+                value = $"{total}{SiteContext.CurrenryUnit}",
+                inline = false
+            });
+
+
+            await DiscordService.SendMessage(DiscordService.Channel.CrowdFundingNotification, string.Empty, new DiscordService.DiscordEmbed
+            {
+                title = donation.Title,
+                url = $"{SiteContext.SiteBaseUrl}Donations/Details?id={donation.Id}",
+                author = new DiscordService.DiscordEmbed.Author
+                {
+                    url = userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl),
+                    icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
+                    name = userContext.CurrentUser.Name
+                },
+                fields = fields.ToArray()
+            });
         }
     }
 }

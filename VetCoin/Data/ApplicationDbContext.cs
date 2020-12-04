@@ -93,6 +93,21 @@ namespace VetCoin.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
 
+
+            builder.Entity<DonationLikeVote>()
+                .HasOne(c => c.Donation)
+                .WithMany(c => c.DonationLikeVotes)
+                .HasForeignKey(c => c.DonationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<DonationLikeVote>()
+                .HasOne(c => c.VetMember)
+                .WithMany()
+                .HasForeignKey(c => c.VetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+
             builder.Entity<VetMember>()
                 .HasIndex(b => b.DiscordId);
 
@@ -140,6 +155,10 @@ namespace VetCoin.Data
         public DbSet<Donation> Donations { get; set; }
         public DbSet<DonationLog> DonationLogs { get; set; }
         public DbSet<Doner> Doners { get; set; }
+
+        public DbSet<DonationLikeVote> DonationLikeVotes { get; set; }
+
+        
 
         public DbSet<DonationMessage> DonationMessages { get; set; }
 

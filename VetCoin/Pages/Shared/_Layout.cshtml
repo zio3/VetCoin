@@ -1,5 +1,9 @@
 ﻿@inject Codes.SiteContext SiteContext
-
+@inject Services.CoreService CoreService
+@{ 
+    var uc = CoreService.GetUserContext();
+    var waitingContracts = await CoreService.EnumWaitingContracts(uc.CurrentUser);
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +47,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Logs">ログ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/MyPage/Index">マイページ</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/MyPage/Index">マイページ
+                                @if(waitingContracts.Count() != 0)
+                                {
+                                    <span class="badge badge-pill badge-danger">@waitingContracts.Count()</span>
+                                }
+
+                            </a>
                         </li>
                     </ul>
                 </div>

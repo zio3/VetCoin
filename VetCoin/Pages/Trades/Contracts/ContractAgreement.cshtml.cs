@@ -154,7 +154,7 @@ namespace VetCoin.Pages.Trades.Contracts
 
             Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
             builder.WithTitle(trade.Title)
-            .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl())
+            .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(SiteContext.SiteBaseUrl))
             .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
                 .AddField("アクション", "提案が受理され契約されました。");
                 //.AddField("メッセージ内容", message);

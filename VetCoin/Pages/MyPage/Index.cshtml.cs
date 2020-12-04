@@ -29,11 +29,14 @@ namespace VetCoin.Pages.MyPage
 
         public IEnumerable<Trade> CommentedTrades { get; set; }
 
+
         public IEnumerable<Contract> Contracts { get; set; }
+
+        public IEnumerable<Contract> WaitingContracts { get; set; }
 
         public IEnumerable<CoinTransaction> Transactions { get; set; }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             UserContext = CoreService.GetUserContext();
             if (UserContext == null)
@@ -74,14 +77,16 @@ namespace VetCoin.Pages.MyPage
                             .Take(5)
                             .ToArray();
 
-            Contracts = CoreService.DbContext
+            Contracts = await CoreService.DbContext
                                 .Contracts
                                 .Include(c => c.VetMember)
                                 .Include(c => c.Trade.VetMember)
                                 .Where(c => c.VetMemberId == UserContext.CurrentUser.Id)
                                 .OrderByDescending(c => c.ContractMessages.Max(d => d.CreateDate))
                                 .Take(5)
-                                .ToArray();
+                                .ToArrayAsync();
+
+            WaitingContracts = await CoreService.EnumWaitingContracts(VetMember);
 
             return Page();
         }

@@ -26,11 +26,12 @@ namespace VetCoin.Pages.Trades
         [DisplayName("通知不要")]
         public bool IsSkipNotification { get; set; }
 
-        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService)
+        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext)
         {
             DbContext = context;
             CoreService = coreService;
             DiscordService = discordService;
+            SiteContext = siteContext;
         }
 
         public IActionResult OnGet(Direction? direction, int? cloneSrcId)
@@ -54,8 +55,7 @@ namespace VetCoin.Pages.Trades
         [BindProperty]
         public Trade Trade { get; set; }
         public DiscordService DiscordService { get; }
-
-
+        public SiteContext SiteContext { get; }
 
         private string GetDisplayName(Direction direction)
         {
@@ -79,29 +79,26 @@ namespace VetCoin.Pages.Trades
 
             if (!IsSkipNotification)
             {
+                await Notification(userContext);
+            }
 
-                //                await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, $@"{Trade.Direction}
-                //タイトル:{Trade.Title}
-                //依頼主:{userContext.CurrentUser.Name}
-                //料金:{Trade.Reward} {Trade.RewardComment}
-                //納期:{Trade.DeliveryDate}
+            return RedirectToPage("./Index", new { direction = Trade.Direction });
+        }
 
-                //{Trade.Content}
-
-                //https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}");
-
-                await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, string.Empty, new DiscordService.DiscordEmbed
+        private async Task Notification(UserContext userContext)
+        {
+            await DiscordService.SendMessage(DiscordService.Channel.TradeEntryNotification, string.Empty, new DiscordService.DiscordEmbed
+            {
+                title = Trade.Title,
+                url = $"https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}",
+                author = new DiscordService.DiscordEmbed.Author
                 {
-                    title = Trade.Title,
-                    url = $"https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}",
-                    author = new DiscordService.DiscordEmbed.Author
-                    {
-                        url = userContext.CurrentUser.GetMemberPageUrl(),
-                        icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
-                        name = userContext.CurrentUser.Name
-                    },
-                    fields = new DiscordService.DiscordEmbed.Field[]
-                {
+                    url = userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl),
+                    icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
+                    name = userContext.CurrentUser.Name
+                },
+                fields = new DiscordService.DiscordEmbed.Field[]
+            {
                     new DiscordService.DiscordEmbed.Field
                     {
                         name = "売買",
@@ -126,11 +123,8 @@ namespace VetCoin.Pages.Trades
                         value = Trade.Content,
                         inline = false
                     }
-                },
-                });
-            }
-
-            return RedirectToPage("./Index", new { direction = Trade.Direction });
+            },
+            });
         }
 
         string GetPriceStr(Trade trade)
