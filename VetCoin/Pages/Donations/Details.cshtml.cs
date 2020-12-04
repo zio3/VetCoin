@@ -23,6 +23,9 @@ namespace VetCoin.Pages.Donations
             DiscordService = discordService;
             SiteContext = siteContext;
         }
+        public bool IsVoted { get; set; }
+
+        public int VoteCount { get; set; }
 
         public Donation Donation { get; set; }
 
@@ -63,6 +66,15 @@ namespace VetCoin.Pages.Donations
             {
                 return NotFound();
             }
+
+            VoteCount = await DbContext.DonationLikeVotes
+                .AsQueryable()
+                .CountAsync(c => c.DonationId == id);
+                        IsVoted = await DbContext.DonationLikeVotes
+                            .AsQueryable()
+                .AnyAsync(c => c.DonationId == id && c.VetMemberId == userContext.CurrentUser.Id);
+
+
             return Page();
         }
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using VetCoin.Data;
+using VetCoin.Services;
 
 namespace VetCoin.Pages.Donations
 {
@@ -14,16 +15,20 @@ namespace VetCoin.Pages.Donations
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
         public string SearchKey { get; set; }
+        public UserContext UserContext { get; set; }
 
-        public IndexModel(VetCoin.Data.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context, CoreService coreService)
         {
             DbContext = context;
+            CoreService = coreService;
         }
 
         public IQueryable<Donation> DonationQuery { get; set; }
+        public CoreService CoreService { get; }
 
         public void OnGet(string searchKey)
         {
+            UserContext = CoreService.GetUserContext();
             DonationQuery = DbContext.Donations
                 .Include(d => d.VetMember)
                 .Include(c=>c.Doners)

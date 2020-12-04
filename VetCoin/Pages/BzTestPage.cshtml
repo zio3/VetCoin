@@ -1,0 +1,14 @@
+﻿@page
+@model VetCoin.Pages.BzTestPageModel
+@{
+    ViewBag.HostBlazor = true;
+}
+
+
+<component type="typeof(VetCoinWasm.Pages.LikeVote)" 
+           render-mode="WebAssemblyPrerendered"
+           param-IsVoted="false"  
+           param-TargetId="1"  
+           param-VoteCount="100"  
+           param-VoteTarget="@("Donate")"  />
+

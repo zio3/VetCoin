@@ -1,8 +1,9 @@
 ﻿@inject Codes.SiteContext SiteContext
 @inject Services.CoreService CoreService
-@{ 
+@{
     var uc = CoreService.GetUserContext();
     var waitingContracts = await CoreService.EnumWaitingContracts(uc.CurrentUser);
+    var hostBlazor = (ViewBag.HostBlazor as bool?) ?? false;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +11,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - @SiteContext.SiteTitle</title>
+    @if (hostBlazor)
+    {
+        <base href="/" />
+        <link href="css/app.css" rel="stylesheet" />
+    }
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="https://unpkg.com/vue"></script>
@@ -47,8 +54,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Logs">ログ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/MyPage/Index">マイページ
-                                @if(waitingContracts.Count() != 0)
+                            <a class="nav-link text-dark" asp-area="" asp-page="/MyPage/Index">
+                                マイページ
+                                @if (waitingContracts.Count() != 0)
                                 {
                                     <span class="badge badge-pill badge-danger">@waitingContracts.Count()</span>
                                 }
@@ -77,5 +85,9 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
+    @if (hostBlazor)
+    {
+        <script src="_framework/blazor.webassembly.js"></script>
+    }
 </body>
 </html>

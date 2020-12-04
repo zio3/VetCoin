@@ -31,7 +31,7 @@ namespace VetCoin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<VoteResult>> PostTradeLikeVote(int donationId)
+        public async Task<ActionResult<VoteResult>> PostDonationLikeVote(int donationId)
         {
             //_context.DonationLikeVotes.Add(tradeLikeVote);
             //CoreService.GetCu
