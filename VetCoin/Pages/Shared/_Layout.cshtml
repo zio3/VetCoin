@@ -2,7 +2,7 @@
 @inject Services.CoreService CoreService
 @{
     var uc = CoreService.GetUserContext();
-    var waitingContracts = await CoreService.EnumWaitingContracts(uc.CurrentUser);
+    var waitingContracts = await CoreService.EnumWaitingContracts(uc?.CurrentUser);
     var hostBlazor = (ViewBag.HostBlazor as bool?) ?? false;
 }
 <!DOCTYPE html>
