@@ -78,8 +78,15 @@ namespace VetCoin.Services
 
         public async Task<IEnumerable<Contract>> EnumWaitingContracts(VetMember vetMember )
         {
+            if(vetMember == null)
+            {
+                return new Contract[0];
+            }
+
             return await DbContext
                 .Contracts
+                .Include(c => c.VetMember)
+                .Include(c => c.Trade.VetMember)
                 .AsQueryable()
                 .Where(c => c.ContractStatus == ContractStatus.Deliveryed)
                 .Where(c =>
@@ -411,7 +418,7 @@ namespace VetCoin.Services
             DbContext.SaveChanges();
 
 #if DEBUG
-            entity = DbContext.VetMembers.Find(3);
+            entity = DbContext.VetMembers.Find(35);
 #endif
 
             return new AuthenticationResult
