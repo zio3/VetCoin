@@ -68,15 +68,16 @@ namespace VetCoin.Pages.Trades.Contracts
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
 
             //DbContext.Attach(Contract).State = EntityState.Modified;
 
             var entity = DbContext.Contracts
                 .Include(c=>c.VetMember)
+                .Include(c => c.Trade.VetMember)
                 .FirstOrDefault(c=>c.Id == Contract.Id);
             var trade = DbContext.Trades
                 .Include(c=>c.VetMember)
