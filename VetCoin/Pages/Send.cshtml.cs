@@ -62,12 +62,12 @@ namespace VetCoin.Pages
 
             if (sendAmount <= 0)
             {
-                this.ModelState.AddModelError("sendAmount", "1ˆÈã‚Ì”‚ðŽw’è‚µ‚Ä‚­‚¾‚³‚¢");
+                this.ModelState.AddModelError("sendAmount", "1ä»¥ä¸Šã®æ•°ã‚’æŒ‡å®šã—ã¦ãã ã•ã„");
                 return OnGet(null);
             }
             if (UserContext.Amount  < sendAmount)
             {
-                this.ModelState.AddModelError("sendAmount", "Žc‚‚ª•s‘«‚µ‚Ä‚¢‚Ü‚·");
+                this.ModelState.AddModelError("sendAmount", "æ®‹é«˜ãŒä¸è¶³ã—ã¦ã„ã¾ã™");
                 return OnGet(null);
             }
 

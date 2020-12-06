@@ -55,7 +55,7 @@ namespace VetCoin.Pages.Donations
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                return await OnGetAsync(Donation.Id);
             }
 
             var entity = DbContext.Donations.Find(Donation.Id);

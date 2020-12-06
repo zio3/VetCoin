@@ -1,0 +1,30 @@
+﻿@page
+@model DestributeModel
+@inject Codes.SiteContext SiteContext
+@{
+}
+
+<h2>通貨発行</h2>
+
+@if(Model.IsIssued)
+{
+<div class="alert alert-success" role="alert">
+    @Model.ReciveMember.Name に @Model.IssuedAmound @SiteContext.CurrenryUnit 発行されました。(残高:@Model.ReciverAmount @SiteContext.CurrenryUnit)
+</div>
+}
+
+@Html.ValidationSummary()
+
+<form method="post">
+
+    <label>対象</label>
+    <select asp-for="ReciveVetMemberId" asp-items="@Model.MembersDdl" class="form-control"></select>
+
+    <label>発行金額</label>
+    <input type="number" asp-for="SendAmount" placeholder="" class="form-control" />
+    <label>メッセージ</label>
+    <input type="text" asp-for="Message" placeholder="メッセージを入力(任意)" class="form-control" />
+
+    <button type="submit" class="btn btn-primary">送信</button>
+
+</form>
