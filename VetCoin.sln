@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VetCoin", "VetCoin\VetCoin.csproj", "{E0CFC743-4E79-4435-8495-CFCC5BEF3172}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VetCoinWasm", "VetCoinWasm\VetCoinWasm.csproj", "{C4EFCA72-13C8-4195-BE72-50F34D4AAFBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VetCoinWasm", "VetCoinWasm\VetCoinWasm.csproj", "{C4EFCA72-13C8-4195-BE72-50F34D4AAFBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
