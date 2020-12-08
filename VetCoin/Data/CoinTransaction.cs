@@ -26,7 +26,10 @@ namespace VetCoin.Data
         public DateTimeOffset CreateDate { get; set; }
         public DateTimeOffset UpdateDate { get; set; }
 
+        [DisplayName("SendMember")]
         public virtual VetMember SendVetMember { get; set; }
+
+        [DisplayName("RecivedMember")]
         public virtual VetMember RecivedVetMember { get; set; }
 
         public virtual ICollection<Contract> EscrowContracts { get; set; }
