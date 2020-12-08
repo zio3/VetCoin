@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +18,8 @@ namespace VetCoin.Data
 
         public string CreateUser { get; set; }
         public DateTimeOffset CreateDate { get; set; }
-
+        
+        [DisplayName("Member")]
         public virtual VetMember VetMember { get; set; }
         public virtual Trade Trade { get; set; }
 

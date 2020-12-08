@@ -3,7 +3,6 @@
 @{
 }
 <h1>SiteSettings</h1>
-BitpointAmounts
 @if (Model.SaveSucceed)
 {
 
@@ -23,12 +22,12 @@ BitpointAmounts
 
             <div class="form-group">
                 <label asp-for="SiteSetting.TitleDescription" class="control-label"></label>
-                <textarea asp-for="SiteSetting.TitleDescription" class="form-control" step="any" rows="10"></textarea>
+                <textarea asp-for="SiteSetting.TitleDescription" class="form-control" rows="10"></textarea>
                 <span asp-validation-for="SiteSetting.TitleDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SiteSetting.HideDonations" class="control-label"></label>
-                <textarea asp-for="SiteSetting.HideDonations" class="form-control" step="any" rows="10"></textarea>
+                <input asp-for="SiteSetting.HideDonations" />
                 <span asp-validation-for="SiteSetting.HideDonations" class="text-danger"></span>
             </div>
 
