@@ -45,6 +45,7 @@ namespace VetCoin.Data
         public string UpdateUser { get; set; }
         public DateTimeOffset UpdateDate { get; set; }
 
+        [DisplayName("Member")]
         public virtual VetMember VetMember { get; set; }
 
         public virtual Trade Trade { get; set; }

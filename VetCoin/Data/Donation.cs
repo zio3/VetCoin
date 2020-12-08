@@ -16,6 +16,7 @@ namespace VetCoin.Data
 
         public int VetMemberId { get; set; }
 
+        [DisplayName("Member")]
         public virtual VetMember VetMember { get; set; }
         public virtual ICollection<Doner> Doners { get; set; }
         public virtual ICollection<DonationLog> DonationLogs { get; set; }

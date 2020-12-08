@@ -37,9 +37,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Trades/Index" asp-route-direction="Buy">お仕事を探す</a>
                         </li>
+
+                        @if (!SiteContext.SiteSetting.HideDonations)
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Donations/Index" asp-route-direction="Buy">寄付・クラファン</a>
                         </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Send">送金</a>
                         </li>
