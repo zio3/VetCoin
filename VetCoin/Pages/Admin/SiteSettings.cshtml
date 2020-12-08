@@ -1,0 +1,35 @@
+﻿@page
+@model VetCoin.Pages.Admin.SiteSettingsModel
+@{
+}
+<h1>SiteSettings</h1>
+BitpointAmounts
+@if (Model.SaveSucceed)
+{
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @DateTimeOffset.Now : 保存されました
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="SiteSetting.TitleDescription" class="control-label"></label>
+                <textarea asp-for="SiteSetting.TitleDescription" class="form-control" step="any" rows="10" ></textarea>
+                <span asp-validation-for="SiteSetting.TitleDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" name="mode" value="Save" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

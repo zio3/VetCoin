@@ -97,7 +97,8 @@ namespace VetCoin.Pages.Admin
                 Amount = sendAmount,
                 SendeVetMemberId = issure.Id,
                 RecivedVetMemberId = reciveVetMemberId,
-                Text = message
+                Text = message,
+                TransactionType = CoinTransactionType.Issue
             });
 
             DbContext.SaveChanges();
