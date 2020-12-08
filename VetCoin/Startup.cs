@@ -31,8 +31,7 @@ namespace VetCoin
     }
 
     public class Startup
-    {
-        private object builder;
+    {        
 
         public Startup(IConfiguration configuration)
         {

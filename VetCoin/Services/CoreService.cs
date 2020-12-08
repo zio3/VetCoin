@@ -123,15 +123,15 @@ namespace VetCoin.Services
             DbContext.VetMembers.Add(addUser);
             if (DbContext.CoinTransactions.Count() != 0)
             {
-                var issueTran = new CoinTransaction
-                {
-                    Amount = 100000,
-                    SendVetMember = issuer,
-                    RecivedVetMember = vault,
-                    TransactionType = CoinTransactionType.Issue,
-                    Text = $"[登録時発行:{user.Username}]"
-                };
-                DbContext.CoinTransactions.Add(issueTran);
+                //var issueTran = new CoinTransaction
+                //{
+                //    Amount = 100000,
+                //    SendVetMember = issuer,
+                //    RecivedVetMember = vault,
+                //    TransactionType = CoinTransactionType.Issue,
+                //    Text = $"[登録時発行:{user.Username}]"
+                //};
+                //DbContext.CoinTransactions.Add(issueTran);
             }
             //DbContext.CoinTransactions.Add(initTran);
             return addUser;
