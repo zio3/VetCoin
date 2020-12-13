@@ -104,10 +104,7 @@ namespace VetCoin
             services.AddHostedService<Services.HostedServices.DbMigrationHostedService<Data.ApplicationDbContext>>();
             services.AddHostedService<Services.HostedServices.ScheduledExecutionHostedService<ScheduledExecutionService>>(); 
             services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();     
-            
 #endif
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
