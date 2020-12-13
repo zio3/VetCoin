@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -98,7 +99,53 @@ namespace VetCoin.Services.Chat
             }
         }
 
+        public async Task SendError(string msg)
+        {
+            var hc = HttpClientFactory.CreateClient();
+            string json;
 
+            if (msg.Length >= 1900)
+            {
+                msg = msg.Substring(0, 1900);
+                json = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    content = msg
+                });
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                var url = GetChannelUrl(Channel.WebRequestError);
+                if (string.IsNullOrEmpty(url))
+                {
+                    return;
+                }
+                var mpc = new MultipartFormDataContent();
+                mpc.Add(content);
+
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                ms.Write( System.Text.Encoding.UTF8.GetBytes(msg) );
+                ms.Seek(0, SeekOrigin.Begin);
+                var sc = new StreamContent(ms);
+                mpc.Add(sc, "file", "Error.txt");
+
+
+                await hc.PostAsync(url, mpc);
+
+            }
+            else
+            {
+                json = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    content = msg
+                });
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                var url = GetChannelUrl(Channel.WebRequestError);
+
+                if (string.IsNullOrEmpty(url))
+                {
+                    return;
+                }
+                await hc.PostAsync(url, content);
+            }
+        }
 
         public class DiscordEmbed
         {

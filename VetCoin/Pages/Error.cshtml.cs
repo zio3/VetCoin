@@ -38,7 +38,8 @@ namespace VetCoin.Pages
                         .Get<IExceptionHandlerFeature>();
 
 
-            await DiscordService.SendMessage(DiscordService.Channel.WebRequestError, error.Error.ToString());
+            //await DiscordService.SendMessage(DiscordService.Channel.WebRequestError, error.Error.ToString());
+            await DiscordService.SendError(error.Error.ToString());
         }
     }
 }
