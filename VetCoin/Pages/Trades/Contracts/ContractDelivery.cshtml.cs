@@ -80,6 +80,7 @@ namespace VetCoin.Pages.Trades.Contracts
             var trade = DbContext.Trades.Find(entity.TradeId);
             //await TryUpdateModelAsync(entity, nameof(Contract));
             entity.ContractStatus = ContractStatus.Deliveryed;
+            UserContext = CoreService.GetUserContext();
 
             var escrowReciveUser = trade.Direction == Direction.Buy ?
                           DbContext.VetMembers.Find(trade.VetMemberId) :
@@ -110,7 +111,7 @@ namespace VetCoin.Pages.Trades.Contracts
                 }
             }
 
-            await SendMessages(entity, escrowSendUser, escrowReciveUser);
+            await SendMessages(entity, escrowSendUser, escrowReciveUser,UserContext.CurrentUser);
 
             return RedirectToPage("./Index", new { contractId = Contract.Id });
         }
@@ -133,14 +134,14 @@ namespace VetCoin.Pages.Trades.Contracts
         //    return await stakeHolders.ToArrayAsync();
         //}
 
-        private async Task SendMessages(Contract contract, VetMember sender, VetMember reciver)
+        private async Task SendMessages(Contract contract, VetMember sender, VetMember reciver, VetMember postUser)
         {
             //var stakeHolders = await GetStakeHolders(contract.Id);
             var trade = DbContext.Contracts.AsQueryable().Where(c => c.Id == contract.Id).Select(c => c.Trade).First();
 
             Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
             builder.WithTitle(trade.Title)
-            .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(SiteContext.SiteBaseUrl))
+            .WithAuthor(postUser.Name, postUser.GetAvaterIconUrl(), postUser.GetMemberPageUrl(SiteContext.SiteBaseUrl))
             .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
                 .AddField("アクション", "作業完了通知")
                 .AddField("メッセージ内容", @"作業完了したようです。
