@@ -76,10 +76,10 @@ namespace VetCoin.Pages.Trades.Contracts
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
 
             //DbContext.Attach(Contract).State = EntityState.Modified;
 

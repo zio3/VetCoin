@@ -417,6 +417,10 @@ namespace VetCoin.Services
 
             DbContext.SaveChanges();
 
+#if DEBUG
+            entity = DbContext.VetMembers.Find(12);
+#endif
+
             return new AuthenticationResult
             {
                 IsAuthenticated = true,
