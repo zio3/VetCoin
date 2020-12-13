@@ -54,7 +54,7 @@ namespace VetCoin
             {
                 options.AddPolicy("AdminPolicy", policy => policy.RequireClaim("AdminUser"));
             });
-
+            
 
             services.AddRazorPages()
                 .AddRazorPagesOptions(options =>
@@ -63,6 +63,8 @@ namespace VetCoin
                     options.Conventions.AllowAnonymousToPage("/Index");
                     options.Conventions.AuthorizeFolder("/");
                     options.Conventions.AuthorizeFolder("/Admin", "AdminPolicy");
+
+                    options.Conventions.ConfigureFilter(new Filters.MultiPostFilter());
 
                 })
                 .AddRazorRuntimeCompilation();
