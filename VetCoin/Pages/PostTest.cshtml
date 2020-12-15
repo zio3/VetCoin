@@ -1,0 +1,16 @@
+﻿@page
+@model VetCoin.Pages.PostTestModel
+@{
+    var list = PostTestModel.Guids.ToArray().Reverse().Take(20);
+}
+<form method="post">
+    <input type="text" asp-for="PostGuid" value="@Model.PostGuid" />
+    <button type="submit">投稿</button>
+</form>
+
+<ul>
+    @foreach (var item in list)
+    {
+        <li>@item</li>
+    }
+</ul>
