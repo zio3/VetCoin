@@ -216,7 +216,8 @@ namespace VetCoin.Services
             var recodes = query.Select(c => new CoinTransactionsCsvrow
             {
                 Id = c.Id,
-                DateTime = c.UpdateDate.ToOffset(Consts.JstOffset).DateTime.ToString("yyyy/MM/dd HH:mm:ss"),
+                CreateDateTime = c.CreateDate.ToOffset(Consts.JstOffset).DateTime.ToString("yyyy/MM/dd HH:mm:ss"),
+                UpdateDateTime = c.UpdateDate.ToOffset(Consts.JstOffset).DateTime.ToString("yyyy/MM/dd HH:mm:ss"),
                 Type = c.TransactionType.ToString(),
                 SendMemberId = c.SendVetMember.DiscordId,
                 SendMemberName = c.SendVetMember.Name,
@@ -499,7 +500,9 @@ namespace VetCoin.Services
     {
         public int Id { get; set; }
 
-        public string DateTime { get; set; }
+        public string CreateDateTime { get; set; }
+
+        public string UpdateDateTime { get; set; }
 
         public string Type { get; set; }
 
