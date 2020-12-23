@@ -33,7 +33,17 @@ namespace VetCoin.Pages.Admin
 
         public async Task OnPostAsync()
         {
+            var current = DbContext.GetParam<SiteSetting>();
+
             DbContext.SetParam(SiteSetting);
+
+            if(current.TitleDescription != SiteSetting.TitleDescription)
+            {
+                DbContext.RuleTextLogs.Add(new RuleTextLog
+                {
+                    RuleMarkdown = SiteSetting.TitleDescription
+                });
+            }
 
             await DbContext.SaveChangesAsync();
             SaveSucceed = true;

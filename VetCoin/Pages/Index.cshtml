@@ -92,6 +92,17 @@ else
 
     <hr />
 
-    <pre>@SiteContext.SiteSetting.TitleDescription</pre>
+    @if (!string.IsNullOrEmpty(SiteContext.SiteSetting.TitleDescription))
+    {
+        MarkdownSharp.MarkdownOptions mdopt = new MarkdownSharp.MarkdownOptions();
+        mdopt.AutoNewlines = true;
 
+        var md = new MarkdownSharp.Markdown(mdopt);
+        var html = md.Transform(SiteContext.SiteSetting.TitleDescription);
+        html = html.Replace("<br", "<br />");
+
+        @Html.Raw(html);
+    }
+
+    <a asp-page="/RuleTextLogs/index">改変履歴</a>
 }

@@ -1,0 +1,61 @@
+﻿@page
+@model IndexModel
+@inject Services.UrlQueryService UrlQueryService
+
+@{
+    ViewData["Title"] = "Index";
+    var query = Model.RuleTextLogQuery;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 10;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.RuleTextLog();
+}
+
+<h1>Index</h1>
+
+@*<form class="form-inline" method="get">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+</form>*@
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateUser)">
+                    @Html.DisplayNameFor(model => displayNameEntity.CreateUser)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pageItems) 
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateUser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                <a asp-page="./Details" asp-route-id="@item.Id">内容確認</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />
