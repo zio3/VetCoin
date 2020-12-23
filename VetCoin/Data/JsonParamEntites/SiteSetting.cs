@@ -9,7 +9,7 @@ namespace VetCoin.Data.JsonParamEntites
 {
     public class SiteSetting
     {
-        [DisplayName("TOPの注釈テキスト")]
+        [DisplayName("TOPの注釈(Markdown記法)")]
         public string TitleDescription { get; set; }
 
         [DisplayName("寄付・クラファンの非表示")]

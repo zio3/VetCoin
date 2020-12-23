@@ -20,9 +20,7 @@ namespace VetCoin.Data
             )
             : base(options)
         {
-
             HttpContextAccessor = httpContextAccessor;
-
         }
 
 
@@ -155,6 +153,7 @@ namespace VetCoin.Data
         public DbSet<Donation> Donations { get; set; }
         public DbSet<DonationLog> DonationLogs { get; set; }
         public DbSet<Doner> Doners { get; set; }
+        public DbSet<RuleTextLog> RuleTextLogs { get; set; }
 
         public DbSet<DonationLikeVote> DonationLikeVotes { get; set; }
 

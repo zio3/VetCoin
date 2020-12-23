@@ -1,0 +1,22 @@
+﻿@page
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>RuleTextLog</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RuleTextLog.RuleMarkdown)
+        </dt>
+        <dd class="col-sm-10" style="white-space:pre-wrap">@Html.DisplayFor(model => model.RuleTextLog.RuleMarkdown)</dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
