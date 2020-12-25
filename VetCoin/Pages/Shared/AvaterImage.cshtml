@@ -3,7 +3,11 @@
 {
     if (Model.DiscordId != 0)
     {
-    <img src="https://cdn.discordapp.com/avatars/@(Model.DiscordId)/@(Model.AvatarId).png?size=128" height="32" width="32" />
+        var url = Model.GetAvaterIconUrl();
+        if (!string.IsNullOrEmpty(url))
+        {
+        <img src="@url" height="32" width="32" />
+        }
     }
 }
 
