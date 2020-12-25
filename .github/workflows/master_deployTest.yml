@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,3 +36,20 @@ jobs:
           # The desired behavior if no files are found using the provided path.           
 
 
+  deploy1:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2
+      with:
+          name: GaAspCore
+          path: ${{env.DOTNET_ROOT}}/myapp
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'ykmcoin'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7014e788a62947829b2a718bf670e78b }}
+        package: ${{env.DOTNET_ROOT}}/myapp 
