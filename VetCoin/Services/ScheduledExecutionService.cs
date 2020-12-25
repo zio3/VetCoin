@@ -28,7 +28,7 @@ namespace VetCoin.Services
         //    await DiscordService.SendMessage(DiscordService.Channel.TEST, "VetCoin SendTest");
         //}
         [Cron("0 * * * *")]
-        public async Task RegularDistribution()
+        public async Task IconCheck()
         {
             await IconCheckService.IconCheck();
         }
