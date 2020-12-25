@@ -6,7 +6,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - master_deployTest
+      - master
 
 jobs:
   build-and-deploy:
