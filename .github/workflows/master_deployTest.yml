@@ -24,7 +24,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp -r win-x86 --self-contained false
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp -r win-x86 
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.1
