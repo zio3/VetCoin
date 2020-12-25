@@ -25,8 +25,8 @@ jobs:
 
     - name: Zip output
       run: |
-        cd ${{env.DOTNET_ROOT}}/myapp
-        zip publish.zip *.*
+        cd ${{env.DOTNET_ROOT}}/
+        zip publish.zip myapp
 
 
 
@@ -36,7 +36,7 @@ jobs:
           # Artifact name
           name: GaAspCore
           # A file, directory or wildcard pattern that describes what to upload
-          path: ${{env.DOTNET_ROOT}}/myapp/publish.zip
+          path: ${{env.DOTNET_ROOT}}/publish.zip
           # The desired behavior if no files are found using the provided path.           
 
 
