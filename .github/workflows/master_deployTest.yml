@@ -44,12 +44,33 @@ jobs:
       uses: actions/download-artifact@v2
       with:
           name: GaAspCore
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: myapp
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
+    #- name: Deploy to Azure Web App
+    #  uses: azure/webapps-deploy@v2
+    #  with:
+    #    app-name: 'ykmcoin'
+    #    slot-name: 'production'
+    #    publish-profile: ${{ secrets.AzureAppService_PublishProfile_7014e788a62947829b2a718bf670e78b }}
+    #    package: myapp 
+
+
+    #- name: Azure WebApp
+    #  uses: Azure/webapps-deploy@v2
+    #  with:
+    #    # Name of the Azure Web App
+    #    app-name: GaAspCore
+    #    # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
+    #    publish-profile: ${{ secrets.GAASPCORE_PUBLISHPROFILE }}
+    #    # Enter an existing Slot other than the Production slot
+    #    package: ${{env.DOTNET_ROOT}}/myapp    
+
+    - name: Azure WebApp
+      uses: Azure/webapps-deploy@v2
       with:
-        app-name: 'ykmcoin'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7014e788a62947829b2a718bf670e78b }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        # Name of the Azure Web App
+        app-name: GaAspCore
+        # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
+        publish-profile: ${{ secrets.GAASPCORE }}
+        # Enter an existing Slot other than the Production slot
+        package: myapp    
