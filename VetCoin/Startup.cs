@@ -93,7 +93,12 @@ namespace VetCoin
             services.AddScoped<ReactionSendService>();
 
             services.AddScoped<UrlQueryService>();
+
+            services.AddScoped<IconCheckService>();
+
             
+
+
             services.AddTransient<DiscordService>();
             services.AddTransient<ScheduledExecutionService>();
 

@@ -23,6 +23,11 @@ namespace VetCoin.Data
 
         public string GetAvaterIconUrl()
         {
+            if(AvatarId != null)
+            {
+                return "";
+            }
+
             return $"https://cdn.discordapp.com/avatars/{DiscordId}/{AvatarId}.png?size=128";
         }
         public string GetMemberPageUrl(string siteBaseUrl)

@@ -19,13 +19,14 @@ namespace VetCoin.Controllers
     [ApiController]
     public class ApiSandboxController : ControllerBase
     {
-        public ApiSandboxController(SuperChatService superChatService, DiscordService discordService, ApplicationDbContext applicationDbContext, SiteContext siteContext, CoreService coreService)
+        public ApiSandboxController(SuperChatService superChatService, DiscordService discordService, ApplicationDbContext applicationDbContext, SiteContext siteContext, CoreService coreService, IconCheckService iconCheckService)
         {
             SuperChatService = superChatService;
             DiscordService = discordService;
             DbContext = applicationDbContext;
             SiteContext = siteContext;
             CoreService = coreService;
+            IconCheckService = iconCheckService;
         }
 
         public SuperChatService SuperChatService { get; }
@@ -33,15 +34,16 @@ namespace VetCoin.Controllers
         public Data.ApplicationDbContext DbContext { get; }
         public SiteContext SiteContext { get; }
         public CoreService CoreService { get; }
+        public IconCheckService IconCheckService { get; }
 
         [HttpGet]
         public async Task TestAsync()
         {
             var aa = CoreService.GetUserContext();
 
-            var items = DbContext.Donations               
+            var items = DbContext.Donations
                 .AsQueryable()
-                .Include(c=>c.VetMember)
+                .Include(c => c.VetMember)
                 //.Where(c=>c.DonationState == DonationState.Open)
                 .ToArray();
 
@@ -51,8 +53,12 @@ namespace VetCoin.Controllers
                 await Notification(item, aa);
                 await Task.Delay(1000);
             }
+        }
 
-            
+        [HttpPost]
+        public async Task IconCheck()
+        {
+            await IconCheckService.IconCheck();
         }
 
 
