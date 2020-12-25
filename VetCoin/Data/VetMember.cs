@@ -25,7 +25,7 @@ namespace VetCoin.Data
         {
             if(AvatarId != null)
             {
-                return "";
+                return "https://discord.com/assets/322c936a8c8be1b803cd94861bdfa868.png";
             }
 
             return $"https://cdn.discordapp.com/avatars/{DiscordId}/{AvatarId}.png?size=128";
