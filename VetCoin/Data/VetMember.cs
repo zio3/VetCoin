@@ -23,7 +23,7 @@ namespace VetCoin.Data
 
         public string GetAvaterIconUrl()
         {
-            if(AvatarId != null)
+            if(AvatarId == null)
             {
                 return "https://discord.com/assets/322c936a8c8be1b803cd94861bdfa868.png";
             }
