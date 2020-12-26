@@ -24,11 +24,12 @@ jobs:
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp -p:PublishProfile=FolderProfile
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.1
+    - name: Azure WebApp
+      uses: Azure/webapps-deploy@v2
       with:
-          # Artifact name
-          name: GaAspCore
-          # A file, directory or wildcard pattern that describes what to upload
-          path: ${{env.DOTNET_ROOT}}/myapp
-          # The desired behavior if no files are found using the provided path.           
+        # Name of the Azure Web App
+        app-name: GaAspCore
+        # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
+        publish-profile: ${{ secrets.GAASPCORE }}
+        # Enter an existing Slot other than the Production slot
+        package: ${{env.DOTNET_ROOT}}/myapp    
