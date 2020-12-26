@@ -71,6 +71,7 @@ namespace VetCoin.Pages.Admin
 
         public async Task<IActionResult> OnPostAsync(long sendAmount,string message ,int reciveVetMemberId)
         {
+            await Task.Yield();
             UserContext = CoreService.GetUserContext();
             if (UserContext == null)
             {
