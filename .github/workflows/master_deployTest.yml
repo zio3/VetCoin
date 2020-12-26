@@ -92,3 +92,21 @@ jobs:
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_7014e788a62947829b2a718bf670e78b }}
         package: myapp 
+
+  deployVet:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2
+      with:
+          name: GaAspCore
+          path: myapp
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'vetcoin'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.VETCOIN }}
+        package: myapp 
