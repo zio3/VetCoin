@@ -32,7 +32,8 @@ namespace VetCoin.Codes
 
             SiteBaseUrl = configuration.GetValue<string>(nameof(SiteBaseUrl));
 
-           // SiteSetting = DbContext.GetParam<SiteSetting>();
+            UseRegularDistribution = configuration.GetValue<bool>(nameof(UseRegularDistribution));
+            // SiteSetting = DbContext.GetParam<SiteSetting>();
         }
 
         public string SiteTitle { get; private set; }
@@ -51,6 +52,8 @@ namespace VetCoin.Codes
         public ulong AdminDiscordId { get; private set; }
 
         public ulong DeveloperDiscordId { get; private set; }
+
+        public bool UseRegularDistribution { get; set; }
 
 
         public SiteSetting _SiteSetting;

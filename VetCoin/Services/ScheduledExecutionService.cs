@@ -1,6 +1,7 @@
 ﻿using VetCoin.Services.Chat;
 using VetCoin.Services.HostedServices;
 using System.Threading.Tasks;
+using VetCoin.Codes;
 
 namespace VetCoin.Services
 {
@@ -10,17 +11,20 @@ namespace VetCoin.Services
         public ScheduledExecutionService(
             DiscordService discordService,
             CoreService coreService,
-            IconCheckService iconCheckService
+            IconCheckService iconCheckService,
+            SiteContext siteContext
             )
         {
             DiscordService = discordService;
             CoreService = coreService;
             IconCheckService = iconCheckService;
+            SiteContext = siteContext;
         }
 
         public DiscordService DiscordService { get; }
         public CoreService CoreService { get; }
         public IconCheckService IconCheckService { get; }
+        public SiteContext SiteContext { get; }
 
         //[Cron("* * * * *")]
         //public async Task CollectEngage()
@@ -36,9 +40,12 @@ namespace VetCoin.Services
         [Cron("0 0 1 * *")]
         public async Task RegularDistribution()
         {
-            //await DiscordService.SendMessage(DiscordService.Channel.TEST, "VetCoin SendTest");
-            await CoreService.RegularDistribution();
-            await CoreService.DbContext.SaveChangesAsync();
+            if (SiteContext.UseRegularDistribution)
+            {
+                //await DiscordService.SendMessage(DiscordService.Channel.TEST, "VetCoin SendTest");
+                await CoreService.RegularDistribution();
+                await CoreService.DbContext.SaveChangesAsync();
+            }
         }
     }
 
