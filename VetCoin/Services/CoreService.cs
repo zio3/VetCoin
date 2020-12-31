@@ -300,8 +300,46 @@ namespace VetCoin.Services
 
             var trades = await DbContext.Trades
                 .AsQueryable()
+                .Include(c=>c.Contracts)
                 .Where(c=>c.TradeStatus != TradeStatus.Cancel)
                 .ToArrayAsync();
+
+            //var targetMonth = DateTime.Today
+            var limitDate = DateTime.Today;
+            if(DateTime.Today.Day == 1)
+            {
+                //targetMonth = DateTime.Today.AddMonths(-2);
+                limitDate = limitDate.AddDays(-1);
+            }
+            var limitStartDate = new DateTimeOffset(limitDate.Year, limitDate.Month, 1, 0, 0, 0, Consts.JstOffset);
+
+            trades = trades.Where(c =>
+            {
+                if(c.IsContinued)
+                {
+                    return true;
+                }
+
+                //作業中があれば
+                var wk = c.Contracts.Any(d => d.ContractStatus == ContractStatus.Working);
+                if (wk == true)
+                {
+                    return true;
+                }
+
+                var newrComplite = c.Contracts.Any(d => d.ContractStatus == ContractStatus.Complete && d.UpdateDate >= limitStartDate);
+                if (newrComplite == true)
+                {
+                    return true;
+                }
+
+                if(c.Contracts.Count() == 0)
+                {
+                    return true;
+                }
+                return false;
+            }).ToArray();
+
 
             var baseDistribute = members.Count() * 500;
             var tradeDistribute = totalAmount - baseDistribute;
