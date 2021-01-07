@@ -31,7 +31,10 @@ namespace VetCoin.Pages.Venders
         public void OnGet(string searchKey)
         {
             VenderQuery = DbContext.Venders
-                .Include(v => v.VetMember).AsQueryable();
+                .Include(v => v.VetMember)
+                .AsQueryable();
+
+            VenderQuery = VenderQuery.Where(c => !c.IsClosed);
 
             UserContext = CoreService.GetUserContext();
 
