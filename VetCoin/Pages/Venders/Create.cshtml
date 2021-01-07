@@ -1,0 +1,70 @@
+﻿@page
+@model CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>販売所 新規作成</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Vender.Title" class="control-label">タイトル</label>
+                <input asp-for="Vender.Title" class="form-control" />
+                <span asp-validation-for="Vender.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vender.Content" class="control-label">本文</label>
+                <textarea asp-for="Vender.Content" class="form-control" rows="15"></textarea>
+                <span id="help8" class="form-text text-muted"><a href="https://www.google.com/search?q=Markdown&oq=Markdown" target="_blank">Markdown記法</a>で装飾することができます。</span>
+
+                <span asp-validation-for="Vender.Content" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Vender.DefaultAmount" class="control-label"></label>
+                <input asp-for="Vender.DefaultAmount" class="form-control" />
+                <span asp-validation-for="Vender.DefaultAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Vender.IsFreeAmmount" /> 金額をユーザー入力にする
+                </label>
+            </div>
+
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Vender.HasDeliveryMessage" /> 購入時にDMでメッセージを送る
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vender.DeliveryMessage" class="control-label">購入時のDMメッセージ</label>
+                <textarea asp-for="Vender.DeliveryMessage" class="form-control" rows="5"></textarea>
+                <span id="help8" class="form-text text-muted">購入者DMでメッセージを送れます。商品のDLURLなどを記述することを想定しています</span>
+                <span asp-validation-for="Vender.DeliveryMessage" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Vender.IsSalesNotification" /> 購入時のDM通知
+                </label>
+                <span id="help8" class="form-text text-muted">購入者がいたときに DMで通知します</span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="作成" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

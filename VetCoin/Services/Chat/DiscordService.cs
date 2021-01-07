@@ -28,6 +28,7 @@ namespace VetCoin.Services.Chat
             ScheduleError,
             WebRequestError,
             CrowdFundingNotification,
+            VenderNotification,
         }
 
         string GetChannelUrl(Channel chanel)
@@ -43,6 +44,8 @@ namespace VetCoin.Services.Chat
                     return Configuration.GetValue<string>("DiscordWebhookWebRequestError");
                 case Channel.CrowdFundingNotification:
                     return Configuration.GetValue<string>("DiscordWebhookCrowdFundingNotification");
+                case Channel.VenderNotification:
+                    return Configuration.GetValue<string>("DiscordWebhookVenderNotification");
 
                 default:
                     throw new ArgumentOutOfRangeException();

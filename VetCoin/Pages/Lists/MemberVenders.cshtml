@@ -1,0 +1,86 @@
+﻿@page "/Member/{MemberId}/Venders"
+@model MemberVendersModel
+@inject Services.UrlQueryService UrlQueryService
+
+@{
+    ViewData["Title"] = "MemberTrades";
+    var query = Model.VenderQuery;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 10;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.Trade();
+}
+
+<h1>@Model.VetMember.Name の 販売所一覧</h1>
+
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Title)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Title)
+                </a>
+            </th>
+
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.DefaultAmount)">
+                    @Html.DisplayNameFor(model => displayNameEntity.DeliveryDate)
+                </a>
+            </th>
+
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
+                </a>
+            </th>
+
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.VetMember.Name)">
+                    @Html.DisplayNameFor(model => displayNameEntity.VetMember.Name)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.IsClosed)">
+                    @Html.DisplayNameFor(model => displayNameEntity.TradeStatus)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pageItems)
+        {
+        <tr>
+
+            <td>
+
+                <a asp-page="../Venders/Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+            </td>
+            <td>
+                <a asp-page="../Venders/Details" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DefaultAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                <partial name="MemberTag" model="item.VetMember" />
+            </td>
+            <td>
+                
+                @(item.IsClosed?"閉店":"")
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />

@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VetCoin.Data;
+using VetCoin.Data.VenerEntityes;
 using VetCoin.Services;
 
-namespace VetCoin.Pages.Donations
+namespace VetCoin.Pages.Venders
 {
     public class EditModel : PageModel
     {
@@ -22,7 +23,7 @@ namespace VetCoin.Pages.Donations
         }
 
         [BindProperty]
-        public Donation Donation { get; set; }
+        public Vender Vender { get; set; }
         public CoreService CoreService { get; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -34,15 +35,15 @@ namespace VetCoin.Pages.Donations
 
             var uc = CoreService.GetUserContext();
 
-            Donation = await DbContext.Donations
-                .Include(d => d.VetMember).FirstOrDefaultAsync(m => m.Id == id);
+            Vender = await DbContext.Venders
+                .Include(v => v.VetMember).FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Donation == null)
+            if (Vender == null)
             {
                 return NotFound();
             }
 
-            if(Donation.VetMemberId != uc.CurrentUser.Id)
+            if (Vender.VetMemberId != uc.CurrentUser.Id)
             {
                 return NotFound();
             }
@@ -51,23 +52,19 @@ namespace VetCoin.Pages.Donations
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (Vender.HasDeliveryMessage && string.IsNullOrWhiteSpace(Vender.DeliveryMessage))
+            {
+                ModelState.AddModelError("Vender.DeliveryMessage", "DMメッセージ内容を入力してください");
+            }
+
             if (!ModelState.IsValid)
             {
-                return await OnGetAsync(Donation.Id);
-            }           
+                return Page();
+            }
 
 
-            var entity = DbContext.Donations.Find(Donation.Id);
-
-            var log = new DonationLog
-            {
-                Title = entity.Title,
-                Content = entity.Content,
-                DonationId = Donation.Id
-
-            };
-            DbContext.DonationLogs.Add(log);
-            await TryUpdateModelAsync(entity, nameof(Donation));
+            var entity = DbContext.Venders.Find(Vender.Id);
+            await TryUpdateModelAsync(entity, nameof(Vender));
 
             try
             {
@@ -75,7 +72,7 @@ namespace VetCoin.Pages.Donations
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DonationExists(Donation.Id))
+                if (!VenderExists(Vender.Id))
                 {
                     return NotFound();
                 }
@@ -85,12 +82,12 @@ namespace VetCoin.Pages.Donations
                 }
             }
 
-            return RedirectToPage("./Details",new {id= Donation.Id });
+            return RedirectToPage("./Details", new { id = Vender.Id });
         }
 
-        private bool DonationExists(int id)
+        private bool VenderExists(int id)
         {
-            return DbContext.Donations.Any(e => e.Id == id);
+            return DbContext.Venders.Any(e => e.Id == id);
         }
     }
 }

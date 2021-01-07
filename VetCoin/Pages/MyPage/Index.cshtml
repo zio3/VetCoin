@@ -38,7 +38,7 @@
 <a asp-page="Edit">名前変更</a>
 @*<a asp-page="MarkdownEdit">自己紹介の編集</a>*@
 
-@if(Model.WaitingContracts.Count() != 0)
+@if (Model.WaitingContracts.Count() != 0)
 {
     <h2>完了待ちのお仕事</h2>
     <div class="alert alert-danger" role="alert">確認して、終了していた場合は契約を完了させてください</div>
@@ -89,10 +89,7 @@
             <tr></tr>
 
         </tbody>
-
-
     </table>
-
 }
 
 
@@ -332,3 +329,45 @@
     </tbody>
 </table>
 <a asp-page="/Lists/MemberTransactions" asp-route-memberId="@Model.UserContext.CurrentUser.Id">すべて見る</a>
+
+
+<h3>販売所</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>タイトル</th>
+            <th>金額</th>
+            <th>日時</th>
+            <th>ステータス</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Venders)
+        {
+
+        <tr>
+            <td>
+
+                <a asp-page="../Venders/Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+            </td>
+            <td>
+                <a asp-page="../Venders/Details" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DefaultAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @(item.IsClosed?"閉店":"")
+            </td>
+        </tr>
+        }
+
+    </tbody>
+</table>
+<a asp-page="/Lists/MemberVenders" asp-route-memberId="@Model.UserContext.CurrentUser.Id">すべて見る</a>

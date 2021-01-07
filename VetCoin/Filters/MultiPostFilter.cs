@@ -38,9 +38,6 @@ namespace VetCoin.Filters
 
         public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
-
-
-
             //throw new NotImplementedException();
             return Task.CompletedTask;
         }
