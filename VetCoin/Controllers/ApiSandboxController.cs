@@ -14,7 +14,7 @@ using VetCoin.Services.HostedServices;
 
 namespace VetCoin.Controllers
 {
-#if DEBUG
+//#if DEBUG
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ApiSandboxController : ControllerBase
@@ -87,5 +87,5 @@ namespace VetCoin.Controllers
         }
 
     }
-#endif
+//#endif
 }
