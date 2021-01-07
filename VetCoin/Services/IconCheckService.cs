@@ -33,6 +33,10 @@ namespace VetCoin.Services
                 .ToArray();
 
             var hc = HttpClientFactory.CreateClient("IconCheckService");
+            hc.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
+            {
+                NoCache = true
+            };
 
             string token = Configuration.GetValue<string>("DiscordBotToken");
             var _rclient = new DiscordRestClient(new DiscordRestConfig { });
