@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using VetCoin.Data;
+using VetCoin.Data.VenerEntityes;
 using VetCoin.Services;
 
 namespace VetCoin.Pages
@@ -31,7 +32,9 @@ namespace VetCoin.Pages
 
         public IEnumerable<CoinTransaction> Transactions { get; set; }
 
-        public void OnGet(ulong memberId)
+        public IEnumerable<Vender> Venders { get; set; }
+
+        public async Task OnGetAsync(ulong memberId)
         {
             UserContext = CoreService.GetUserContext();
 
@@ -50,8 +53,7 @@ namespace VetCoin.Pages
                             .Include(c => c.VetMember)
                             .Include(c => c.TradeMessages)
                                 .ThenInclude(c => c.VetMember)
-                            .OrderByDescending(c => c.TradeMessages.Max(d => d.CreateDate))
-                            .ThenByDescending(c => c.CreateDate)
+                            .OrderByDescending(c => c.CreateDate)
                             .Where(c => c.VetMemberId == VetMember.Id)
                             .Take(5)
                             .ToArray();
@@ -64,6 +66,15 @@ namespace VetCoin.Pages
                                 .OrderByDescending(c => c.ContractMessages.Max(d => d.CreateDate))
                                 .Take(5)
                                 .ToArray();
+
+
+            Venders = await CoreService.DbContext
+                .Venders
+                .Include(c => c.VetMember)
+                .Where(c => c.VetMemberId == UserContext.CurrentUser.Id)
+                .OrderByDescending(c => c.CreateDate)
+                .Take(5)
+                .ToArrayAsync();
         }
     }
 }

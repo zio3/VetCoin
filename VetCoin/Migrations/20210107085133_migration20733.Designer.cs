@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VetCoin.Data;
 
 namespace VetCoin.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210107085133_migration20733")]
+    partial class migration20733
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -658,9 +660,6 @@ namespace VetCoin.Migrations
                     b.Property<string>("CreateUser")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DefaultAmount")
-                        .HasColumnType("int");
-
                     b.Property<string>("DeliveryMessage")
                         .HasColumnType("nvarchar(max)");
 
@@ -668,12 +667,6 @@ namespace VetCoin.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsClosed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsFreeAmmount")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSalesNotification")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")

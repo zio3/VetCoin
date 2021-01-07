@@ -7,6 +7,22 @@
     var loginUrl = coreService.GetLoginPageUrl();
 }
 
+@if (Model.FileList != null)
+{
+
+
+    <ul>
+        <li>
+            <a href="/swagger/index.html">Swagger</a>
+        </li>
+        @foreach (var item in Model.FileList)
+        {
+            <li>
+                <a asp-page="/@(item)">@item</a>
+            </li>
+        }
+    </ul>
+}
 
 
 @if (!User.Identity.IsAuthenticated)

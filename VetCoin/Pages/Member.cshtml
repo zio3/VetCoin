@@ -27,20 +27,20 @@
 </table>
 
 @*<h3>自己紹介</h3>
-<hr />
-<div>
-    @if (!string.IsNullOrEmpty(Model.VetMember.Markdown))
-    {
-        var md = new MarkdownSharp.Markdown();
-        var html = md.Transform(Model.VetMember.Markdown);
-        @Html.Raw(html);
-    }
-    else
-    {
-        <p>自己紹介がまだ設定されていません。</p>
-    }
-</div>
-<hr />*@
+    <hr />
+    <div>
+        @if (!string.IsNullOrEmpty(Model.VetMember.Markdown))
+        {
+            var md = new MarkdownSharp.Markdown();
+            var html = md.Transform(Model.VetMember.Markdown);
+            @Html.Raw(html);
+        }
+        else
+        {
+            <p>自己紹介がまだ設定されていません。</p>
+        }
+    </div>
+    <hr />*@
 
 
 <hr />
@@ -199,3 +199,45 @@
     </tbody>
 </table>
 <a asp-page="/Lists/MemberTransactions" asp-route-memberId="@Model.VetMember.Id">すべて見る</a>
+
+
+<h3>販売所</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>タイトル</th>
+            <th>金額</th>
+            <th>日時</th>
+            <th>ステータス</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Venders)
+        {
+
+            <tr>
+                <td>
+
+                    <a asp-page="../Venders/Details" asp-route-id="@item.Id" class="btn btn-primary">確認</a>
+                </td>
+                <td>
+                    <a asp-page="../Venders/Details" asp-route-id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DefaultAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @(item.IsClosed?"閉店":"")
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+<a asp-page="/Lists/MemberVenders" asp-route-memberId="@Model.UserContext.CurrentUser.Id">すべて見る</a>

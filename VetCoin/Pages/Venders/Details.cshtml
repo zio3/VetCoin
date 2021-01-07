@@ -1,0 +1,131 @@
+﻿@page
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Vender.Title</h1>
+
+@if (Model.Vender.IsClosed)
+{
+    <div class="alert alert-danger" role="alert">
+        この販売ページは無効です。
+    </div>
+}
+
+@if (Model.IsOwner)
+{
+    <a asp-page="./Edit" asp-route-id="@Model.Vender.Id" class="btn btn-primary">編集</a>
+    <a asp-page="./Switch" asp-route-id="@Model.Vender.Id" class="btn btn-primary">開店/閉店</a>
+}
+
+
+<hr />
+@if (!string.IsNullOrEmpty(Model.Vender.Content))
+{
+    MarkdownSharp.MarkdownOptions mdopt = new MarkdownSharp.MarkdownOptions();
+    mdopt.AutoNewlines = true;
+
+    var md = new MarkdownSharp.Markdown(mdopt);
+    var html = md.Transform(Model.Vender.Content);
+    html = html.Replace("<br", "<br />");
+
+    @Html.Raw(html);
+}
+<hr />
+
+@if (!Model.Vender.IsClosed)
+{
+    <form class="form" method="post">
+        <div class="form-group mb-2">
+            <label>
+                購入金額
+                @if (Model.Vender.IsFreeAmmount)
+                {
+                    Model.Amount = Model.Vender.DefaultAmount;
+                    <input type="text" class="form-control" asp-for="Amount" placeholder="購入額を入力" />
+                }
+                else
+                {
+                    Model.Amount = Model.Vender.DefaultAmount;
+                    <input type="hidden" class="form-control" asp-for="Amount" />
+                    <input type="text" class="form-control" value="@Model.Amount" readonly="readonly" />
+                }
+
+            </label>
+        </div>
+        <div class="form-group mb-2">
+            <input type="text" class="form-control" asp-for="BuyMessage" placeholder="一言メッセージ" />
+        </div>
+        <button type="submit" class="btn btn-primary mb-2" name="mode" value="Buy">購入する</button>
+    </form>
+    <hr />
+}
+<h3>購入履歴</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Member</th>
+            <th>日時</th>
+            <th>購入金額</th>
+            <th>メッセージ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sale in Model.Vender.VenderSales.OrderByDescending(c => c.CreateDate))
+        {
+            <tr>
+                <td>
+                    <partial name="MemberTag" model="sale.VetMember" />
+                </td>
+                <td>
+                    @Html.DisplayFor(c => sale.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(c => sale.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(c => sale.Message)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<hr />
+<h3>メッセージ</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Member</th>
+            <th>日時</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in @Model.Vender.VenderMessages.OrderBy(c => c.CreateDate))
+        {
+            <tr>
+                <td>
+                    <partial name="MemberTag" model="message.VetMember" />
+                </td>
+                <td>
+                    @Html.DisplayFor(c => message.CreateDate)
+                </td>
+                <td class="col-sm-10" style="white-space:pre-wrap">@message.Message</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form class="form" method="post">
+    <div class="form-group mb-2">
+        <textarea type="text" class="form-control" asp-for="PostMessage" placeholder="メッセージを記入してください"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2" name="mode" value="PostMessage">投稿</button>
+</form>

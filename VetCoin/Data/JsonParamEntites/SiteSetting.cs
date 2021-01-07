@@ -14,5 +14,9 @@ namespace VetCoin.Data.JsonParamEntites
 
         [DisplayName("寄付・クラファンの非表示")]
         public bool HideDonations { get; set; }
+
+        [DisplayName("販売所の非表示")]
+        public bool HideVenders { get; set; } = true;
+
     }
 }

@@ -7,23 +7,27 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VetCoin.Data;
+using VetCoin.Data.VenerEntityes;
 using VetCoin.Services;
 
-namespace VetCoin.Pages.Donations
+namespace VetCoin.Pages.Venders
 {
-    public class EditModel : PageModel
+    public class SwitchModel : PageModel
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public EditModel(ApplicationDbContext context, CoreService coreService)
+        public SwitchModel(ApplicationDbContext context, CoreService coreService)
         {
             DbContext = context;
             CoreService = coreService;
         }
 
         [BindProperty]
-        public Donation Donation { get; set; }
+        public Vender Vender { get; set; }
         public CoreService CoreService { get; }
+
+        [BindProperty]
+        public string mode{ get; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -34,40 +38,38 @@ namespace VetCoin.Pages.Donations
 
             var uc = CoreService.GetUserContext();
 
-            Donation = await DbContext.Donations
-                .Include(d => d.VetMember).FirstOrDefaultAsync(m => m.Id == id);
+            Vender = await DbContext.Venders
+                .Include(v => v.VetMember).FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Donation == null)
+            if (Vender == null)
             {
                 return NotFound();
             }
 
-            if(Donation.VetMemberId != uc.CurrentUser.Id)
+            if (Vender.VetMemberId != uc.CurrentUser.Id)
             {
                 return NotFound();
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string mode)
         {
-            if (!ModelState.IsValid)
+            var entity = DbContext.Venders.Find(Vender.Id);
+
+            switch (mode)
             {
-                return await OnGetAsync(Donation.Id);
-            }           
+                case "Open":
+                    entity.IsClosed = false;
+                    break;
+                case "Close":
+                    entity.IsClosed = true;
+                    break;
+                default:
+                    break;
+            }
 
 
-            var entity = DbContext.Donations.Find(Donation.Id);
-
-            var log = new DonationLog
-            {
-                Title = entity.Title,
-                Content = entity.Content,
-                DonationId = Donation.Id
-
-            };
-            DbContext.DonationLogs.Add(log);
-            await TryUpdateModelAsync(entity, nameof(Donation));
 
             try
             {
@@ -75,7 +77,7 @@ namespace VetCoin.Pages.Donations
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DonationExists(Donation.Id))
+                if (!VenderExists(Vender.Id))
                 {
                     return NotFound();
                 }
@@ -85,12 +87,12 @@ namespace VetCoin.Pages.Donations
                 }
             }
 
-            return RedirectToPage("./Details",new {id= Donation.Id });
+            return RedirectToPage("./Details", new { id = Vender.Id });
         }
 
-        private bool DonationExists(int id)
+        private bool VenderExists(int id)
         {
-            return DbContext.Donations.Any(e => e.Id == id);
+            return DbContext.Venders.Any(e => e.Id == id);
         }
     }
 }

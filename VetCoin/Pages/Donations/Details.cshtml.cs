@@ -70,7 +70,7 @@ namespace VetCoin.Pages.Donations
             VoteCount = await DbContext.DonationLikeVotes
                 .AsQueryable()
                 .CountAsync(c => c.DonationId == id);
-                        IsVoted = await DbContext.DonationLikeVotes
+            IsVoted = await DbContext.DonationLikeVotes
                             .AsQueryable()
                 .AnyAsync(c => c.DonationId == id && c.VetMemberId == userContext.CurrentUser.Id);
 
@@ -138,14 +138,14 @@ namespace VetCoin.Pages.Donations
             if (DonateAmount <= 0)
             {
                 IsSuppotError = true;
-                ErrorMessage = "残高不足です";
+                ErrorMessage = "数値の入力が必要です";
                 return await OnGetAsync(id);
             }
 
             if (userContext.Amount < DonateAmount)
             {
                 IsSuppotError = true;
-                ErrorMessage = "数値の入力が必要です";
+                ErrorMessage = "残高不足です";
                 return await OnGetAsync(id);
             }
             var coinTransaction = new CoinTransaction
@@ -179,9 +179,6 @@ namespace VetCoin.Pages.Donations
         private async Task Notification(UserContext userContext,Donation donation, Doner doner)
         {
             var fields = new List<DiscordService.DiscordEmbed.Field>();
-
-
-
 
             fields.Add(new DiscordService.DiscordEmbed.Field
             {

@@ -123,6 +123,32 @@ namespace VetCoin.Data
                 .HasForeignKey(c => c.VetMemberId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+
+            builder.Entity<Vender>()
+              .HasOne(c => c.VetMember)
+              .WithMany()
+              .HasForeignKey(c => c.VetMemberId)
+              .OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Entity<VenderSale>()
+              .HasOne(c => c.VetMember)
+              .WithMany()
+              .HasForeignKey(c => c.VetMemberId)
+              .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<VenderMessage>()
+              .HasOne(c => c.VetMember)
+              .WithMany()
+              .HasForeignKey(c => c.VetMemberId)
+              .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<VenderLikeVote>()
+              .HasOne(c => c.VetMember)
+              .WithMany()
+              .HasForeignKey(c => c.VetMemberId)
+              .OnDelete(DeleteBehavior.NoAction);
+
         }
 
         public DbSet<ScheduledExecutionLog> ScheduledExecutionLogs { get; set; }

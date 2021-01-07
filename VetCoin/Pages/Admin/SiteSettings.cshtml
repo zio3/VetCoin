@@ -30,6 +30,11 @@
                 <input asp-for="SiteSetting.HideDonations" />
                 <span asp-validation-for="SiteSetting.HideDonations" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="SiteSetting.HideVenders" class="control-label"></label>
+                <input asp-for="SiteSetting.HideVenders" />
+                <span asp-validation-for="SiteSetting.HideVenders" class="text-danger"></span>
+            </div>
 
             <div class="form-group">
                 <button type="submit" name="mode" value="Save" class="btn btn-primary">Save</button>

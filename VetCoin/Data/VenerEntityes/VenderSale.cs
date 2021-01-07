@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VetCoin.Data.VenerEntityes
 {
-    public class VenderSale
+    public class VenderSale : ICreate
     {
         public int Id { get; set; }
 
