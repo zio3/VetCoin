@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using VetCoin.Codes;
 using System.Threading;
+using VetCoin.Data.VenerEntityes;
 
 namespace VetCoin.Data
 {
@@ -157,9 +158,13 @@ namespace VetCoin.Data
 
         public DbSet<DonationLikeVote> DonationLikeVotes { get; set; }
 
-        
-
         public DbSet<DonationMessage> DonationMessages { get; set; }
+
+        public DbSet<Vender> Venders { get; set; }
+        public DbSet<VenderLikeVote> VenderLikeVotes { get; set; }
+        public DbSet<VenderMessage> VenderMessages { get; set; }
+        public DbSet<VenderSale> VenderSales { get; set; }
+
 
         public override int SaveChanges()
         {
