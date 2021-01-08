@@ -30,7 +30,7 @@ jobs:
         app-name: 'ykmcoin'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_7014e788a62947829b2a718bf670e78b }}
-        package: myapp 
+        package: ${{env.DOTNET_ROOT}}/myapp 
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -38,4 +38,4 @@ jobs:
         app-name: 'vetcoin'
         slot-name: 'production'
         publish-profile: ${{ secrets.VETCOIN }}
-        package: myapp 
+        package: ${{env.DOTNET_ROOT}}/myapp 
