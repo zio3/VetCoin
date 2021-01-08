@@ -35,6 +35,11 @@
 }
 <hr />
 
+@if(Model.IsBuyError)
+{
+    <p>@Model.ErrorMessage</p>
+}
+
 @if (!Model.Vender.IsClosed)
 {
     <form class="form" method="post">

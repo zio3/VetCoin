@@ -151,19 +151,19 @@ namespace VetCoin.Pages.Venders
             }
 
             var userContext = CoreService.GetUserContext();
-            var escrowUser = DbContext.VetMembers.FirstOrDefault(c => c.MemberType == MemberType.Escrow);
+            //var escrowUser = DbContext.VetMembers.FirstOrDefault(c => c.MemberType == MemberType.Escrow);
 
-            if (Amount <= 0)
+            if (Amount < 0)
             {
                 IsBuyError = true;
-                ErrorMessage = "数値の入力が必要です";
+                ErrorMessage = "マイナスの値は入力不可です";
                 return await OnGetAsync(id);
             }
 
             var coinTransaction = new CoinTransaction
             {
                 SendeVetMemberId = userContext.CurrentUser.Id,
-                RecivedVetMemberId = escrowUser.Id,
+                RecivedVetMemberId = vender.VetMemberId,
                 Amount = Amount,
                 Text = $"{vender.Title} にて購入 {Amount}{SiteContext.CurrenryUnit} {BuyMessage}",
                 TransactionType = CoinTransactionType.Vender
