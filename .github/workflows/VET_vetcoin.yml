@@ -35,7 +35,7 @@ jobs:
       uses: zio3/discord-post@v1.0.0
       with:
         webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
-        content: "Build Error ${{github.repository }}"
+        message: "Build Error ${{github.repository }}"
 
     - name: dotnet publish
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
@@ -44,7 +44,7 @@ jobs:
       uses: zio3/discord-post@v1.0.0
       with:
         webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
-        content: "Deploy Start ${{github.repository }}"
+        message: "Deploy Start ${{github.repository }}"
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -58,4 +58,4 @@ jobs:
       uses: zio3/discord-post@v1.0.0
       with:
         webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
-        content: "Actions Complite ${{github.repository }}"
+        message: "Actions Complite ${{github.repository }}"
