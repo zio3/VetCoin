@@ -15,25 +15,36 @@
     </div>
 }
 
+@if (Model.Donation.DonationState == Data.DonationState.Close)
+{
+    <div class="alert alert-success" role="alert">
+        寄付/クラファンは終了しています。
+    </div>
+}
+
 
 <h1>寄付/クラファン詳細</h1>
 @{
-    var sum = Model.Donation.Doners.Where(c => c.DonerState != Data.DonerState.Cancel).Sum(c => c.Amount);
+    var sum = Model.Donation.Doners.Where(c => c.DonerState != Data.DonerState.Cancel)
+        .Where(c=>c.VetMemberId != Model.Donation.VetMemberId)
+        .Sum(c => c.Amount);
 
     <h2>現在 @sum @SiteContext.CurrenryUnit 支援されています</h2>
 
 }
 <p></p>
 
-@if (Model.Donation.DonationState == Data.DonationState.Open)
+
+@if (Model.IsOwner)
 {
-    @if (Model.IsOwner)
-    {
-        <a asp-page="./Edit" asp-route-id="@Model.Donation.Id" class="btn btn-primary">編集</a>
-        @*<a asp-page="./Images" asp-route-id="@Model.Donation.Id" class="btn btn-primary">画像</a>*@
-        <a asp-page="./Receipt" asp-route-donationId="@Model.Donation.Id" class="btn btn-primary">受領管理</a>
-    }
+    <a asp-page="./Edit" asp-route-id="@Model.Donation.Id" class="btn btn-primary">編集</a>
+    @*<a asp-page="./Images" asp-route-id="@Model.Donation.Id" class="btn btn-primary">画像</a>*@
+    <a asp-page="./Receipt" asp-route-donationId="@Model.Donation.Id" class="btn btn-primary">受領管理</a>
+
+    <a asp-page="./Switch" asp-route-id="@Model.Donation.Id" class="btn btn-primary">募集/募集終了/キャンセル</a>
+
 }
+
 <div>
     <a asp-page="./EditLog" asp-route-donationid="@Model.Donation.Id">Log</a> |
     <a asp-page="./Index">Back to List</a>
@@ -46,7 +57,7 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Donation.Title)
-            
+
             <component type="typeof(VetCoinWasm.Pages.LikeVote)"
                        render-mode="WebAssemblyPrerendered"
                        param-IsVoted="Model.IsVoted"
@@ -76,19 +87,21 @@
     <div class="alert alert-danger" role="alert">支援ができませんでした。</div>
 }
 
-
-<form class="form" method="post">
-    <div class="form-group mb-2">
-        <label>
-            支援額
-            <input type="text" class="form-control" asp-for="DonateAmount" placeholder="寄付額を入力" />
-        </label>
-    </div>
-    <div class="form-group mb-2">
-        <input type="text" class="form-control" asp-for="PostMessage" placeholder="一言メッセージ" />
-    </div>
-    <button type="submit" class="btn btn-primary mb-2" name="mode" value="SupprtEntry">支援する</button>
-</form>
+@if (Model.Donation.DonationState == Data.DonationState.Open)
+{
+    <form class="form" method="post">
+        <div class="form-group mb-2">
+            <label>
+                支援額
+                <input type="text" class="form-control" asp-for="DonateAmount" placeholder="寄付額を入力" />
+            </label>
+        </div>
+        <div class="form-group mb-2">
+            <input type="text" class="form-control" asp-for="PostMessage" placeholder="一言メッセージ" />
+        </div>
+        <button type="submit" class="btn btn-primary mb-2" name="mode" value="SupprtEntry">支援する</button>
+    </form>
+}
 
 
 <h3>支援一覧</h3>

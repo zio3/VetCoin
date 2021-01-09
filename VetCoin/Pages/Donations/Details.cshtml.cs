@@ -199,6 +199,7 @@ namespace VetCoin.Pages.Donations
 
             var total = DbContext.Doners.AsQueryable().Where(c => c.DonationId == donation.Id)
                 .Where(c=>c.DonerState != DonerState.Cancel)
+                .Where(c=>c.VetMemberId != donation.VetMemberId)
                 .Sum(c => c.Amount);
 
             fields.Add(new DiscordService.DiscordEmbed.Field
