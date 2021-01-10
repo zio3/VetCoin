@@ -33,7 +33,10 @@ namespace VetCoin.Pages.Venders
 
         public int VoteCount { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        [BindProperty]
+        public bool IsBuyNotification { get; set; } = true;
+
+        public async Task<IActionResult> OnGetAsync(int? id,bool? isBuyNotification = null)
         {
             if (id == null)
             {
@@ -63,6 +66,11 @@ namespace VetCoin.Pages.Venders
             IsVoted = await DbContext.VenderLikeVotes
                             .AsQueryable()
                             .AnyAsync(c => c.VenderId == id && c.VetMemberId == userContext.CurrentUser.Id);
+
+            if (isBuyNotification.HasValue)
+            {
+                IsBuyNotification = isBuyNotification.Value;
+            }
 
             return Page();
         }
@@ -115,7 +123,7 @@ namespace VetCoin.Pages.Venders
             }
 
 
-            return RedirectToPage("Details", new { id = id });
+            return RedirectToPage("Details", new { id = id, isBuyNotification = IsBuyNotification });
         }
 
         private async Task SendMessages(Vender vender, VetMember sender, string message)
@@ -153,6 +161,14 @@ namespace VetCoin.Pages.Venders
             var userContext = CoreService.GetUserContext();
             //var escrowUser = DbContext.VetMembers.FirstOrDefault(c => c.MemberType == MemberType.Escrow);
 
+            if( (userContext.Amount - Amount) < 0)
+            {
+                IsBuyError = true;
+                ErrorMessage = "残高不足です";
+                return await OnGetAsync(id);
+            }
+
+
             if (Amount < 0)
             {
                 IsBuyError = true;
@@ -182,8 +198,10 @@ namespace VetCoin.Pages.Venders
 
             await DbContext.SaveChangesAsync();
 
-            //全体への周知
-            await WebHookNotification(userContext,vender, venderSale);
+            if (vender.IsSalesPublicNotification && IsBuyNotification)
+            {
+                await WebHookNotification(userContext, vender, venderSale);
+            }
 
             if(vender.IsSalesNotification)
             {

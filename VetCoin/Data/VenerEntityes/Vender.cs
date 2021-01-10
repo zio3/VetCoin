@@ -27,8 +27,12 @@ namespace VetCoin.Data.VenerEntityes
         public bool IsFreeAmmount { get; set; }
 
 
-        [DisplayName("購入通知")]
+        [DisplayName("購入通知(自身のDM)")]
         public bool IsSalesNotification { get; set; }
+
+
+        [DisplayName("購入通知(全体)")]
+        public bool IsSalesPublicNotification { get; set; }
 
 
         [DisplayName("Member")]
