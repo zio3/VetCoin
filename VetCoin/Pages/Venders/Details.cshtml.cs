@@ -198,10 +198,10 @@ namespace VetCoin.Pages.Venders
 
             await DbContext.SaveChangesAsync();
 
-            if (vender.IsSalesPublicNotification && IsBuyNotification)
-            {
-                await WebHookNotification(userContext, vender, venderSale);
-            }
+            //if (vender.IsSalesPublicNotification && IsBuyNotification)
+            //{
+            //    await WebHookNotification(userContext, vender, venderSale);
+            //}
 
             if(vender.IsSalesNotification)
             {
