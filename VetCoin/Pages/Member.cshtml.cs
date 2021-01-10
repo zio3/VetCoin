@@ -71,7 +71,7 @@ namespace VetCoin.Pages
             Venders = await CoreService.DbContext
                 .Venders
                 .Include(c => c.VetMember)
-                .Where(c => c.VetMemberId == UserContext.CurrentUser.Id)
+                .Where(c => c.VetMemberId == VetMember.Id)
                 .OrderByDescending(c => c.CreateDate)
                 .Take(5)
                 .ToArrayAsync();

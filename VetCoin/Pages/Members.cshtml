@@ -4,7 +4,7 @@
 
 @{
     ViewData["Title"] = "Members";
-    var query = Model.VetMemberQuery;
+    var query = Model.MemberInfoes;
     UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
     UrlQueryService.RowsPerPage = 50;
     var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
@@ -27,8 +27,13 @@
     <thead>
         <tr>
             <th>
-                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Name)">
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Member.Name)">
                     @Html.DisplayNameFor(model => displayNameEntity.Name)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Amount)">
+                    残高
                 </a>
             </th>
             <th></th>
@@ -40,10 +45,19 @@
         <tr>
 
             <td>
-                <partial name="MemberTag" model="item" />
+                <partial name="MemberTag" model="item.Member" />
             </td>
             <td>
-                <a asp-page="./Member" asp-route-Memberid="@item.DiscordId" class="btn btn-primary">確認</a>
+                @Html.DisplayFor(c => item.Amount)
+            </td>
+            @*<td>
+                @Html.DisplayFor(c => item.SendAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(c => item.ReciveAmount)
+            </td>*@
+            <td>
+                <a asp-page="./Member" asp-route-Memberid="@item.Member.DiscordId" class="btn btn-primary">確認</a>
             </td>
         </tr>
 }

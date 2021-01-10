@@ -20,22 +20,41 @@ namespace VetCoin.Pages
             DbContext = context;
         }
 
-        public IQueryable<VetMember> VetMemberQuery { get; set; }
+        //public IQueryable<VetMember> VetMemberQuery { get; set; }
+
+        public IQueryable<MemberInfo> MemberInfoes { get; set; }
 
         public void OnGet(string searchKey)
         {
-            VetMemberQuery = DbContext.VetMembers
+            MemberInfoes = DbContext.VetMembers
                 .AsQueryable()
                 .Where(c=>c.DiscordId != 0)
+                .Select(c=>new MemberInfo
+                {
+                    Member = c,
+                    Amount = c.RecivedTransactions.Sum(d=>((int?)d.Amount)??0) - (c.SendTransactions.Sum(d=>(int?)d.Amount) ?? 0) ,
+                    SendAmount = c.SendTransactions.Sum(d => (int?)d.Amount) ?? 0,
+                    ReciveAmount = c.RecivedTransactions.Sum(d => (int?)d.Amount) ?? 0,
+
+                })
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchKey))
             {
                 //Todo:SearchImpl
-                VetMemberQuery = VetMemberQuery
-                    .Where(c => c.Name.Contains(searchKey));
+                MemberInfoes = MemberInfoes
+                    .Where(c => c.Member.Name.Contains(searchKey));
             }
+        }
 
+        public class MemberInfo
+        {
+            public VetMember Member { get; set; }
+
+            public int Amount { get; set; }
+
+            public int SendAmount { get; set; }
+            public int ReciveAmount { get; set; }
         }
     }
 }
