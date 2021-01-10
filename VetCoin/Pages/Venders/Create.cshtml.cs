@@ -27,6 +27,11 @@ namespace VetCoin.Pages.Venders
 
         public IActionResult OnGet()
         {
+            Vender = new Vender
+            {
+                IsSalesNotification = true
+            };
+
             return Page();
         }
 
