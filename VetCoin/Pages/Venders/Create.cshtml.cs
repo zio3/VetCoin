@@ -71,7 +71,7 @@ namespace VetCoin.Pages.Venders
             await DiscordService.SendMessage(DiscordService.Channel.VenderNotification, string.Empty, new DiscordService.DiscordEmbed
             {
                 title = Vender.Title,
-                url = $"{SiteContext.SiteBaseUrl}Vender/Details?id={Vender.Id}",
+                url = $"{SiteContext.SiteBaseUrl}Venders/Details?id={Vender.Id}",
                 author = new DiscordService.DiscordEmbed.Author
                 {
                     url = userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl),
