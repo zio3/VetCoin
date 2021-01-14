@@ -49,6 +49,7 @@ namespace VetCoin.Data
         Subscription,
         Donate,
         Vender,
+        ExteralApplication,
 
         Other = 100
     }

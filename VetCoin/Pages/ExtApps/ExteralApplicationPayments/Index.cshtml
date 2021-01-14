@@ -1,0 +1,127 @@
+﻿@page
+@model IndexModel
+@inject Services.UrlQueryService UrlQueryService
+
+@{
+    ViewData["Title"] = "Index";
+    var query = Model.ExteralApplicationPaymentQuery;
+    UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
+    UrlQueryService.RowsPerPage = 10;
+    var pageUrlContext = UrlQueryService.GetPageUrlContext(query);
+    var pageItems = UrlQueryService.PageRows(query);
+    var pagerContext = pageUrlContext.GetPagerContext();
+    var displayNameEntity = new VetCoin.Data.ExtApp.ExteralApplicationPayment();
+}
+
+<h1>Index</h1>
+
+@*<form class="form-inline" method="get">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" asp-for="SearchKey" placeholder="検索">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">検索</button>
+</form>*@
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<partial name="PageNavi" model="pagerContext" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.ExteralApplication)">
+                   @Html.DisplayNameFor(model => displayNameEntity.ExteralApplication)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Amount)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Amount)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.Description)">
+                    @Html.DisplayNameFor(model => displayNameEntity.Description)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.DiscordId)">
+                    @Html.DisplayNameFor(model => displayNameEntity.DiscordId)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.IsPayd)">
+                    @Html.DisplayNameFor(model => displayNameEntity.IsPayd)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.ExpirationDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.ExpirationDate)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateUser)">
+                    @Html.DisplayNameFor(model => displayNameEntity.CreateUser)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.CreateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.CreateDate)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.UpdateUser)">
+                    @Html.DisplayNameFor(model => displayNameEntity.UpdateUser)
+                </a>
+            </th>
+            <th>
+                <a href="@pageUrlContext.GetSortUrlFor(s=>s.UpdateDate)">
+                    @Html.DisplayNameFor(model => displayNameEntity.UpdateDate)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pageItems) 
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExteralApplication.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscordId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPayd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpirationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateUser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateUser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<partial name="PageNavi" model="pagerContext" />

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using VetCoin.Codes;
 using System.Threading;
 using VetCoin.Data.VenerEntityes;
+using VetCoin.Data.ExtApp;
 
 namespace VetCoin.Data
 {
@@ -192,6 +193,9 @@ namespace VetCoin.Data
         public DbSet<VenderSale> VenderSales { get; set; }
 
 
+        public DbSet<VetCoin.Data.ExtApp.ExteralApplication> ExteralApplications { get; set; }
+
+        public DbSet<VetCoin.Data.ExtApp.ExteralApplicationPayment> ExteralApplicationPayments { get; set; }
         public override int SaveChanges()
         {
             EntryModifyInfo();
@@ -331,6 +335,7 @@ namespace VetCoin.Data
 
 
         }
+
 
     }
 }
