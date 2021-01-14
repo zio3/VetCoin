@@ -43,11 +43,13 @@ namespace VetCoin.Controllers
 
         // GET: api/ExteralApplicationPayments/5
         [HttpGet]
-        public async Task<ActionResult<ExteralApplicationPayment>> GetExteralApplicationPayment(Guid id, ulong discordId)
+        public async Task<ActionResult<ExteralApplicationPayment>> GetExteralApplicationPayment(Guid id, string discordId)
         {
+            var discordIdUl = ulong.Parse(discordId);
+
             var exteralApplicationPayment = await _context.ExteralApplicationPayments
                 .AsQueryable()
-                .FirstOrDefaultAsync(c => c.Id == id && c.DiscordId == discordId);
+                .FirstOrDefaultAsync(c => c.Id == id && c.DiscordId == discordIdUl);
 
             if (exteralApplicationPayment == null)
             {
@@ -60,12 +62,14 @@ namespace VetCoin.Controllers
         // PUT: api/ExteralApplicationPayments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<ActionResult<PutResult>> PutExteralApplicationPayment(Guid id, ulong discordId)
+        public async Task<ActionResult<PutResult>> PutExteralApplicationPayment(Guid id, string discordId)
         {
+            var discordIdul = ulong.Parse(discordId);
+
             var exteralApplicationPayment = await _context.ExteralApplicationPayments
                     .Include(c=>c.ExteralApplication)
                     .AsQueryable()
-                    .FirstOrDefaultAsync(c => c.Id == id && c.DiscordId == discordId);
+                    .FirstOrDefaultAsync(c => c.Id == id && c.DiscordId == discordIdul);
 
             if (exteralApplicationPayment == null)
             {
@@ -83,7 +87,7 @@ namespace VetCoin.Controllers
 
             //TODO:トランザクションを作る
             var venderId = exteralApplicationPayment.ExteralApplication.VetMemberId;
-            var buyMember = await _context.VetMembers.AsQueryable().FirstOrDefaultAsync(c => c.DiscordId == discordId);
+            var buyMember = await _context.VetMembers.AsQueryable().FirstOrDefaultAsync(c => c.DiscordId == discordIdul);
             var lestAmount = CoreService.CalcAmount(buyMember);
 
             if(lestAmount < exteralApplicationPayment.Amount)
@@ -136,7 +140,9 @@ namespace VetCoin.Controllers
         [HttpPost]
         public async Task<ActionResult<PostResult>> PostExteralApplicationPayment(PostRequest postRequest)
         {
-            var buyMember = await _context.VetMembers.AsQueryable().FirstOrDefaultAsync(c => c.DiscordId == postRequest.DiscordId);
+            var discordIdUl = ulong.Parse(postRequest.DiscordId);
+
+            var buyMember = await _context.VetMembers.AsQueryable().FirstOrDefaultAsync(c => c.DiscordId == discordIdUl);
             if(buyMember == null)
             {
                 return new PostResult
@@ -168,7 +174,7 @@ namespace VetCoin.Controllers
                 ExteralApplicationId = postRequest.AppId,
                 Amount = postRequest.Amount,
                 Description = postRequest.Description,
-                DiscordId = postRequest.DiscordId,
+                DiscordId = discordIdUl,
                 RefJson = postRequest.RefJson,
                 ExpirationDate = DateTimeOffset.Now.AddMinutes(5)
             };
@@ -228,7 +234,7 @@ namespace VetCoin.Controllers
 
             public string Description { get; set; }
 
-            public ulong DiscordId { get; set; }
+            public string DiscordId { get; set; }
 
             public string RefJson { get; set; }
         }
