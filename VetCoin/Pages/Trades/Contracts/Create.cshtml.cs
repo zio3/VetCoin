@@ -17,11 +17,12 @@ namespace VetCoin.Pages.Trades.Contracts
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public CreateModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService, SiteContext siteContext)
+        public CreateModel(ApplicationDbContext context, CoreService coreService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = context;
             CoreService = coreService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
 
@@ -54,6 +55,7 @@ namespace VetCoin.Pages.Trades.Contracts
         public Contract Contract { get; set; }
         public CoreService CoreService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         public async Task<IActionResult> OnPostAsync(int tradeId)
         {
@@ -91,7 +93,7 @@ namespace VetCoin.Pages.Trades.Contracts
 
             EmbedBuilder builder = new EmbedBuilder();
             builder.WithTitle(trade.Title)
-                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(SiteContext.SiteBaseUrl))
+                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(StaticSettings.SiteBaseUrl))
                 .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
                 .AddField("アクション", "提案がありました")
                 .AddField("報酬", contract.Reword,true)

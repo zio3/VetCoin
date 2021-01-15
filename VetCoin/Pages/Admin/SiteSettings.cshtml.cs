@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using VetCoin.Codes;
 using VetCoin.Data;
 using VetCoin.Data.JsonParamEntites;
+using VetCoin.Services;
 
 namespace VetCoin.Pages.Admin
 {
     public class SiteSettingsModel : PageModel
     {
-        public SiteSettingsModel(ApplicationDbContext dbContext, SiteContext siteContext)
+        public SiteSettingsModel(ApplicationDbContext dbContext, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = dbContext;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public bool SaveSucceed { get; set; }
@@ -26,6 +28,7 @@ namespace VetCoin.Pages.Admin
         public SiteSetting SiteSetting { get; set; }
         public ApplicationDbContext DbContext { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         public void OnGet() {
             SiteSetting = DbContext.GetParam<SiteSetting>();

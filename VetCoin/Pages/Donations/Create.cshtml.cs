@@ -17,12 +17,13 @@ namespace VetCoin.Pages.Donations
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext)
+        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = context;
             CoreService = coreService;
             DiscordService = discordService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public IActionResult OnGet()
@@ -36,6 +37,7 @@ namespace VetCoin.Pages.Donations
         public CoreService CoreService { get; }
         public DiscordService DiscordService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
         [BindProperty]
         [DisplayName("通知不要")]
         public bool IsSkipNotification { get; set; }
@@ -63,10 +65,10 @@ namespace VetCoin.Pages.Donations
             await DiscordService.SendMessage(DiscordService.Channel.CrowdFundingNotification, string.Empty, new DiscordService.DiscordEmbed
             {
                 title = Donation.Title,
-                url = $"{SiteContext.SiteBaseUrl}Donations/Details?id={Donation.Id}",
+                url = $"{StaticSettings.SiteBaseUrl}Donations/Details?id={Donation.Id}",
                 author = new DiscordService.DiscordEmbed.Author
                 {
-                    url = userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl),
+                    url = userContext.CurrentUser.GetMemberPageUrl(StaticSettings.SiteBaseUrl),
                     icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
                     name = userContext.CurrentUser.Name
                 },

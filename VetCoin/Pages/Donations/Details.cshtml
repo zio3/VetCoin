@@ -1,6 +1,8 @@
 ﻿@page
 @model DetailsModel
 @inject Codes.SiteContext SiteContext
+@inject Services.StaticSettings StaticSettings
+
 
 @{
     ViewBag.HostBlazor = true;
@@ -26,10 +28,10 @@
 <h1>寄付/クラファン詳細</h1>
 @{
     var sum = Model.Donation.Doners.Where(c => c.DonerState != Data.DonerState.Cancel)
-        .Where(c=>c.VetMemberId != Model.Donation.VetMemberId)
+        .Where(c => c.VetMemberId != Model.Donation.VetMemberId)
         .Sum(c => c.Amount);
 
-    <h2>現在 @sum @SiteContext.CurrenryUnit 支援されています</h2>
+    <h2>現在 @sum @StaticSettings.CurrenryUnit 支援されています</h2>
 
 }
 <p></p>

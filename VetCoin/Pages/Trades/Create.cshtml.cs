@@ -26,12 +26,13 @@ namespace VetCoin.Pages.Trades
         [DisplayName("通知不要")]
         public bool IsSkipNotification { get; set; }
 
-        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext)
+        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = context;
             CoreService = coreService;
             DiscordService = discordService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public IActionResult OnGet(Direction? direction, int? cloneSrcId)
@@ -56,6 +57,7 @@ namespace VetCoin.Pages.Trades
         public Trade Trade { get; set; }
         public DiscordService DiscordService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         private string GetDisplayName(Direction direction)
         {
@@ -93,7 +95,7 @@ namespace VetCoin.Pages.Trades
                 url = $"https://vetcoin.azurewebsites.net/Trades/Details?id={Trade.Id}",
                 author = new DiscordService.DiscordEmbed.Author
                 {
-                    url = userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl),
+                    url = userContext.CurrentUser.GetMemberPageUrl(StaticSettings.SiteBaseUrl),
                     icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
                     name = userContext.CurrentUser.Name
                 },

@@ -23,13 +23,15 @@ namespace VetCoin.Controllers
         public CoreService CoreService { get; }
         public DiscordService DiscordService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
-        public ExteralApplicationPaymentsController(ApplicationDbContext context, CoreService coreService,DiscordService discordService,SiteContext siteContext)
+        public ExteralApplicationPaymentsController(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext, StaticSettings staticSettings)
         {
             _context = context;
             CoreService = coreService;
             DiscordService = discordService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         // GET: api/ExteralApplicationPayments
@@ -85,6 +87,16 @@ namespace VetCoin.Controllers
                 };
             }
 
+            if(exteralApplicationPayment.IsPayd)
+            {
+                return new PutResult
+                {
+                    IsSucceed = false,
+                    ErrorMessage = "支払い済みのデータです"
+                };
+            }
+
+
             //TODO:トランザクションを作る
             var venderId = exteralApplicationPayment.ExteralApplication.VetMemberId;
             var buyMember = await _context.VetMembers.AsQueryable().FirstOrDefaultAsync(c => c.DiscordId == discordIdul);
@@ -106,6 +118,7 @@ namespace VetCoin.Controllers
                 Amount = exteralApplicationPayment.Amount,
                 Text = $"外部購入:{exteralApplicationPayment.ExteralApplication.Name}:{exteralApplicationPayment.Id}",
             };
+            exteralApplicationPayment.IsPayd = true;
 
             _context.CoinTransactions.Add(transaction);
 
@@ -197,7 +210,7 @@ namespace VetCoin.Controllers
 
             builder.WithTitle($"{app.Name}:購入確認");
             builder.WithUrl(app.CallbackUrl + $"?id={eap.Id}");
-            builder.WithAuthor(app.VetMember.Name, app.VetMember.GetAvaterIconUrl(), app.VetMember.GetMemberPageUrl(SiteContext.SiteBaseUrl));
+            builder.WithAuthor(app.VetMember.Name, app.VetMember.GetAvaterIconUrl(), app.VetMember.GetMemberPageUrl(StaticSettings.SiteBaseUrl));
             builder.AddField("金額", eap.Amount);
             builder.WithDescription(eap.Description);
             builder.WithFooter("よろしければ、タイトルをクリックして購入処理をつづけてください");

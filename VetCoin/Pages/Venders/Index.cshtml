@@ -3,6 +3,7 @@
 @inject Services.UrlQueryService UrlQueryService
 @inject Data.ApplicationDbContext DbContext
 @inject Codes.SiteContext SiteContext
+@inject Services.StaticSettings StaticSettings
 
 @{
     ViewData["Title"] = "Index";
@@ -95,7 +96,7 @@ VoteCount = c.VenderLikeVotes.Count(),
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.DefaultAmount) @SiteContext.CurrenryUnit
+                    @Html.DisplayFor(modelItem => item.DefaultAmount) @StaticSettings.CurrenryUnit
                 </td>
                 <td>
                     <component type="typeof(VetCoinWasm.Pages.LikeVote)"

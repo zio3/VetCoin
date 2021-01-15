@@ -1,16 +1,17 @@
 ﻿@page
 @model DestributeModel
 @inject Codes.SiteContext SiteContext
+@inject Services.StaticSettings StaticSettings
 @{
 }
 
 <h2>通貨発行</h2>
 
-@if(Model.IsIssued)
+@if (Model.IsIssued)
 {
-<div class="alert alert-success" role="alert">
-    @Model.ReciveMember.Name に @Model.IssuedAmound @SiteContext.CurrenryUnit 発行されました。(残高:@Model.ReciverAmount @SiteContext.CurrenryUnit)
-</div>
+    <div class="alert alert-success" role="alert">
+        @Model.ReciveMember.Name に @Model.IssuedAmound @StaticSettings.CurrenryUnit 発行されました。(残高:@Model.ReciverAmount @StaticSettings.CurrenryUnit)
+    </div>
 }
 
 @Html.ValidationSummary()

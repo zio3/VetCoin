@@ -100,8 +100,7 @@ namespace VetCoin
 
             services.AddScoped<IconCheckService>();
 
-            
-
+            services.AddSingleton<StaticSettings>((sp) => Configuration.Get<StaticSettings>());
 
             services.AddTransient<DiscordService>();
             services.AddTransient<ScheduledExecutionService>();
@@ -110,11 +109,17 @@ namespace VetCoin
             services.AddScoped<VetCoinWasm.Api.ITradeLikeVotesClient>(sp => new VetCoinWasm.Api.TradeLikeVotesClient(string.Empty, new HttpClient()));
             services.AddScoped<VetCoinWasm.Api.IDonateLikeVotesClient>(sp => new VetCoinWasm.Api.DonateLikeVotesClient(string.Empty, new HttpClient()));
 
-#if !DEBUG
-            services.AddHostedService<Services.HostedServices.DbSeedHostedService>();
-            services.AddHostedService<Services.HostedServices.DbMigrationHostedService<Data.ApplicationDbContext>>();
-            services.AddHostedService<Services.HostedServices.ScheduledExecutionHostedService<ScheduledExecutionService>>(); 
-            services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();     
+            var staiicSettings = Configuration.Get<StaticSettings>();
+
+#if DEBUG
+
+            if (staiicSettings.EnableHostedService)
+            {
+                services.AddHostedService<Services.HostedServices.DbSeedHostedService>();
+                services.AddHostedService<Services.HostedServices.DbMigrationHostedService<Data.ApplicationDbContext>>();
+                services.AddHostedService<Services.HostedServices.ScheduledExecutionHostedService<ScheduledExecutionService>>();
+                services.AddHostedService<Services.HostedServices.VetCoinBotHostedService>();
+            }
 #endif
         }
 

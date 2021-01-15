@@ -15,45 +15,59 @@ namespace VetCoin.Codes
         {
             ServiceProvider = serviceProvider;
             // DbContext = dbContext;
-            SiteTitle = configuration.GetValue<string>(nameof(SiteTitle));
-            CurrenryUnit = configuration.GetValue<string>(nameof(CurrenryUnit));
-            TopImageUrl = configuration.GetValue<string>(nameof(TopImageUrl));
+            //SiteTitle = configuration.GetValue<string>(nameof(SiteTitle));
+            //CurrenryUnit = configuration.GetValue<string>(nameof(CurrenryUnit));
+            //TopImageUrl = configuration.GetValue<string>(nameof(TopImageUrl));
 
-            DiscordAppClientId = configuration.GetValue<string>(nameof(DiscordAppClientId));
+            //DiscordAppClientId = configuration.GetValue<string>(nameof(DiscordAppClientId));
 
-            LoginCheckDiscordServerId = configuration.GetValue<ulong>(nameof(LoginCheckDiscordServerId));
+            //LoginCheckDiscordServerId = configuration.GetValue<ulong>(nameof(LoginCheckDiscordServerId));
 
-            SuperChatLowLimit = configuration.GetValue<int>(nameof(SuperChatLowLimit));
+            //SuperChatLowLimit = configuration.GetValue<int>(nameof(SuperChatLowLimit));
 
-            SuperChatHeightLimit = configuration.GetValue<int>(nameof(SuperChatHeightLimit));
+            //SuperChatHeightLimit = configuration.GetValue<int>(nameof(SuperChatHeightLimit));
 
-            AdminDiscordId = configuration.GetValue<ulong>(nameof(AdminDiscordId));
-            DeveloperDiscordId = configuration.GetValue<ulong>(nameof(DeveloperDiscordId));
+            //AdminDiscordId = configuration.GetValue<ulong>(nameof(AdminDiscordId));
+            //DeveloperDiscordId = configuration.GetValue<ulong>(nameof(DeveloperDiscordId));
 
-            SiteBaseUrl = configuration.GetValue<string>(nameof(SiteBaseUrl));
+            //SiteBaseUrl = configuration.GetValue<string>(nameof(SiteBaseUrl));
 
-            UseRegularDistribution = configuration.GetValue<bool>(nameof(UseRegularDistribution));
+            //UseRegularDistribution = configuration.GetValue<bool>(nameof(UseRegularDistribution));
             // SiteSetting = DbContext.GetParam<SiteSetting>();
         }
 
-        public string SiteTitle { get; private set; }
+        //[Obsolete]
+        //public string SiteTitle { get; private set; }
 
-        public string CurrenryUnit { get; private set; }
+        //[Obsolete]
+        //public string CurrenryUnit { get; private set; }
 
-        public string TopImageUrl { get; private set; }
+        //[Obsolete]
+        //public string TopImageUrl { get; private set; }
 
-        public string DiscordAppClientId { get; private set; }
-        public ulong LoginCheckDiscordServerId { get; private set; }
+        //[Obsolete]
+        //public string DiscordAppClientId { get; private set; }
 
-        public int SuperChatLowLimit { get; private set; }
-        public int SuperChatHeightLimit { get; private set; }
-        public string SiteBaseUrl { get; private set; }
+        //[Obsolete]
+        //public ulong LoginCheckDiscordServerId { get; private set; }
 
-        public ulong AdminDiscordId { get; private set; }
+        //[Obsolete]
+        //public int SuperChatLowLimit { get; private set; }
 
-        public ulong DeveloperDiscordId { get; private set; }
+        //[Obsolete]
+        //public int SuperChatHeightLimit { get; private set; }
+        
+        //[Obsolete]
+        //public string SiteBaseUrl { get; private set; }
 
-        public bool UseRegularDistribution { get; set; }
+        //[Obsolete]
+        //public ulong AdminDiscordId { get; private set; }
+
+        //[Obsolete]
+        //public ulong DeveloperDiscordId { get; private set; }
+
+        //[Obsolete]
+        //public bool UseRegularDistribution { get; set; }
 
 
         public SiteSetting _SiteSetting;

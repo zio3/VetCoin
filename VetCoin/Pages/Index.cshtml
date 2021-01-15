@@ -1,6 +1,8 @@
 ﻿@page
 @inject VetCoin.Services.CoreService coreService
+@inject Services.StaticSettings StaticSettings
 @inject Codes.SiteContext SiteContext
+
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -30,7 +32,7 @@
 
     <div class="row">
         <div class="col-6">
-            <img src="@SiteContext.TopImageUrl" style="width:100%;max-width:600px;" />
+            <img src="@StaticSettings.TopImageUrl" style="width:100%;max-width:600px;" />
         </div>
         <div class="col-6">
 
@@ -55,7 +57,7 @@ else
 {
     <div class="row">
         <div class="col-6">
-            <img src="@SiteContext.TopImageUrl" style="width:100%;max-width:600px;" />
+            <img src="@StaticSettings.TopImageUrl" style="width:100%;max-width:600px;" />
         </div>
         <div class="col-6">
 
@@ -66,7 +68,7 @@ else
             </div>
             <div class="form-group row">
                 <div class="col-md-8">
-                    <p>現在の残高は @Model.UserContext.Amount @SiteContext.CurrenryUnit です</p>
+                    <p>現在の残高は @Model.UserContext.Amount @StaticSettings.CurrenryUnit です</p>
                 </div>
             </div>
 

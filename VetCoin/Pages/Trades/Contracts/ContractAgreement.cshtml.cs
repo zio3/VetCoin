@@ -16,11 +16,12 @@ namespace VetCoin.Pages.Trades.Contracts
 
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public ContractAgreementModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService,SiteContext siteContext)
+        public ContractAgreementModel(ApplicationDbContext context, CoreService coreService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = context;
             CoreService = coreService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         [BindProperty]
@@ -30,6 +31,7 @@ namespace VetCoin.Pages.Trades.Contracts
         public UserContext UserContext { get; set; }
         public CoreService CoreService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
         public bool IsInsufficientFunds { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -109,7 +111,7 @@ namespace VetCoin.Pages.Trades.Contracts
                 RecivedVetMemberId = escrowUser.Id,
                 Amount=entity.Reword,
                 SendeVetMemberId = escrowSendUser.Id,
-                Text = $"{trade.Title } 代金 {entity.Reword}{SiteContext.CurrenryUnit}",       
+                Text = $"{trade.Title } 代金 {entity.Reword}{StaticSettings.CurrenryUnit}",       
                 TransactionType = CoinTransactionType.Contract
             };
 
@@ -155,7 +157,7 @@ namespace VetCoin.Pages.Trades.Contracts
 
             Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
             builder.WithTitle(trade.Title)
-            .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(SiteContext.SiteBaseUrl))
+            .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(StaticSettings.SiteBaseUrl))
             .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
                 .AddField("アクション", "提案が受理され契約されました。");
                 //.AddField("メッセージ内容", message);

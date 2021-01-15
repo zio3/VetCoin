@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VetCoin.Codes;
 using VetCoin.Data;
+using VetCoin.Services;
 
 namespace VetCoin.Pages.Admin.ReactionMaps
 {
@@ -15,15 +16,17 @@ namespace VetCoin.Pages.Admin.ReactionMaps
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public EditModel(VetCoin.Data.ApplicationDbContext context,SiteContext siteContext)
+        public EditModel(ApplicationDbContext context, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = context;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         [BindProperty]
         public ReactionMap ReactionMap { get; set; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

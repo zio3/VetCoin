@@ -25,12 +25,14 @@ namespace VetCoin.Controller
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
-        public AuthenticationController(ApplicationDbContext dbContext, CoreService coreService, Codes.SiteContext siteContext)
+        public AuthenticationController(ApplicationDbContext dbContext, CoreService coreService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = dbContext;
             CoreService = coreService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         //public SignInManager SignInManager { get; }
@@ -58,8 +60,8 @@ namespace VetCoin.Controller
                 new Claim("DiscordId",result.User.DiscordId.ToString()),
             };
 
-            if(SiteContext.AdminDiscordId == result.User.DiscordId ||
-                SiteContext.DeveloperDiscordId == result.User.DiscordId )
+            if(StaticSettings.AdminDiscordId == result.User.DiscordId ||
+                StaticSettings.DeveloperDiscordId == result.User.DiscordId )
             {
                 claims.Add(new Claim("AdminUSer", ""));
             }
