@@ -17,12 +17,13 @@ namespace VetCoin.Pages.Venders
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext)
+        public CreateModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = context;
             CoreService = coreService;
             DiscordService = discordService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public IActionResult OnGet()
@@ -40,6 +41,7 @@ namespace VetCoin.Pages.Venders
         public CoreService CoreService { get; }
         public DiscordService DiscordService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -71,10 +73,10 @@ namespace VetCoin.Pages.Venders
             await DiscordService.SendMessage(DiscordService.Channel.VenderNotification, string.Empty, new DiscordService.DiscordEmbed
             {
                 title = Vender.Title,
-                url = $"{SiteContext.SiteBaseUrl}Venders/Details?id={Vender.Id}",
+                url = $"{StaticSettings.SiteBaseUrl}Venders/Details?id={Vender.Id}",
                 author = new DiscordService.DiscordEmbed.Author
                 {
-                    url = userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl),
+                    url = userContext.CurrentUser.GetMemberPageUrl(StaticSettings.SiteBaseUrl),
                     icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
                     name = userContext.CurrentUser.Name
                 },
@@ -83,7 +85,7 @@ namespace VetCoin.Pages.Venders
                                      new DiscordService.DiscordEmbed.Field
                     {
                         name = "標準金額",
-                        value = $"{Vender.DefaultAmount }{ SiteContext.CurrenryUnit}",
+                        value = $"{Vender.DefaultAmount }{ StaticSettings.CurrenryUnit}",
                         inline = false
                     },
 

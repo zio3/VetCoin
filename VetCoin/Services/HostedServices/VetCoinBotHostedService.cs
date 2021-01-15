@@ -28,12 +28,13 @@ namespace VetCoin.Services.HostedServices
     {
         private DiscordSocketClient _client;
         private DiscordRestClient _rclient;
-        public VetCoinBotHostedService(IServiceProvider services, IConfiguration configuration, ILogger<VetCoinBotHostedService> logger, Codes.SiteContext siteContext)
+        public VetCoinBotHostedService(IServiceProvider services, IConfiguration configuration, ILogger<VetCoinBotHostedService> logger, SiteContext siteContext, StaticSettings staticSettings)
         {
             Services = services;
             Configuration = configuration;
             Logger = logger;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public IServiceProvider Services { get; }
@@ -41,6 +42,7 @@ namespace VetCoin.Services.HostedServices
 
         public ILogger<VetCoinBotHostedService> Logger { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -226,16 +228,18 @@ namespace VetCoin.Services.HostedServices
 
     public class SuperChatService
     {
-        public SuperChatService(ApplicationDbContext dbContext, CoreService coreService, SiteContext siteContext)
+        public SuperChatService(ApplicationDbContext dbContext, CoreService coreService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = dbContext;
             CoreService = coreService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         public async Task PostSuperChat(ISocketMessageChannel channel, ulong fromId, ulong toId, int amount, string message, IDMChannel fromDmChannel, IDMChannel toDmChannel)
         {
@@ -249,20 +253,20 @@ namespace VetCoin.Services.HostedServices
             var fromAmount = CoreService.CalcAmount(fromMember);
             if (fromAmount < amount)
             {
-                await fromDmChannel.SendMessageAsync($"{SiteContext.CurrenryUnit}残高が不足しています。({fromAmount}{SiteContext.CurrenryUnit})");
+                await fromDmChannel.SendMessageAsync($"{StaticSettings.CurrenryUnit}残高が不足しています。({fromAmount}{StaticSettings.CurrenryUnit})");
                 return;
             }
 
-            if (amount < SiteContext.SuperChatLowLimit)
+            if (amount < StaticSettings.SuperChatLowLimit)
             {
-                await fromDmChannel.SendMessageAsync($"送金下限は{SiteContext.SuperChatLowLimit}{SiteContext.CurrenryUnit}です。それ未満は送れません");
+                await fromDmChannel.SendMessageAsync($"送金下限は{StaticSettings.SuperChatLowLimit}{StaticSettings.CurrenryUnit}です。それ未満は送れません");
                 return;
             }
 
 
-            if (amount > SiteContext.SuperChatHeightLimit)
+            if (amount > StaticSettings.SuperChatHeightLimit)
             {
-                await fromDmChannel.SendMessageAsync($"送金上限は{SiteContext.SuperChatHeightLimit}{SiteContext.CurrenryUnit}です。それ以上は送れません");
+                await fromDmChannel.SendMessageAsync($"送金上限は{StaticSettings.SuperChatHeightLimit}{StaticSettings.CurrenryUnit}です。それ以上は送れません");
                 return;
             }
 
@@ -285,12 +289,12 @@ namespace VetCoin.Services.HostedServices
             {
                 if (fromDmChannel != null)
                 {
-                    await fromDmChannel.SendMessageAsync($@"SuperChat:{toMember.Name}へ{amount}{SiteContext.CurrenryUnit} 送金しました [{fromAmount - amount}{SiteContext.CurrenryUnit}]");
+                    await fromDmChannel.SendMessageAsync($@"SuperChat:{toMember.Name}へ{amount}{StaticSettings.CurrenryUnit} 送金しました [{fromAmount - amount}{StaticSettings.CurrenryUnit}]");
                 }
 
                 if(toDmChannel != null)
                 {
-                    await toDmChannel.SendMessageAsync($@"SuperChat:{fromMember.Name}から{amount}{SiteContext.CurrenryUnit} をもらいました [{toAmount + amount}{SiteContext.CurrenryUnit}]");
+                    await toDmChannel.SendMessageAsync($@"SuperChat:{fromMember.Name}から{amount}{StaticSettings.CurrenryUnit} をもらいました [{toAmount + amount}{StaticSettings.CurrenryUnit}]");
                 }                
 
                 DbContext.CoinTransactions.Add(new CoinTransaction
@@ -369,7 +373,7 @@ namespace VetCoin.Services.HostedServices
               .StrokeColor(MagickColors.White)
               .FillColor(MagickColors.White)
               //.TextAlignment(TextAlignment.Center)
-              .Text(158, 64, $"{amount:#,0}{SiteContext.CurrenryUnit}")
+              .Text(158, 64, $"{amount:#,0}{StaticSettings.CurrenryUnit}")
               // Add an ellipse
               .StrokeColor(new MagickColor(0, Quantum.Max, 0))
               //.FillColor(MagickColors.SaddleBrown)
@@ -424,37 +428,39 @@ namespace VetCoin.Services.HostedServices
 
     public class ReactionSendService
     {
-        public ReactionSendService(ApplicationDbContext dbContext, CoreService coreService, SiteContext siteContext)
+        public ReactionSendService(ApplicationDbContext dbContext, CoreService coreService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = dbContext;
             CoreService = coreService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         public async Task SendCoin(ulong fromId, ulong toId, int amount, IDMChannel fromDmChannel, IDMChannel toDmChannel, string jumpUrl)
         {
             var fromMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == fromId);
             if (fromMember == null)
             {
-                await fromDmChannel.SendMessageAsync($"{SiteContext.SiteTitle} 登録者以外は送信できません");
+                await fromDmChannel.SendMessageAsync($"{StaticSettings.SiteTitle} 登録者以外は送信できません");
                 return;
             }
 
             var fromAmount = CoreService.CalcAmount(fromMember);
             if (fromAmount < amount)
             {
-                await fromDmChannel.SendMessageAsync($"{SiteContext.CurrenryUnit}残高が不足しています。({fromAmount}{SiteContext.CurrenryUnit})");
+                await fromDmChannel.SendMessageAsync($"{StaticSettings.CurrenryUnit}残高が不足しています。({fromAmount}{StaticSettings.CurrenryUnit})");
                 return;
             }
 
             var toMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == toId);
             if (toMember == null)
             {
-                await fromDmChannel.SendMessageAsync($"{SiteContext.SiteTitle} 登録者以外へは送信できません");
+                await fromDmChannel.SendMessageAsync($"{StaticSettings.SiteTitle} 登録者以外へは送信できません");
                 return;
                 //toMember = DbContext.VetMembers.FirstOrDefault(c => c.DiscordId == 287434171570192384);
             }
@@ -480,9 +486,9 @@ namespace VetCoin.Services.HostedServices
                 await DbContext.SaveChangesAsync();
                 if (fromDmChannel != null)
                 {
-                    await fromDmChannel.SendMessageAsync($@"Reaction:{toMember.Name} へ {amount} {SiteContext.CurrenryUnit} を送金しました[{fromAmount - amount}vec]");
+                    await fromDmChannel.SendMessageAsync($@"Reaction:{toMember.Name} へ {amount} {StaticSettings.CurrenryUnit} を送金しました[{fromAmount - amount}vec]");
                 }
-                await toDmChannel.SendMessageAsync($@"Reaction: {fromMember.Name} から {amount} {SiteContext.CurrenryUnit} をもらいました[{toAmount + amount}vec]
+                await toDmChannel.SendMessageAsync($@"Reaction: {fromMember.Name} から {amount} {StaticSettings.CurrenryUnit} をもらいました[{toAmount + amount}vec]
 {jumpUrl}");
             }
             catch

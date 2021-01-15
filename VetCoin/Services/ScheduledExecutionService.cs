@@ -12,19 +12,19 @@ namespace VetCoin.Services
             DiscordService discordService,
             CoreService coreService,
             IconCheckService iconCheckService,
-            SiteContext siteContext
+            StaticSettings staticSettings
             )
         {
             DiscordService = discordService;
             CoreService = coreService;
             IconCheckService = iconCheckService;
-            SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public DiscordService DiscordService { get; }
         public CoreService CoreService { get; }
         public IconCheckService IconCheckService { get; }
-        public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
 
         //[Cron("* * * * *")]
         //public async Task CollectEngage()
@@ -40,7 +40,7 @@ namespace VetCoin.Services
         [Cron("0 0 1 * *")]
         public async Task RegularDistribution()
         {
-            if (SiteContext.UseRegularDistribution)
+            if (StaticSettings.UseRegularDistribution)
             {
                 //await DiscordService.SendMessage(DiscordService.Channel.TEST, "VetCoin SendTest");
                 await CoreService.RegularDistribution();

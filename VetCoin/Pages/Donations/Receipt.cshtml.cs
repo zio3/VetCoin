@@ -13,16 +13,18 @@ namespace VetCoin.Pages.Donations
 {
     public class ReceiptModel : PageModel
     {
-        public ReceiptModel(ApplicationDbContext dbContext, CoreService coreService,SiteContext siteContext)
+        public ReceiptModel(ApplicationDbContext dbContext, CoreService coreService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = dbContext;
             CoreService = coreService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
         public Doner[] Doners { get; set; }
 
         [BindProperty(SupportsGet =true)]

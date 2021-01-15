@@ -19,7 +19,7 @@ namespace VetCoin.Controllers
     [ApiController]
     public class ApiSandboxController : ControllerBase
     {
-        public ApiSandboxController(SuperChatService superChatService, DiscordService discordService, ApplicationDbContext applicationDbContext, SiteContext siteContext, CoreService coreService, IconCheckService iconCheckService)
+        public ApiSandboxController(SuperChatService superChatService, DiscordService discordService, ApplicationDbContext applicationDbContext, SiteContext siteContext, CoreService coreService, IconCheckService iconCheckService, StaticSettings staticSettings)
         {
             SuperChatService = superChatService;
             DiscordService = discordService;
@@ -27,6 +27,7 @@ namespace VetCoin.Controllers
             SiteContext = siteContext;
             CoreService = coreService;
             IconCheckService = iconCheckService;
+            StaticSettings = staticSettings;
         }
 
         public SuperChatService SuperChatService { get; }
@@ -35,6 +36,7 @@ namespace VetCoin.Controllers
         public SiteContext SiteContext { get; }
         public CoreService CoreService { get; }
         public IconCheckService IconCheckService { get; }
+        public StaticSettings StaticSettings { get; }
 
         [HttpGet]
         public async Task TestAsync()
@@ -67,10 +69,10 @@ namespace VetCoin.Controllers
             await DiscordService.SendMessage(DiscordService.Channel.CrowdFundingNotification, string.Empty, new DiscordService.DiscordEmbed
             {
                 title = Donation.Title,
-                url = $"{SiteContext.SiteBaseUrl}Donations/Details?id={Donation.Id}",
+                url = $"{StaticSettings.SiteBaseUrl}Donations/Details?id={Donation.Id}",
                 author = new DiscordService.DiscordEmbed.Author
                 {
-                    url = userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl),
+                    url = userContext.CurrentUser.GetMemberPageUrl(StaticSettings.SiteBaseUrl),
                     icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
                     name = userContext.CurrentUser.Name
                 },

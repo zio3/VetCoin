@@ -1,0 +1,10 @@
+﻿@page
+@model VetCoin.Pages.Admin.StaticSettingsModel
+@inject Services.StaticSettings StaticSettings
+@{
+
+    var jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(StaticSettings,Newtonsoft.Json.Formatting.Indented);
+}
+
+
+<pre>@jsonText</pre>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace VetCoin.Data.ExtApp
@@ -11,6 +12,7 @@ namespace VetCoin.Data.ExtApp
 
         public Guid ExteralApplicationId { get; set; }
 
+        [JsonIgnore]
         public virtual ExteralApplication ExteralApplication { get; set; }
 
         public int Amount { get; set; }

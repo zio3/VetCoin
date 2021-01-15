@@ -3,6 +3,7 @@
 @inject Services.UrlQueryService UrlQueryService
 @inject Data.ApplicationDbContext DbContext
 @inject Codes.SiteContext SiteContext
+@inject Services.StaticSettings StaticSettings
 
 @{
     ViewBag.HostBlazor = true;
@@ -25,9 +26,9 @@
             .Select(c => new
             {
                 Id = c.Id,
-                //Message = c.TradeMessages.Count(),
-                //Suggestion = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Suggestion),
-                Working = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Working),
+        //Message = c.TradeMessages.Count(),
+        //Suggestion = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Suggestion),
+        Working = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Working),
                 Compilte = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Complete),
                 VoteCount = c.TradeLikeVotes.Count(),
                 IsVoted = c.TradeLikeVotes.Any(c => c.VetMemberId == Model.UserContext.CurrentUser.Id)
@@ -38,7 +39,7 @@
     {
         <div class="col-9">
             <h1>お仕事を探す</h1>
-            <p>お仕事を探すページです。依頼をうけて@(SiteContext.CurrenryUnit)を稼ぐことができます </p>
+            <p>お仕事を探すページです。依頼をうけて@(StaticSettings.CurrenryUnit)を稼ぐことができます </p>
         </div>
         <div class="col-3">
             <p>
@@ -50,7 +51,7 @@
     {
         <div class="col-8">
             <h1>商品・サービスを探す</h1>
-            <p>「商品・サービスを探す」ページです。@(SiteContext.CurrenryUnit)を消費して商品・サービスを購入できます</p>
+            <p>「商品・サービスを探す」ページです。@(StaticSettings.CurrenryUnit)を消費して商品・サービスを購入できます</p>
         </div>
 
         <div class="col-4">
@@ -168,62 +169,62 @@
                 btnClass = "btn-secondary";
                 btnText = "完了";
             }
-        <tr>
+            <tr>
 
-            <td>
-                <a asp-page="./Details" asp-route-id="@item.Id" class="btn @btnClass">@btnText</a>
-            </td>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.Direction)
-        </td>*@
-            <td>
-                <a asp-page="./Details" asp-route-id="@item.Id">
-                    @Html.DisplayFor(modelItem => item.Title)
-                </a>
-            </td>
-            @*<td>
-                <vue-trade-like-vote trade-id="@item.Id" vote-count="@countInfo.VoteCount" is-voted="@countInfo.IsVoted.ToString().ToLower()"></vue-trade-like-vote>
-            </td>*@
-            <td>
-                <component type="typeof(VetCoinWasm.Pages.LikeVote)"
-                           render-mode="WebAssemblyPrerendered"
-                           param-IsVoted="countInfo.IsVoted"
-                           param-TargetId="item.Id"
-                           param-VoteCount="countInfo.VoteCount"
-                           param-VoteTarget="@("Trade")" />
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn @btnClass">@btnText</a>
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Direction)
+                    </td>*@
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </a>
+                </td>
+                @*<td>
+                        <vue-trade-like-vote trade-id="@item.Id" vote-count="@countInfo.VoteCount" is-voted="@countInfo.IsVoted.ToString().ToLower()"></vue-trade-like-vote>
+                    </td>*@
+                <td>
+                    <component type="typeof(VetCoinWasm.Pages.LikeVote)"
+                               render-mode="WebAssemblyPrerendered"
+                               param-IsVoted="countInfo.IsVoted"
+                               param-TargetId="item.Id"
+                               param-VoteCount="countInfo.VoteCount"
+                               param-VoteTarget="@("Trade")" />
 
-            </td>
+                </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.Reward)
-                @Html.DisplayFor(modelItem => item.RewardComment)
-            </td>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.DeliveryDate)
-        </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            @*<td>
-            @countInfo.Message
-        </td>
-        <td>
-            @countInfo.Suggestion
-        </td>
-        <td>
-            @countInfo.Working
-        </td>
-        <td>
-            @countInfo.Compilte
-        </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reward)
+                    @Html.DisplayFor(modelItem => item.RewardComment)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.DeliveryDate)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                @*<td>
+                        @countInfo.Message
+                    </td>
+                    <td>
+                        @countInfo.Suggestion
+                    </td>
+                    <td>
+                        @countInfo.Working
+                    </td>
+                    <td>
+                        @countInfo.Compilte
+                    </td>*@
 
-            <td>
-                <partial name="MemberTag" model="item.VetMember" />
-            </td>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.TradeStatus)
-        </td>*@
-        </tr>
+                <td>
+                    <partial name="MemberTag" model="item.VetMember" />
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.TradeStatus)
+                    </td>*@
+            </tr>
         }
     </tbody>
 </table>

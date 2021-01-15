@@ -15,11 +15,12 @@ namespace VetCoin.Pages.Trades.Contracts
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public IndexModel(VetCoin.Data.ApplicationDbContext context, CoreService coreService, SiteContext siteContext)
+        public IndexModel(ApplicationDbContext context, CoreService coreService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = context;
             CoreService = coreService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public Contract Contract { get; set; }
@@ -27,6 +28,7 @@ namespace VetCoin.Pages.Trades.Contracts
         public string PostMessage { get; set; }
         public CoreService CoreService { get; }
         public SiteContext SiteContext { get; }
+        public StaticSettings StaticSettings { get; }
         public UserContext UserContext { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? contractId)
@@ -104,7 +106,7 @@ namespace VetCoin.Pages.Trades.Contracts
             //{message}";
             Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
             builder.WithTitle(trade.Title)
-                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(SiteContext.SiteBaseUrl))
+                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(StaticSettings.SiteBaseUrl))
                 .WithUrl($"https://vetcoin.azurewebsites.net/Trades/Contracts?contractId={contract.Id}")
                 // .AddField("アクション", "メッセージがあります")
                 .AddField("メッセージ内容", message);

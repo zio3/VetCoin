@@ -17,12 +17,13 @@ namespace VetCoin.Pages.Venders
     {
         private readonly VetCoin.Data.ApplicationDbContext DbContext;
 
-        public DetailsModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext)
+        public DetailsModel(ApplicationDbContext context, CoreService coreService, DiscordService discordService, SiteContext siteContext, StaticSettings staticSettings)
         {
             DbContext = context;
             CoreService = coreService;
             DiscordService = discordService;
             SiteContext = siteContext;
+            StaticSettings = staticSettings;
         }
 
         public Vender Vender { get; set; }
@@ -140,8 +141,8 @@ namespace VetCoin.Pages.Venders
 
             Discord.EmbedBuilder builder = new Discord.EmbedBuilder();
             builder.WithTitle($"{ vender.Title} 【メッセージ】")
-                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(SiteContext.SiteBaseUrl))
-                .WithUrl($"{SiteContext.SiteBaseUrl}Venders/Details?id={vender.Id}")
+                .WithAuthor(sender.Name, sender.GetAvaterIconUrl(), sender.GetMemberPageUrl(StaticSettings.SiteBaseUrl))
+                .WithUrl($"{StaticSettings.SiteBaseUrl}Venders/Details?id={vender.Id}")
                 .AddField("内容", message);
 
             await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
@@ -181,7 +182,7 @@ namespace VetCoin.Pages.Venders
                 SendeVetMemberId = userContext.CurrentUser.Id,
                 RecivedVetMemberId = vender.VetMemberId,
                 Amount = Amount,
-                Text = $"{vender.Title} にて購入 {Amount}{SiteContext.CurrenryUnit} {BuyMessage}",
+                Text = $"{vender.Title} にて購入 {Amount}{StaticSettings.CurrenryUnit} {BuyMessage}",
                 TransactionType = CoinTransactionType.Vender
             };
 
@@ -228,7 +229,7 @@ namespace VetCoin.Pages.Venders
             fields.Add(new DiscordService.DiscordEmbed.Field
             {
                 name = "金額",
-                value = $"{venderSale.Amount}{SiteContext.CurrenryUnit}",
+                value = $"{venderSale.Amount}{StaticSettings.CurrenryUnit}",
                 inline = false
             });
 
@@ -245,10 +246,10 @@ namespace VetCoin.Pages.Venders
             await DiscordService.SendMessage(DiscordService.Channel.VenderNotification, string.Empty, new DiscordService.DiscordEmbed
             {
                 title = $"{vender.Title} 【購入】",
-                url = $"{SiteContext.SiteBaseUrl}Venders/Details?id={vender.Id}",
+                url = $"{StaticSettings.SiteBaseUrl}Venders/Details?id={vender.Id}",
                 author = new DiscordService.DiscordEmbed.Author
                 {
-                    url = userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl),
+                    url = userContext.CurrentUser.GetMemberPageUrl(StaticSettings.SiteBaseUrl),
                     icon_url = userContext.CurrentUser.GetAvaterIconUrl(),
                     name = userContext.CurrentUser.Name
                 },
@@ -261,13 +262,13 @@ namespace VetCoin.Pages.Venders
             var builder = new Discord.EmbedBuilder();
             builder
                 .WithTitle($"{vender.Title} 【購入】")
-                .WithUrl($"{SiteContext.SiteBaseUrl}Venders/Details?id={vender.Id}")
+                .WithUrl($"{StaticSettings.SiteBaseUrl}Venders/Details?id={vender.Id}")
                 .WithAuthor(
                     userContext.CurrentUser.Name,
                     userContext.CurrentUser.GetAvaterIconUrl(),
-                    userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl)
+                    userContext.CurrentUser.GetMemberPageUrl(StaticSettings.SiteBaseUrl)
                 )
-                .AddField("金額", $"{venderSale.Amount}{SiteContext.CurrenryUnit}", false);
+                .AddField("金額", $"{venderSale.Amount}{StaticSettings.CurrenryUnit}", false);
 
             if(!string.IsNullOrEmpty(venderSale.Message))
             {
@@ -286,13 +287,13 @@ namespace VetCoin.Pages.Venders
             var builder = new Discord.EmbedBuilder();
             builder
                 .WithTitle($"{vender.Title} 【購入】")
-                .WithUrl($"{SiteContext.SiteBaseUrl}Venders/Details?id={vender.Id}")
+                .WithUrl($"{StaticSettings.SiteBaseUrl}Venders/Details?id={vender.Id}")
                 .WithAuthor(
                     userContext.CurrentUser.Name,
                     userContext.CurrentUser.GetAvaterIconUrl(),
-                    userContext.CurrentUser.GetMemberPageUrl(SiteContext.SiteBaseUrl)
+                    userContext.CurrentUser.GetMemberPageUrl(StaticSettings.SiteBaseUrl)
                 )
-                .AddField("金額", $"{venderSale.Amount}{SiteContext.CurrenryUnit}", false);
+                .AddField("金額", $"{venderSale.Amount}{StaticSettings.CurrenryUnit}", false);
                 //.AddField("メッセージ", venderSale.Message, false);
 
 
@@ -336,7 +337,7 @@ namespace VetCoin.Pages.Venders
         public CoreService CoreService { get; }
         public DiscordService DiscordService { get; }
         public SiteContext SiteContext { get; }
-
+        public StaticSettings StaticSettings { get; }
 
         [BindProperty]
         public string PostMessage { get; set; }
