@@ -78,7 +78,7 @@ namespace VetCoin.Controllers
                 return NotFound();
             }
 
-            if(exteralApplicationPayment.ExpirationDate >= DateTimeOffset.Now)
+            if(exteralApplicationPayment.ExpirationDate <= DateTimeOffset.Now)
             {
                 return new PutResult
                 {

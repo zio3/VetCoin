@@ -111,7 +111,7 @@ namespace VetCoin
 
             var staiicSettings = Configuration.Get<StaticSettings>();
 
-#if DEBUG
+#if !DEBUG
 
             if (staiicSettings.EnableHostedService)
             {
