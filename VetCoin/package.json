@@ -1,6 +1,7 @@
 {
   "scripts": {
     "ef.addMigration": "dotnet ef migrations add migration%RANDOM%",
-    "ef.updateDatabase": "dotnet ef database update"
+    "ef.updateDatabase": "dotnet ef database update",
+    "api.ClientScaffold": "nswag run ApiGenerateSetting.nswag"
   }
 }

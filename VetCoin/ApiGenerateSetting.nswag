@@ -90,7 +90,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "Api/VetCoinClient.cs",
+      "output": "../VetCoinWasm/Api/VetCoinClient.cs",
       "newLineBehavior": "Auto"
     }
   }

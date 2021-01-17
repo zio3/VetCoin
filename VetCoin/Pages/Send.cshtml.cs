@@ -15,9 +15,11 @@ namespace VetCoin.Pages
 {
     public class SendModel : PageModel
     {
-        public SendModel(CoreService coreService)
+        public SendModel(CoreService coreService, StaticSettings staticSettings,ApplicationDbContext dbContext)
         {
             CoreService = coreService;
+            StaticSettings = staticSettings;
+            DbContext = dbContext;
         }
 
         public IEnumerable<SelectListItem> MembersDdl { get; set; }
@@ -34,6 +36,7 @@ namespace VetCoin.Pages
         public int ReciveVetMemberId { get; set; }
         public ApplicationDbContext DbContext { get; }
         public CoreService CoreService { get; }
+        public StaticSettings StaticSettings { get; }
 
         public IActionResult OnGet(int? reciveVetMemberId)
         {
@@ -74,8 +77,37 @@ namespace VetCoin.Pages
             CoreService.AddTransaction(UserContext , sendAmount, message, reciveVetMemberId, CoinTransactionType.Transfer);
             await CoreService.SavechanesAsnc();
 
+            var reciveMember = DbContext.VetMembers.Find(reciveVetMemberId);
+            var lastAmount = CoreService.CalcAmount(reciveMember);
+
+            await Notification(UserContext.CurrentUser, reciveMember, sendAmount,message, lastAmount);
+
             return RedirectToPage("/index");
 
         }
+
+        private async Task Notification(VetMember from, VetMember to, long amount,string message, long totalAmount)
+        {
+            var builder = new Discord.EmbedBuilder();
+            builder
+                .WithTitle($"{from.Name} から{amount}{StaticSettings.CurrenryUnit} 送金されました")
+                .WithAuthor(
+                    from.Name,
+                    from.GetAvaterIconUrl(),
+                    from.GetMemberPageUrl(StaticSettings.SiteBaseUrl)
+                )
+                .AddField("金額", $"{amount}{StaticSettings.CurrenryUnit}", false)
+                .AddField("残高", $"{totalAmount}{StaticSettings.CurrenryUnit}", false);
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                builder
+                .AddField("メッセージ", message, false);
+            }
+
+            var messageTargets = new[] { to };
+            await CoreService.SendDirectMessage(messageTargets, string.Empty, builder.Build());
+        }
+
     }
 }
