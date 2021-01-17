@@ -6,6 +6,8 @@
 @inject Services.StaticSettings StaticSettings
 
 @{
+    ViewBag.HostBlazor = true;
+
     ViewData["Title"] = "Index";
     var query = Model.VenderQuery.OrderByDescending(c => c.CreateDate);
     UrlQueryService.DefaultSortDirection = Services.SortDirection.Descending;
@@ -23,10 +25,10 @@
 .Select(c => new
 {
     Id = c.Id,
-//Message = c.TradeMessages.Count(),
-//Suggestion = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Suggestion),
+    //Message = c.TradeMessages.Count(),
+    //Suggestion = c.Contracts.Count(c => c.ContractStatus == Data.ContractStatus.Suggestion),
 
-VoteCount = c.VenderLikeVotes.Count(),
+    VoteCount = c.VenderLikeVotes.Count(),
     IsVoted = c.VenderLikeVotes.Any(c => c.VetMemberId == Model.UserContext.CurrentUser.Id)
 }).ToDictionary(c => c.Id);
 

@@ -108,6 +108,7 @@ namespace VetCoin
             //DummyApi
             services.AddScoped<VetCoinWasm.Api.ITradeLikeVotesClient>(sp => new VetCoinWasm.Api.TradeLikeVotesClient(string.Empty, new HttpClient()));
             services.AddScoped<VetCoinWasm.Api.IDonateLikeVotesClient>(sp => new VetCoinWasm.Api.DonateLikeVotesClient(string.Empty, new HttpClient()));
+            services.AddScoped<VetCoinWasm.Api.IVenderLikeVotesClient>(sp => new VetCoinWasm.Api.VenderLikeVotesClient(string.Empty, new HttpClient()));
 
             var staiicSettings = Configuration.Get<StaticSettings>();
 

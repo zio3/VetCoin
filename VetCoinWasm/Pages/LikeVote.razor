@@ -1,6 +1,7 @@
 ﻿@page "/likeVote"
 @inject Api.IDonateLikeVotesClient DonateLikeVotesClient
 @inject Api.ITradeLikeVotesClient TradeLikeVotesClient
+@inject Api.IVenderLikeVotesClient VenderLikeVotesClient
 
 <div @onclick="click">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="@fillColor" style="width: 16px; height: 20px">
@@ -31,7 +32,7 @@
     private async Task click()
     {
         //currentCount++;
-        VoteCount = VoteCount + (IsVoted?-1:+1);
+        VoteCount = VoteCount + (IsVoted ? -1 : +1);
         IsVoted = !IsVoted;
         Console.WriteLine("ApiBefore!!");
 
@@ -47,6 +48,13 @@
             case "Trade":
                 {
                     var result = await TradeLikeVotesClient.PostTradeLikeVoteAsync(TargetId);
+                    IsVoted = result.IsVoted;
+                    VoteCount = result.Count;
+                }
+                break;
+            case "Vender":
+                {
+                    var result = await VenderLikeVotesClient.PostVenderLikeVoteAsync(TargetId);
                     IsVoted = result.IsVoted;
                     VoteCount = result.Count;
                 }

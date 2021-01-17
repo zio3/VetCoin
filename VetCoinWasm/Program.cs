@@ -25,6 +25,7 @@ namespace VetCoinWasm
 
             builder.Services.AddScoped<Api.ITradeLikeVotesClient>(sp => new Api.TradeLikeVotesClient(builder.HostEnvironment.BaseAddress, new HttpClient()));
             builder.Services.AddScoped<Api.IDonateLikeVotesClient>(sp => new Api.DonateLikeVotesClient(builder.HostEnvironment.BaseAddress, new HttpClient()));
+            builder.Services.AddScoped<Api.IVenderLikeVotesClient>(sp => new Api.VenderLikeVotesClient(builder.HostEnvironment.BaseAddress, new HttpClient()));
 
             await builder.Build().RunAsync();
         }

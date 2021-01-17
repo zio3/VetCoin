@@ -2,10 +2,15 @@
 @model DetailsModel
 
 @{
+    ViewBag.HostBlazor = true;
+
     ViewData["Title"] = "Details";
 }
 
 <h1>@Model.Vender.Title</h1>
+
+
+
 
 @if (Model.Vender.IsClosed)
 {
@@ -33,6 +38,14 @@
 
     @Html.Raw(html);
 }
+
+<component type="typeof(VetCoinWasm.Pages.LikeVote)"
+           render-mode="WebAssemblyPrerendered"
+           param-IsVoted="true"
+           param-TargetId="Model.Vender.Id"
+           param-VoteCount="10"
+           param-VoteTarget="@("Vender")" />
+
 <hr />
 
 @if (Model.IsBuyError)
@@ -74,15 +87,15 @@
             </div>
         </div>
         @*@if (Model.Vender.IsSalesPublicNotification)
-        {
-            <div class="form-group row">
-                <div class="col-sm-10 offset-2">
-                    <label class="form-check-label">
-                        <input type="checkbox" asp-for="IsBuyNotification" class="form-check-input" />購入を全体通知
-                    </label>
+            {
+                <div class="form-group row">
+                    <div class="col-sm-10 offset-2">
+                        <label class="form-check-label">
+                            <input type="checkbox" asp-for="IsBuyNotification" class="form-check-input" />購入を全体通知
+                        </label>
+                    </div>
                 </div>
-            </div>
-        }*@
+            }*@
 
         <div class="form-group row">
             <div class="col-sm-10 offset-2">
