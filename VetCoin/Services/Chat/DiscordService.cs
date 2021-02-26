@@ -52,7 +52,7 @@ namespace VetCoin.Services.Chat
             }
         }
 
-        public async Task SendMessage(Channel channel, string msg, DiscordEmbed embed = null)
+        public async Task SendMessage(Channel channel, string msg, params DiscordEmbed[] embeds)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace VetCoin.Services.Chat
                 }
 
                 
-                if(embed == null)
+                if(embeds == null)
                 {
                     json = Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
@@ -79,10 +79,7 @@ namespace VetCoin.Services.Chat
                     json = Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
                         content = msg,
-                        embeds = new[]
-                        {
-                        embed,
-                    }
+                        embeds = embeds,
                     });
                 }
 

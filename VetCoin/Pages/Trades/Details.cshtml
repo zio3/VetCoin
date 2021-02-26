@@ -6,6 +6,7 @@
 @{
     ViewData["Title"] = "Details";
     ViewBag.HostBlazor = true;
+
 }
 
 <h1>取引詳細</h1>
@@ -23,9 +24,24 @@
     {
         @if (Model.IsOwner)
         {
+            var isWorking = Model.Trade.Contracts.Any(c =>
+                c.ContractStatus == Data.ContractStatus.Working ||
+                c.ContractStatus == Data.ContractStatus.Deliveryed
+            );
+
             <a asp-page="./Edit" asp-route-id="@Model.Trade.Id" class="btn btn-primary">編集</a>
             <a asp-page="./Images" asp-route-id="@Model.Trade.Id" class="btn btn-primary">画像</a>
-            <a asp-page="./Delete" asp-route-id="@Model.Trade.Id" class="btn btn-primary">キャンセル</a>
+
+            @if (isWorking)
+            {
+                <button asp-route-id="@Model.Trade.Id" class="btn btn-primary" disabled title="進行中の取引があるのでキャンセルできません" >キャンセル</button>
+            }
+            else
+            {
+                <a asp-page="./Delete" asp-route-id="@Model.Trade.Id" class="btn btn-primary">キャンセル</a>
+            }
+
+
         }
         else
         {
@@ -42,8 +58,8 @@
         <a asp-page="./Create" asp-route-cloneSrcId="@Model.Trade.Id" class="btn btn-primary">依頼再作成</a>
     }
 
-        <a asp-page="./Index">Back to List</a>
-    </div>
+    <a asp-page="./Index">Back to List</a>
+</div>
 
 <div>
     <hr />
