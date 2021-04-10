@@ -1,0 +1,61 @@
+name: VET_vetcoindev-20210114142456
+
+on:
+  workflow_dispatch:
+  #push:
+  #  branches:
+  #    - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Setup Start Notification
+      uses: zio3/discord-post@v1.0.0
+      with:
+        message: "BuildStart ${{github.repository }}"
+        webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
+        embedUrl: "https://github.com/zio3/VetCoin/actions?query=workflow%3AVET_vetcoindev-20210114142456"
+        embedTitle: "GithubActions"
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+
+    - name: Build Error Notification
+      if: failure()
+      uses: zio3/discord-post@v1.0.0
+      with:
+        webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
+        message: "Build Error ${{github.repository }}"
+
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+    - name: Deploy Start Notification
+      uses: zio3/discord-post@v1.0.0
+      with:
+        webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
+        message: "Deploy Start ${{github.repository }}"
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'vetcoindev'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.VET_VETCOINDEV }}
+        package: ${{env.DOTNET_ROOT}}/myapp 
+
+    - name: Actions Complite Notification
+      uses: zio3/discord-post@v1.0.0
+      with:
+        webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
+        message: "Actions Complite ${{github.repository }}"
