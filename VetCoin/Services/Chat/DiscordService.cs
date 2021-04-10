@@ -99,6 +99,34 @@ namespace VetCoin.Services.Chat
             }
         }
 
+        public async Task SendImage(string msg,byte[] imgBytes)
+        {
+            var hc = HttpClientFactory.CreateClient();
+            string json;
+           
+            msg = msg.Substring(0, 1900);
+            json = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            {
+                content = msg
+            });
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            var url = GetChannelUrl(Channel.WebRequestError);
+            if (string.IsNullOrEmpty(url))
+            {
+                return;
+            }
+            var mpc = new MultipartFormDataContent();
+            mpc.Add(content);
+
+            System.IO.MemoryStream ms = new System.IO.MemoryStream(imgBytes);
+
+            var sc = new StreamContent(ms);
+            mpc.Add(sc, "file", "Error.png");
+            await hc.PostAsync(url, mpc);            
+        }
+
+
+
         public async Task SendError(string msg)
         {
             var hc = HttpClientFactory.CreateClient();
