@@ -370,7 +370,7 @@ namespace VetCoin.Services.HostedServices
                 new Drawables()
               // Draw text on the image
               .FontPointSize(60)
-              .Font("Comic Sans")
+              .Font(System.IO.Path.Combine(AppContext.BaseDirectory, "Fonts", "ComicNeue-Regular.ttf"))
               .StrokeColor(MagickColors.White)
               .FillColor(MagickColors.White)
               //.TextAlignment(TextAlignment.Center)

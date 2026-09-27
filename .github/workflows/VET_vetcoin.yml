@@ -42,7 +42,7 @@ jobs:
         message: "Build Error ${{github.repository }}"
 
     - name: dotnet publish
-      run: dotnet publish VetCoin/VetCoin.csproj -c Release -o ${{ runner.temp }}/myapp
+      run: dotnet publish VetCoin/VetCoin.csproj -c Release -r linux-x64 --self-contained false -o ${{ runner.temp }}/myapp
 
     - name: Deploy Start Notification
       uses: zio3/discord-post@v1.0.0

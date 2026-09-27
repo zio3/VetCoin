@@ -2,6 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
+		<SatelliteResourceLanguages>ja;en</SatelliteResourceLanguages>
+		<!-- Blazor WASM のデバッグ用プロキシ(約12MB)は本番に不要 -->
+		<BlazorWebAssemblyOmitDebugProxyOutput Condition="'$(Configuration)' == 'Release'">true</BlazorWebAssemblyOmitDebugProxyOutput>
 		<UserSecretsId>VetCoin-98CB18F9-7DB3-425A-BB88-00D9D82DAE7C</UserSecretsId>
 	</PropertyGroup>
 
@@ -20,12 +23,16 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
 		<PackageReference Include="ncrontab" Version="3.3.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.12" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.12" />
+	</ItemGroup>
+
+	<!-- scaffolding 用の設計時パッケージ。実行時には使わないので Debug のみ参照(Release の publish に Roslyn/MSBuild を持ち込まない) -->
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -66,6 +73,19 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\VetCoinWasm\VetCoinWasm.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+		<!-- 送金画像用フォント(Comic Neue・SIL OFL 1.1)。Linux の App Service に Comic Sans は無いため同梱してパス指定する -->
+		<None Update="Fonts\ComicNeue-Regular.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+		<None Update="Fonts\OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<!-- Microsoft.Data.SqlClient が推移的に引く MSAL ブローカー(WAM)の native(libmsalruntime 約37MB)は、SQL 認証では使わないので publish から外す -->
+	<Target Name="RemoveMsalBrokerNativeFromPublish" AfterTargets="ComputeResolvedFilesToPublishList">
+		<ItemGroup>
+			<ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Filename)%(Extension)' == 'libmsalruntime.so' Or '%(Filename)%(Extension)' == 'msalruntime.dll' Or '%(Filename)%(Extension)' == 'msalruntime_x86.dll' Or '%(Filename)%(Extension)' == 'msalruntime_arm64.dll' Or '%(Filename)%(Extension)' == 'libmsalruntime.dylib'" />
+		</ItemGroup>
+	</Target>
+
 	<ProjectExtensions>
 		<VisualStudio>
 			<UserProperties appsettings_1json__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" />
