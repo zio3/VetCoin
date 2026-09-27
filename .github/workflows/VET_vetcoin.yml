@@ -16,13 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup Start Notification
-      uses: zio3/discord-post@v1.0.0
-      with:
-        message: "BuildStart ${{github.repository }}"
-        webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
-        embedUrl: "https://github.com/zio3/VetCoin/actions?query=workflow%3AVET_vetcoin-20210108111714"
-        embedTitle: "GithubActions"
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -34,21 +27,8 @@ jobs:
     - name: Build with dotnet
       run: dotnet build --configuration Release
 
-    - name: Build Error Notification
-      if: failure()
-      uses: zio3/discord-post@v1.0.0
-      with:
-        webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
-        message: "Build Error ${{github.repository }}"
-
     - name: dotnet publish
       run: dotnet publish VetCoin/VetCoin.csproj -c Release -r linux-x64 --self-contained false -o ${{ runner.temp }}/myapp
-
-    - name: Deploy Start Notification
-      uses: zio3/discord-post@v1.0.0
-      with:
-        webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
-        message: "Deploy Start ${{github.repository }}"
 
     - name: Azure login (OIDC)
       uses: azure/login@v3
@@ -63,8 +43,3 @@ jobs:
         app-name: 'vetcoin'
         package: ${{ runner.temp }}/myapp
 
-    - name: Actions Complite Notification
-      uses: zio3/discord-post@v1.0.0
-      with:
-        webhookUrl: "https://discord.com/api/webhooks/748770034414780517/XUuH-jj4Q0ayeOvzGCVdeOsfbz4VKaStzhVVa3rXE3_NIiFaVkhTgUudD8wf3eDRaP7X"
-        message: "Actions Complite ${{github.repository }}"
