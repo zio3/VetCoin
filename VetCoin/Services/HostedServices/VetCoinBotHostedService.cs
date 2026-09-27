@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
 using ImageMagick;
+using ImageMagick.Drawing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
 using Microsoft.Extensions.Configuration;
@@ -363,13 +364,13 @@ namespace VetCoin.Services.HostedServices
 
                 using (var icon = new ImageMagick.MagickImage(toImageFilePath))
                 {
-                    myMagick.Composite(icon, new PointD(640 - 128, 0));
+                    myMagick.Composite(icon, 640 - 128, 0);
                 }
 
                 new Drawables()
               // Draw text on the image
               .FontPointSize(60)
-              .Font("Comic Sans")
+              .Font(System.IO.Path.Combine(AppContext.BaseDirectory, "Fonts", "ComicNeue-Regular.ttf"))
               .StrokeColor(MagickColors.White)
               .FillColor(MagickColors.White)
               //.TextAlignment(TextAlignment.Center)
